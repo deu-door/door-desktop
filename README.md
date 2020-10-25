@@ -1,7 +1,7 @@
-<center>
-	<h1><strong>Door Desktop</strong></h1>
-	<caption>Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Dong-eui University</a></strong></caption>
-</center>
+<h1 align="center">Door Desktop</h1>
+<p align="center">
+Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Dong-eui University</a></strong>
+</p>
 
 <br><br>
 
