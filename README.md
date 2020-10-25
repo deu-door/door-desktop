@@ -1,44 +1,43 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<center>
+	<h1><strong>Door Desktop</strong></h1>
+	<caption>Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Dong-eui University</a></strong></caption>
+</center>
 
-## Available Scripts
+<br><br>
 
-In the project directory, you can run:
+# [NOTE] This project is currently developing.
 
-### `yarn start`
+### Wait a little bit more until release!
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+<br><br>
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+# Features
 
-### `yarn test`
+* Pages once visited, are cached and instantly loaded when you want to see them.
+* Automatic login. No need to login more than once.
+* Better hierarchies. Navigate to another page is fast.
+* Post contents are loaded instantly.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<br><br>
 
-### `yarn build`
+# TODO
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* Notification when new post is uploaded.
+* Enhanced dashboard.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+<br><br>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Technical Stacks
 
-### `yarn eject`
+* **[Typescript](https://www.typescriptlang.org/)**
+* **[React](https://reactjs.org/)**
+* **[Electron](https://www.electronjs.org/)**
+* **[Redux](https://redux.js.org/)**
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+<br><br>
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Run and test with `yarn`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+$ yarn start
+```
