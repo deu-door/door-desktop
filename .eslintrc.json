@@ -1,0 +1,25 @@
+{
+	"parser": "@typescript-eslint/parser",
+	"extends": [
+		"react-app",
+		"plugin:@typescript-eslint/recommended"
+	],
+	"parserOptions": {
+		// Allows for the parsing of modern ECMAScript features
+		"ecmaVersion": 2020,
+		// Allows for the use of imports
+		"sourceType": "module",
+		"ecmaFeatures": {
+			"jsx": true
+		}
+	},
+	"settings": {
+		"react": {
+			// Tells eslint-plugin-react to automatically detect the version of React to use
+			"version": "detect"
+		}
+	},
+	"rules": {
+
+	}
+}

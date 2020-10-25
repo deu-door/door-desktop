@@ -1,5 +1,7 @@
 {
   "name": "door-desktop",
+  "description": "Enhanced Dong-eui University Door Desktop App",
+  "license": "MIT",
   "author": "solo5star",
   "main": "main.js",
   "version": "0.0.1",
@@ -12,10 +14,8 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@types/cheerio": "^0.22.22",
-    "@types/deepmerge": "^2.2.0",
     "@types/jest": "^24.0.0",
     "@types/keytar": "^4.4.2",
-    "@types/lodash": "^4.14.162",
     "@types/node": "^12.0.0",
     "@types/qs": "^6.9.5",
     "@types/react": "^16.9.0",
@@ -29,16 +29,13 @@
     "cheerio": "^1.0.0-rc.3",
     "concurrently": "^5.3.0",
     "cross-env": "^7.0.2",
-    "deepmerge": "^4.2.2",
     "electron": "^10.1.3",
     "electron-builder": "^22.8.1",
     "electron-devtools-installer": "^3.1.1",
     "electron-is-dev": "^1.2.0",
     "electron-store": "^6.0.1",
-    "htmlparser2": "^5.0.0",
     "immer": "^7.0.14",
     "keytar": "^7.0.0",
-    "lodash": "^4.17.20",
     "qs": "^6.9.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -51,10 +48,23 @@
     "redux-persist": "^6.0.0",
     "redux-persist-electron-storage": "^2.1.0",
     "redux-thunk": "^2.3.0",
-    "typesafe-actions": "^5.1.0",
     "typescript": "^4.0.3",
-    "wait-on": "^5.2.0",
-    "xpath": "^0.0.29"
+    "wait-on": "^5.2.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.5.0",
+    "@typescript-eslint/parser": "^4.5.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.12.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-react-app": "^6.0.0",
+    "eslint-plugin-flowtype": "^5.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "prettier": "^2.1.2",
+    "typescript-eslint": "^0.0.1-alpha.0"
   },
   "scripts": {
     "react-start": "craco start",
@@ -63,10 +73,9 @@
     "react-eject": "react-scripts eject",
     "start": "concurrently \"cross-env BROWSER=none yarn react-start\" \"tsc main.ts && wait-on http://localhost:3000 && electron .\"",
     "build": "yarn react-build && electron-builder",
-    "release": "yarn react-build && electron-builder --publish=always"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "release": "yarn react-build && electron-builder --publish=always",
+    "lint": "eslint src",
+    "lint:fix": "eslint --fix src"
   },
   "browserslist": {
     "production": [
