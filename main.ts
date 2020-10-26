@@ -50,6 +50,7 @@ async function createWindow() {
 		center: true,
 		kiosk: !isDev,
 		resizable: true,
+		icon: path.join(__dirname, 'public/favicon.ico'),
 		webPreferences: {
 			//preload: path.join(__dirname, 'preload.js'),
 			// 웹 앱을 데스크탑으로 모양만 바꾼다면 false
