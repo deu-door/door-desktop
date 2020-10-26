@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => createStyles({
 		flexDirection: 'column',
 		placeItems: 'center',
 		placeContent: 'center',
-		backgroundColor: '#2F71E9'
+		backgroundColor: theme.palette.primary.main
 	}
 }));
 
