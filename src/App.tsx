@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import { createMuiTheme, createStyles, Hidden, makeStyles, MuiThemeProvider, ThemeProvider, useMediaQuery } from '@material-ui/core';
 import { LoginPage } from 'page/LoginPage';
 import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
