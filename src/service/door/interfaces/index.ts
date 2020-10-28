@@ -7,7 +7,7 @@ export interface Identifiable {
 	/**
 	 * @description URL 상에서 자원을 인식할 수 있는 고유 ID
 	 */
-	id: ID
+	readonly id: ID
 }
 
 /**

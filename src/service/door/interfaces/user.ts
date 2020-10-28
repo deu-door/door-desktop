@@ -23,7 +23,7 @@ export interface Profile extends Identifiable, Fetchable {
 	 * 
 	 * @example 20172000
 	 */
-	id: string,
+	readonly id: string,
 	/**
 	 * @description Door 시스템 상 등록되어 있는 이름
 	 * 

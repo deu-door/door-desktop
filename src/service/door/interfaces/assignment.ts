@@ -12,7 +12,7 @@ export interface Assignment extends Post, Achievable {
 	 * 
 	 * @example 58662
 	 */
-	id: string,
+	readonly id: string,
 	/**
 	 * @description 과제유형
 	 * 

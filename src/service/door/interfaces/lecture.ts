@@ -11,7 +11,7 @@ export interface Lecture extends Post, Achievable {
 	 * 
 	 * @example 44693
 	 */
-	id: string,
+	readonly id: string,
 	/**
 	 * @description 강의 주차
 	 * 

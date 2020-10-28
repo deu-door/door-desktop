@@ -13,7 +13,7 @@ export interface Course extends Identifiable, Fetchable {
 	 * 홈페이지 URL을 통해 접근할 때 사용하는 자원 ID
 	 * door.deu.ac.kr/LMS/LectureRoom/Main/{ID}
 	 */
-	id: string,
+	readonly id: string,
 	/**
 	 * @description 교과목
 	 * 
