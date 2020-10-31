@@ -3,7 +3,7 @@ import { FetchableMap, ID } from 'service/door/interfaces';
 import { Course } from 'service/door/interfaces/course';
 import { Lecture } from 'service/door/interfaces/lecture';
 import { Notice } from 'service/door/interfaces/notice';
-import { AsyncState, fetchableActions, fetchableMapActions } from '.';
+import { AsyncState, fetchableActions, fetchableMapActions } from './util';
 import { getCourseDetail, getCourses } from 'service/door/course';
 import { getNotice, getNotices } from 'service/door/notice';
 import { getLectures, getLecturesByWeek } from 'service/door/lecture';

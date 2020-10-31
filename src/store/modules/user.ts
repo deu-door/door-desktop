@@ -2,7 +2,7 @@ import { handleActions } from 'redux-actions';
 import door from 'service/door';
 import { User } from 'service/door/interfaces/user';
 import { LoginOptions } from 'service/door/user';
-import { AsyncState, fetchableActions } from '.';
+import { AsyncState, fetchableActions } from './util';
 
 export interface UserState extends User, AsyncState { }
 
