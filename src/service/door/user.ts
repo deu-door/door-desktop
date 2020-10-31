@@ -32,7 +32,7 @@ export async function login(id: string, password: string): Promise<User> {
 
 	const response1 = await doorAxios.post('https://door.deu.ac.kr/Account/LoginDEU', loginForm);
 
-	const expectedResponse1: any = { Code: 1000, Msg: 'OK', Obj: 0 };
+	const expectedResponse1: { [key: string]: string|number } = { Code: 1000, Msg: 'OK', Obj: 0 };
 	if(Object.keys(expectedResponse1).some(key => expectedResponse1[key] !== response1.data[key])){
 		throw new Error('Unexpected result received while processing login');
 	}
