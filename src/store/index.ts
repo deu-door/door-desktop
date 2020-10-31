@@ -1,9 +1,8 @@
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import thunk from 'redux-thunk';
-import user from './modules/user';
-import courses from './modules/courses';
 import createElectronStorage from 'redux-persist-electron-storage';
 import { persistReducer, persistStore } from 'redux-persist';
+import modules from './modules';
 
 const persistConfig = {
 	key: 'root',
@@ -20,7 +19,7 @@ const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ||
 // 미들웨어 적용
 const enhancer = composeEnhancers(applyMiddleware(...middlewares));
 
-const rootReducer = combineReducers({ user, courses });
+const rootReducer = combineReducers(modules);
 
 export type RootState = ReturnType<typeof rootReducer>;
 
