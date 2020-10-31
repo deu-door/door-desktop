@@ -1,4 +1,4 @@
-import { Backdrop, Button, CircularProgress, Container, createStyles, CssBaseline, makeStyles, TextField, Typography } from '@material-ui/core';
+import { Backdrop, Button, Checkbox, CircularProgress, Container, createStyles, CssBaseline, FormControlLabel, makeStyles, TextField, Typography } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,12 +31,13 @@ export const LoginPage: React.FC = props => {
 
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
+	const [saveCredential, setSaveCredential] = useState(true);
 	const [validate, setValidate] = useState(false);
 
 	const handleSubmit = async (e: React.FormEvent<EventTarget>) => {
 		e.preventDefault();
 
-		await dispatch(login(username, password));
+		await dispatch(login(username, password, { saveCredential }));
 
 		setValidate(true);
 	};
@@ -91,6 +92,16 @@ export const LoginPage: React.FC = props => {
 						autoComplete="current-password"
 						disabled={user.pending}
 						onChange={e => setPassword(e.target.value)}
+					/>
+					<FormControlLabel
+						control={
+							<Checkbox
+								color="primary"
+								checked={saveCredential}
+								onChange={e => setSaveCredential(e.target.checked)}
+							/>
+						}
+						label="자동 로그인"
 					/>
 					<Button
 						type="submit"

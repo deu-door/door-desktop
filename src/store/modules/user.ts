@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import door from 'service/door';
 import { User } from 'service/door/interfaces/user';
-import { setPasswordSecurely } from 'service/door/user';
+import { LoginOptions } from 'service/door/user';
 import { AsyncState, fetchableActions } from '.';
 
 export interface UserState extends User, AsyncState { }
@@ -12,10 +12,10 @@ const initialState: UserState = {
 	pending: false
 };
 
-const userActions = fetchableActions<UserState, User, { id: string, password: string }>(
+const userActions = fetchableActions<UserState, User, { id: string, password: string, options?: LoginOptions }>(
 	'USER',
 	draft => draft,
-	({ id, password }) => door.login(id, password),
+	({ id, password, options }) => door.login(id, password, options),
 	{
 		pending: (action, draft) => {
 			draft.authenticated = false;
@@ -27,8 +27,6 @@ const userActions = fetchableActions<UserState, User, { id: string, password: st
 		},
 		success: (action, draft) => {
 			draft.authenticated = true;
-
-			setPasswordSecurely(action.payload.params.id, action.payload.params.password);
 		}
 	}
 );
@@ -37,4 +35,4 @@ export default handleActions<UserState, any>({
 	...userActions.actions
 }, initialState);
 
-export const login = (id: string, password: string) => userActions.fetch({ id, password });
+export const login = (id: string, password: string, options?: LoginOptions) => userActions.fetch({ id, password, options });
