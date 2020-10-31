@@ -12,47 +12,6 @@ export interface AsyncState extends Fetchable {
 	}
 }
 
-type AsyncActions<State, Payload> = { [key in 'pending' | 'failure' | 'success' | 'default']?: (state: State, action: Action<Payload>) => State };
-
-export function asyncActions<State extends AsyncState, Payload>(
-	name: string,
-	actions: AsyncActions<State, Payload>
-){
-	name = name.toUpperCase();
-
-	return {
-		pending: (payload?: Payload) => ({ type: `${name}_PENDING`, payload: payload }),
-		failure: (payload?: Payload) => ({ type: `${name}_FAILURE`, payload: payload }),
-		success: (payload?: Payload) => ({ type: `${name}_SUCCESS`, payload: payload }),
-		
-		handler: () => (actions => ({
-			[`${name}_PENDING`]: (state: State, action: Action<Payload>): State => {
-				const newState = actions.pending ? actions.pending(state, action)
-								: actions.default ? actions.default(state, action)
-								: { ...state } as State;
-
-				return MutateState.pending(newState) as State;
-			},
-
-			[`${name}_FAILURE`]: (state: State, action: Action<Payload & Error & string>): State => {
-				const newState = actions.failure ? actions.failure(state, action)
-								: actions.default ? actions.default(state, action)
-								: { ...state } as State;
-
-				return MutateState.failure(newState) as State;
-			},
-
-			[`${name}_SUCCESS`]: (state: State, action: Action<Payload>): State => {
-				const newState = actions.success ? actions.success(state, action)
-								: actions.default ? actions.default(state, action)
-								: { ...state } as State;
-
-				return MutateState.success(newState) as State;
-			}
-		}))(actions)
-	};
-}
-
 type PendingPayload<Params> = { params: Params };
 type FailurePayload<Params> = { params: Params, error: Error & string };
 type SuccessPayload<Params, Result> = { params: Params, result: Result };
@@ -168,56 +127,4 @@ function insert<T extends Identifiable>(array: T[], item: T): T[] {
 		item,
 		...array.slice(index)
 	]
-}
-
-function update<T extends Identifiable>(array: T[], newItem: T): T[] {
-	return array.map(itemCompare => {
-		// This is the one we want
-		if(newItem.id === itemCompare.id) return newItem;
-
-		// Otherwise, this isn't the item we care about
-		return itemCompare;
-	});
-}
-
-function find<T extends Identifiable>(array: T[], item: T): T | undefined {
-	return array.find(itemCompare => itemCompare.id === item.id);
-}
-
-function findAndUpdate<T extends Identifiable>(array: T[], partOfItem: T): T[] {
-	return array.map(itemCompare => {
-		// Find and insert new fields and data
-		if(partOfItem.id === itemCompare.id) return { ...itemCompare, ...partOfItem };
-
-		return itemCompare;
-	});
-}
-
-function indexOf<T extends Identifiable>(array: T[], findItem: T): number {
-	for(let i = 0; i < array.length; i++){
-		if(findItem.id === array[i].id) return i;
-	}
-	return -1;
-}
-
-export const Util = {
-	insert, update, find, findAndUpdate, indexOf
-};
-
-export const MutateState = {
-	pending: (fetchable: Fetchable): Fetchable => {
-		fetchable.pending = true;
-		fetchable.error = undefined;
-		return fetchable;
-	},
-	failure: (fetchable: Fetchable): Fetchable => {
-		fetchable.pending = false;
-		return fetchable;
-	},
-	success: (fetchable: Fetchable): Fetchable => {
-		fetchable.pending = false;
-		fetchable.error = undefined;
-		fetchable.fetchedAt = new Date();
-		return fetchable;
-	}
 }
