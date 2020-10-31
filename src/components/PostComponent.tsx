@@ -6,6 +6,16 @@ import { Fetchable, Post } from 'service/door/interfaces';
 const useStyles = makeStyles(theme => createStyles({
 	post: {
 		margin: theme.spacing(2, 0)
+	},
+	fetchableWrapper: {
+		position: 'relative'
+	},
+	fetchableProgress: {
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+		marginTop: -10,
+		marginLeft: -10
 	}
 }));
 
@@ -14,9 +24,12 @@ export const FetchableControl: React.FC<{ fetchable: Fetchable, fetcher?: Functi
 	const dispatch = useDispatch();
 
 	return (
-		<Button size="small" color="primary" disabled={fetchable.pending} onClick={() => fetcher && dispatch(fetcher())}>
-			{fetchable.fulfilled ? "새로고침" : "불러오기"}
-		</Button>
+		<div className={classes.fetchableWrapper}>
+			<Button size="small" color="primary" disabled={fetchable.pending} onClick={() => onFetch?.()}>
+				{fetchable.fulfilled ? "새로고침" : "불러오기"}
+			</Button>
+			{fetchable.pending && <CircularProgress size={20} className={classes.fetchableProgress} />}
+		</div>
 	)
 }
 
