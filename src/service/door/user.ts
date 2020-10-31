@@ -96,6 +96,29 @@ export async function login(id: string, password: string): Promise<User> {
 	};
 }
 
+export async function logout(): Promise<void> {
+	try{
+		// check user logined
+		await getProfile();
+	}catch(e){
+		// Not logined, quit
+		return;
+	}
+
+	// GET http://door.deu.ac.kr/Account/LogOff
+	// --> 302 REDIRECT https://door.deu.ac.kr/Account/LogOff
+	// --> 302 REDIRECT https://door.deu.ac.kr/sso/logout.aspx
+	await doorAxios.get('https://door.deu.ac.kr/sso/logout.aspx');
+
+	await doorAxios.post('http://sso.deu.ac.kr/isignplus/logout.jsp', { ssid: 30, domain: '' });
+
+	await doorAxios.post('http://sso.deu.ac.kr/LoginServlet', { ssid: 30, secureSessionId: '', method: 'logout' });
+
+	await doorAxios.post('https://door.deu.ac.kr/sso/business.aspx', {
+		secureToken: '', secureSessionId: '', isToken: 'N', reTry: 'Y', method: 'checkToken', incorrectCount: 0
+	});
+}
+
 export async function getProfile(): Promise<Profile> {
 	const response = await doorAxios.get('https://door.deu.ac.kr/Mypage/MyInfo');
 	const document = cheerio.load(response.data);
