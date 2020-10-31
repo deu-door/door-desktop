@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => createStyles({
 	}
 }));
 
-const TabPanel: React.FC<{ value: any, index: any, children?: React.ReactNode }> = props => {
+const TabPanel: React.FC<{ value: string|number, index: string|number, children?: React.ReactNode }> = props => {
 	const { value, index, children } = props;
 
 	return (
