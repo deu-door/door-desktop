@@ -1,7 +1,7 @@
 import { Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import { Post } from 'service/door/interfaces';
-import { FetchableComponent } from './FetchableComponent';
+import { FetchButton } from './FetchButton';
 
 const useStyles = makeStyles(theme => createStyles({
 	post: {
@@ -25,7 +25,7 @@ export const PostComponent: React.FC<{ post: Post, onFetch?: () => void }> = pro
 				</Typography>
 			</CardContent>}
 			{onFetch && <CardActions>
-				<FetchableComponent fetchable={post} onFetch={onFetch} />
+				<FetchButton fetchable={post} onFetch={onFetch} />
 			</CardActions>}
 		</Card>
 	);

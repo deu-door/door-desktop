@@ -1,13 +1,13 @@
 import { AppBar, Collapse, Container, createStyles, CssBaseline, IconButton, List, ListItem, ListItemText, makeStyles, Step, StepButton, StepContent, Stepper, Tab, Tabs, Typography } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
-import { FetchableComponent } from 'components/FetchableComponent';
+import { FetchButton } from 'components/FetchButton';
 import { PostComponent } from 'components/PostComponent';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { Course } from 'service/door/interfaces/course';
 import { RootState } from 'store';
-import { CourseState, fetchAssignment, fetchLectureByWeek, fetchNotice } from 'store/modules/courses';
+import { CourseState, fetchAssignment, fetchLectureByWeek, fetchNotice, fetchNotices } from 'store/modules/courses';
 
 const useStyles = makeStyles(theme => createStyles({
 	paper: {
@@ -95,6 +95,7 @@ export const CourseComponent: React.FC<{ course: Course }> = props => {
 			</AppBar>
 			<Container className={classes.container}>
 				<TabPanel value={tab} index="notices">
+					<FetchButton fetchable={course.notices} onFetch={() => dispatch(fetchNotices(course.id))} />
 					{Object.values(course.notices.items).reverse().map(notice => (
 						<PostComponent key={notice.id} post={notice} onFetch={() => dispatch(fetchNotice(course.id, notice.id))}/>
 					))}
@@ -113,7 +114,7 @@ export const CourseComponent: React.FC<{ course: Course }> = props => {
 									{Object.values(week.items).map(lecture => (
 										<PostComponent key={lecture.id} post={lecture} />
 									))}
-									<FetchableComponent fetchable={week} onFetch={() => dispatch(fetchLectureByWeek(course.id, week.id))} />
+									<FetchButton fetchable={week} onFetch={() => dispatch(fetchLectureByWeek(course.id, week.id))} />
 								</StepContent>
 							</Step>
 						))}
