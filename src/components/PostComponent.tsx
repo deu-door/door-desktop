@@ -1,6 +1,5 @@
-import { Button, Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Typography } from '@material-ui/core';
+import { Button, Card, CardActions, CardContent, CardHeader, CircularProgress, createStyles, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import { Fetchable, Post } from 'service/door/interfaces';
 
 const useStyles = makeStyles(theme => createStyles({
@@ -19,9 +18,9 @@ const useStyles = makeStyles(theme => createStyles({
 	}
 }));
 
-export const FetchableControl: React.FC<{ fetchable: Fetchable, fetcher?: Function }> = props => {
-	const { fetchable, fetcher } = props;
-	const dispatch = useDispatch();
+export const FetchableControl: React.FC<{ fetchable: Fetchable, onFetch?: () => void }> = props => {
+	const { fetchable, onFetch } = props;
+	const classes = useStyles();
 
 	return (
 		<div className={classes.fetchableWrapper}>
@@ -33,8 +32,8 @@ export const FetchableControl: React.FC<{ fetchable: Fetchable, fetcher?: Functi
 	)
 }
 
-export const PostComponent: React.FC<{ post: Post, fetcher?: Function }> = props => {
-	const { post, fetcher } = props;
+export const PostComponent: React.FC<{ post: Post, onFetch?: () => void }> = props => {
+	const { post, onFetch } = props;
 	const classes = useStyles();
 
 	return (
@@ -48,8 +47,8 @@ export const PostComponent: React.FC<{ post: Post, fetcher?: Function }> = props
 					<div dangerouslySetInnerHTML={{ __html: post.contents }}></div>
 				</Typography>
 			</CardContent>}
-			{fetcher && <CardActions>
-				<FetchableControl fetchable={post} fetcher={fetcher} />
+			{onFetch && <CardActions>
+				<FetchableControl fetchable={post} onFetch={onFetch} />
 			</CardActions>}
 		</Card>
 	);

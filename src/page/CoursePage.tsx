@@ -2,7 +2,7 @@ import { AppBar, Collapse, Container, createStyles, CssBaseline, IconButton, Lis
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { FetchableControl, PostComponent } from 'components/PostComponent';
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { Course } from 'service/door/interfaces/course';
 import { RootState } from 'store';
@@ -68,6 +68,7 @@ export const CourseDescription: React.FC<{ course: Course }> = props => {
 export const CourseComponent: React.FC<{ course: Course }> = props => {
 	const { course } = props;
 	const classes = useStyles();
+	const dispatch = useDispatch();
 	const [ tab, setTab ] = useState('notices');
 	const [ activeWeek, setActiveWeek ] = useState(Object.values(course.lectures.items).length - 1);
 
@@ -94,7 +95,7 @@ export const CourseComponent: React.FC<{ course: Course }> = props => {
 			<Container className={classes.container}>
 				<TabPanel value={tab} index="notices">
 					{Object.values(course.notices.items).reverse().map(notice => (
-						<PostComponent key={notice.id} post={notice} fetcher={() => fetchNotice(course.id, notice.id)}/>
+						<PostComponent key={notice.id} post={notice} onFetch={() => dispatch(fetchNotice(course.id, notice.id))}/>
 					))}
 				</TabPanel>
 				<TabPanel value={tab} index="lectures">
@@ -111,7 +112,7 @@ export const CourseComponent: React.FC<{ course: Course }> = props => {
 									{Object.values(week.items).map(lecture => (
 										<PostComponent key={lecture.id} post={lecture} />
 									))}
-									<FetchableControl fetchable={week} fetcher={() => fetchLectureByWeek(course.id, week.id)} />
+									<FetchableControl fetchable={week} onFetch={() => dispatch(fetchLectureByWeek(course.id, week.id))} />
 								</StepContent>
 							</Step>
 						))}
@@ -119,7 +120,7 @@ export const CourseComponent: React.FC<{ course: Course }> = props => {
 				</TabPanel>
 				<TabPanel value={tab} index="assignments">
 					{Object.values(course.assignments.items).reverse().map(assignment => (
-						<PostComponent key={assignment.id} post={assignment} fetcher={() => fetchAssignment(course.id, assignment.id)} />
+						<PostComponent key={assignment.id} post={assignment} onFetch={() => dispatch(fetchAssignment(course.id, assignment.id))} />
 					))}
 				</TabPanel>
 			</Container>
