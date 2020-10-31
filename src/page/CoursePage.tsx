@@ -1,6 +1,7 @@
 import { AppBar, Collapse, Container, createStyles, CssBaseline, IconButton, List, ListItem, ListItemText, makeStyles, Step, StepButton, StepContent, Stepper, Tab, Tabs, Typography } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
-import { FetchableControl, PostComponent } from 'components/PostComponent';
+import { FetchableComponent } from 'components/FetchableComponent';
+import { PostComponent } from 'components/PostComponent';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
@@ -112,7 +113,7 @@ export const CourseComponent: React.FC<{ course: Course }> = props => {
 									{Object.values(week.items).map(lecture => (
 										<PostComponent key={lecture.id} post={lecture} />
 									))}
-									<FetchableControl fetchable={week} onFetch={() => dispatch(fetchLectureByWeek(course.id, week.id))} />
+									<FetchableComponent fetchable={week} onFetch={() => dispatch(fetchLectureByWeek(course.id, week.id))} />
 								</StepContent>
 							</Step>
 						))}
