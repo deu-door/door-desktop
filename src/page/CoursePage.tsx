@@ -1,9 +1,9 @@
-import { AppBar, Button, Card, CardActions, CardContent, CardHeader, Collapse, Container, createStyles, CssBaseline, IconButton, List, ListItem, ListItemText, makeStyles, Step, StepButton, StepContent, Stepper, Tab, Tabs, Typography } from '@material-ui/core';
+import { AppBar, Collapse, Container, createStyles, CssBaseline, IconButton, List, ListItem, ListItemText, makeStyles, Step, StepButton, StepContent, Stepper, Tab, Tabs, Typography } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import { FetchableControl, PostComponent } from 'components/PostComponent';
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
-import { Fetchable, Post } from 'service/door/interfaces';
 import { Course } from 'service/door/interfaces/course';
 import { RootState } from 'store';
 import { CourseState, fetchAssignment, fetchLectureByWeek, fetchNotice } from 'store/modules/courses';
@@ -14,9 +14,6 @@ const useStyles = makeStyles(theme => createStyles({
 	},
 	container: {
 		marginLeft: 'unset'
-	},
-	post: {
-		margin: theme.spacing(2, 0)
 	},
 	lecturesByWeek: {
 		flexDirection: 'column-reverse'
@@ -65,39 +62,6 @@ export const CourseDescription: React.FC<{ course: Course }> = props => {
 				</ListItem>
 			</Collapse>
 		</List>
-	);
-};
-
-export const FetchableControl: React.FC<{ fetchable: Fetchable, fetcher?: Function }> = props => {
-	const { fetchable, fetcher } = props;
-	const dispatch = useDispatch();
-
-	return (
-		<Button size="small" color="primary" disabled={fetchable.pending} onClick={() => fetcher && dispatch(fetcher())}>
-			{fetchable.fulfilled ? "새로고침" : "불러오기"}
-		</Button>
-	)
-}
-
-export const PostComponent: React.FC<{ post: Post, fetcher?: Function }> = props => {
-	const { post, fetcher } = props;
-	const classes = useStyles();
-
-	return (
-		<Card className={classes.post}>
-			<CardHeader
-				title={post.title}
-				subheader={post.author}
-			/>
-			{post.contents && <CardContent >
-				<Typography variant="body2" color="textSecondary" component="span" paragraph>
-					<div dangerouslySetInnerHTML={{ __html: post.contents }}></div>
-				</Typography>
-			</CardContent>}
-			{fetcher && <CardActions>
-				<FetchableControl fetchable={post} fetcher={fetcher} />
-			</CardActions>}
-		</Card>
 	);
 };
 
