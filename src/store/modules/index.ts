@@ -1,7 +1,7 @@
 import produce, { Draft } from "immer";
 import { Dispatch } from "redux";
 import { Action } from "redux-actions";
-import { Fetchable, FetchableMap, Identifiable } from "service/door/interfaces";
+import { Fetchable, FetchableMap } from "service/door/interfaces";
 
 export interface AsyncState extends Fetchable {
 	pending?: boolean,
@@ -112,19 +112,4 @@ export function fetchableMapActions<State, Result extends Fetchable, Params>(
 	});
 
 	return context;
-}
-
-function insert<T extends Identifiable>(array: T[], item: T): T[] {
-	let index = array.length;
-	for(let i = 0; i < array.length; i++){
-		if(array[i].id === item.id){
-			index = i;
-			break;
-		}
-	}
-	return [
-		...array.slice(0, index),
-		item,
-		...array.slice(index)
-	]
 }
