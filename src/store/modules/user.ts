@@ -12,11 +12,12 @@ const initialState: UserState = {
 	pending: false
 };
 
-const userActions = fetchableActions<UserState, User, { id: string, password: string, options?: LoginOptions }>(
-	'USER',
-	draft => draft,
-	({ id, password, options }) => door.login(id, password, options),
-	{
+const userActions = fetchableActions<UserState, User, { id: string, password: string, options?: LoginOptions }>({
+	name: 'USER',
+	selector: state => state.user,
+	path: draft => draft,
+	fetch: ({ id, password, options }) => door.login(id, password, options),
+	handler: {
 		pending: (action, draft) => {
 			draft.authenticated = false;
 			draft.profile = undefined;
@@ -29,10 +30,15 @@ const userActions = fetchableActions<UserState, User, { id: string, password: st
 			draft.authenticated = true;
 		}
 	}
-);
+});
 
 export default handleActions<UserState, any>({
 	...userActions.actions
 }, initialState);
 
-export const login = (id: string, password: string, options?: LoginOptions) => userActions.fetch({ id, password, options });
+export const actions = {
+	login: (id: string, password: string, options?: LoginOptions) => ({
+		fetch: () => userActions.fetch({ id, password, options }),
+		timeout: () => userActions.timeout({ id, password, options })
+	})
+};

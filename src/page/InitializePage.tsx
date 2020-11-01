@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { RootState } from 'store';
-import { CourseState, fetchAssignments, fetchCourse, fetchCourses, fetchLectures, fetchNotices } from 'store/modules/courses';
+import { actions } from 'store/modules';
+import { CourseState } from 'store/modules/courses';
 
 const useStyles = makeStyles(theme => ({
 	paper: {
@@ -38,7 +39,7 @@ export const InitializePage: React.FC<RouteComponentProps> = props => {
 		const fetch = async () => {
 			if(!courses.fulfilled) {
 				setFetching('강의 목록을 가져오는 중입니다');
-				await dispatch(fetchCourses());
+				await dispatch(actions.courses().fetch());
 			}
 		};
 
@@ -52,19 +53,19 @@ export const InitializePage: React.FC<RouteComponentProps> = props => {
 				setFetchingCourse(course.name);
 				if(!course.fulfilled) {
 					setFetching('강의 정보를 가져오는 중입니다');
-					await dispatch(fetchCourse(course.id));
+					await dispatch(actions.course(course.id).fetch());
 				}
 				if(!course.notices?.fulfilled){
 					setFetching('공지사항을 가져오는 중입니다');
-					await dispatch(fetchNotices(course.id));
+					await dispatch(actions.notices(course.id).fetch());
 				}
 				if(!course.lectures?.fulfilled){
 					setFetching('강의 목록을 가져오는 중입니다');
-					await dispatch(fetchLectures(course.id));
+					await dispatch(actions.lectures(course.id).fetch());
 				}
 				if(!course.assignments?.fulfilled){
 					setFetching('과제 목록을 가져오는 중입니다');
-					await dispatch(fetchAssignments(course.id));
+					await dispatch(actions.assignments(course.id).fetch());
 				}
 			}
 

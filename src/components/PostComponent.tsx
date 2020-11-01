@@ -1,6 +1,7 @@
 import { Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import { Post } from 'service/door/interfaces';
+import { FetchableAction } from 'store/modules';
 import { FetchButton } from './FetchButton';
 
 const useStyles = makeStyles(theme => createStyles({
@@ -9,8 +10,8 @@ const useStyles = makeStyles(theme => createStyles({
 	}
 }));
 
-export const PostComponent: React.FC<{ post: Post, onFetch?: () => void }> = props => {
-	const { post, onFetch } = props;
+export const PostComponent: React.FC<{ post: Post, action?: FetchableAction }> = props => {
+	const { post, action } = props;
 	const classes = useStyles();
 
 	return (
@@ -24,8 +25,8 @@ export const PostComponent: React.FC<{ post: Post, onFetch?: () => void }> = pro
 					<div dangerouslySetInnerHTML={{ __html: post.contents }}></div>
 				</Typography>
 			</CardContent>}
-			{onFetch && <CardActions>
-				<FetchButton fetchable={post} onFetch={onFetch} />
+			{action && <CardActions>
+				<FetchButton fetchable={post} action={action} />
 			</CardActions>}
 		</Card>
 	);

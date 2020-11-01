@@ -3,11 +3,12 @@ import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { FetchButton } from 'components/FetchButton';
 import { PostComponent } from 'components/PostComponent';
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { Course } from 'service/door/interfaces/course';
 import { RootState } from 'store';
-import { CourseState, fetchAssignment, fetchLectureByWeek, fetchNotice, fetchNotices } from 'store/modules/courses';
+import { actions } from 'store/modules';
+import { CourseState } from 'store/modules/courses';
 
 const useStyles = makeStyles(theme => createStyles({
 	paper: {
@@ -69,7 +70,6 @@ export const CourseDescription: React.FC<{ course: Course }> = props => {
 export const CourseComponent: React.FC<{ course: Course }> = props => {
 	const { course } = props;
 	const classes = useStyles();
-	const dispatch = useDispatch();
 	const [ tab, setTab ] = useState('notices');
 	const [ activeWeek, setActiveWeek ] = useState(Object.values(course.lectures.items).length - 1);
 
@@ -95,9 +95,9 @@ export const CourseComponent: React.FC<{ course: Course }> = props => {
 			</AppBar>
 			<Container className={classes.container}>
 				<TabPanel value={tab} index="notices">
-					<FetchButton fetchable={course.notices} onFetch={() => dispatch(fetchNotices(course.id))} />
+					<FetchButton fetchable={course.notices} action={actions.notices(course.id)} />
 					{Object.values(course.notices.items).reverse().map(notice => (
-						<PostComponent key={notice.id} post={notice} onFetch={() => dispatch(fetchNotice(course.id, notice.id))}/>
+						<PostComponent key={notice.id} post={notice} action={actions.notice(course.id, notice.id)}/>
 					))}
 				</TabPanel>
 				<TabPanel value={tab} index="lectures">
@@ -114,7 +114,7 @@ export const CourseComponent: React.FC<{ course: Course }> = props => {
 									{Object.values(week.items).map(lecture => (
 										<PostComponent key={lecture.id} post={lecture} />
 									))}
-									<FetchButton fetchable={week} onFetch={() => dispatch(fetchLectureByWeek(course.id, week.id))} />
+									<FetchButton fetchable={week} action={actions.lectureByWeek(course.id, week.id)} />
 								</StepContent>
 							</Step>
 						))}
@@ -122,7 +122,7 @@ export const CourseComponent: React.FC<{ course: Course }> = props => {
 				</TabPanel>
 				<TabPanel value={tab} index="assignments">
 					{Object.values(course.assignments.items).reverse().map(assignment => (
-						<PostComponent key={assignment.id} post={assignment} onFetch={() => dispatch(fetchAssignment(course.id, assignment.id))} />
+						<PostComponent key={assignment.id} post={assignment} action={actions.assignment(course.id, assignment.id)} />
 					))}
 				</TabPanel>
 			</Container>

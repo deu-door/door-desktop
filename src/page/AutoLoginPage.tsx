@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { getSecurelyStoredPassword } from 'service/door/user';
 import { RootState } from 'store';
-import { login, UserState } from 'store/modules/user';
+import { UserState } from 'store/modules/user';
 import { ReactComponent as Logo } from 'resources/logo-original-white.svg';
 import { createStyles, makeStyles } from '@material-ui/core';
+import { actions } from 'store/modules';
 
 const useStyles = makeStyles(theme => createStyles({
 	main: {
@@ -36,7 +37,7 @@ export const AutoLoginPage: React.FC = () => {
 			// secure was not found
 			if(!secure) return history.push('/login');
 
-			await dispatch(login(user.profile.id, secure));
+			await dispatch(actions.login(user.profile.id, secure).fetch());
 
 			setTriedOnce(true);
 		}

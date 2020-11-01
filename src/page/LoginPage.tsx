@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { RootState } from 'store';
-import { login, UserState } from 'store/modules/user';
+import { actions } from 'store/modules';
+import { UserState } from 'store/modules/user';
 
 const useStyles = makeStyles(theme => createStyles({
 	paper: {
@@ -37,7 +38,7 @@ export const LoginPage: React.FC = props => {
 	const handleSubmit = async (e: React.FormEvent<EventTarget>) => {
 		e.preventDefault();
 
-		await dispatch(login(username, password, { saveCredential }));
+		await dispatch(actions.login(username, password, { saveCredential }).fetch());
 
 		setValidate(true);
 	};

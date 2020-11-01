@@ -9,6 +9,8 @@ import { getNotice, getNotices } from 'service/door/notice';
 import { getLectures, getLecturesByWeek } from 'service/door/lecture';
 import { Assignment } from 'service/door/interfaces/assignment';
 import { getAssignment, getAssignments } from 'service/door/assignment';
+import { FetchableAction } from '.';
+import moment from 'moment';
 
 export interface CourseState extends FetchableMap<Course>, AsyncState {
 	categories: string[],
@@ -24,11 +26,12 @@ const initialState: CourseState = {
 	items: {}
 }
 
-const courseMapActions = fetchableMapActions<CourseState, Course, void>(
-	'COURSE',
-	(draft) => draft,
-	getCourses,
-	{
+const courseMapActions = fetchableMapActions<CourseState, Course, void>({
+	name: 'COURSE',
+	selector: state => state.courses,
+	path: (draft) => draft,
+	fetch: getCourses,
+	handler: {
 		success: (action, draft) => {
 			// Make category by course.type
 			const categories = Array.from(new Set(Object.values(action.payload.result.items).map(course => course.type))).sort((a, b) => {
@@ -51,49 +54,62 @@ const courseMapActions = fetchableMapActions<CourseState, Course, void>(
 			(draft as CourseState).itemsByCategory = itemsByCategory;
 		}
 	}
-);
+});
 
-const courseActions = fetchableActions<CourseState, Course, ID>(
-	'COURSE',
-	(draft, id) => draft.items[id],
-	id => getCourseDetail(id)
-);
+const returnOrSetDefault = <T, R>(path: T, defaul: R): typeof path => {
+	if(path) return path;
+	Object.assign(path, defaul);
+	return path;
+}
 
-const noticeMapActions = fetchableMapActions<CourseState, Notice, ID>(
-	'NOTICE',
-	(draft, courseId) => draft.items[courseId].notices = draft.items[courseId].notices || { items: {}, fulfilled: false },
-	courseId => getNotices(courseId)
-);
+const courseActions = fetchableActions<CourseState, Course, ID>({
+	name: 'COURSE',
+	selector: state => state.courses,
+	path: (draft, id) => draft.items[id],
+	fetch: id => getCourseDetail(id)
+});
 
-const noticeActions = fetchableActions<CourseState, Notice, { courseId: ID, id: ID }>(
-	'NOTICE',
-	(draft, { courseId, id }) => draft.items[courseId].notices.items[id],
-	({ id }) => getNotice(id)
-);
+const noticeMapActions = fetchableMapActions<CourseState, Notice, ID>({
+	name: 'NOTICE',
+	selector: state => state.courses,
+	path: (draft, courseId) => returnOrSetDefault(draft.items[courseId].notices, { items: {}, fulfilled: false }),
+	fetch: courseId => getNotices(courseId)
+});
 
-const lectureMapActions = fetchableMapActions<CourseState, FetchableMap<Lecture>, ID>(
-	'LECTURE',
-	(draft, courseId) => draft.items[courseId].lectures = draft.items[courseId].lectures || { items: {}, fulfilled: false },
-	courseId => getLectures(courseId)
-);
+const noticeActions = fetchableActions<CourseState, Notice, { courseId: ID, id: ID }>({
+	name: 'NOTICE',
+	selector: state => state.courses,
+	path: (draft, { courseId, id }) => draft.items[courseId].notices.items[id],
+	fetch: ({ id }) => getNotice(id)
+});
 
-const lectureActions = fetchableActions<CourseState, FetchableMap<Lecture>, { courseId: ID, id: ID }>(
-	'LECTURE',
-	(draft, { courseId, id }) => draft.items[courseId].lectures.items[id],
-	({ courseId, id}) => getLecturesByWeek(courseId, id)
-);
+const lectureMapActions = fetchableMapActions<CourseState, FetchableMap<Lecture>, ID>({
+	name: 'LECTURE',
+	selector: state => state.courses,
+	path: (draft, courseId) => returnOrSetDefault(draft.items[courseId].lectures, { items: {}, fulfilled: false }),
+	fetch: courseId => getLectures(courseId)
+});
 
-const assignmentMapActions = fetchableMapActions<CourseState, Assignment, ID>(
-	'ASSIGNMENT',
-	(draft, courseId) => draft.items[courseId].assignments = draft.items[courseId].assignments || { items: {}, fulfilled: false },
-	courseId => getAssignments(courseId)
-);
+const lectureActions = fetchableActions<CourseState, FetchableMap<Lecture>, { courseId: ID, id: ID }>({
+	name: 'LECTURE',
+	selector: state => state.courses,
+	path: (draft, { courseId, id }) => draft.items[courseId].lectures.items[id],
+	fetch: ({ courseId, id}) => getLecturesByWeek(courseId, id)
+});
 
-const assignmentActions = fetchableActions<CourseState, Assignment, { courseId: ID, id: ID }>(
-	'ASSIGNMENT',
-	(draft, { courseId, id }) => draft.items[courseId].assignments.items[id],
-	({ courseId, id }) => getAssignment(courseId, id)
-);
+const assignmentMapActions = fetchableMapActions<CourseState, Assignment, ID>({
+	name: 'ASSIGNMENT',
+	selector: state => state.courses,
+	path: (draft, courseId) => returnOrSetDefault(draft.items[courseId].assignments, { items: {}, fulfilled: false }),
+	fetch: courseId => getAssignments(courseId)
+});
+
+const assignmentActions = fetchableActions<CourseState, Assignment, { courseId: ID, id: ID }>({
+	name: 'ASSIGNMENT',
+	selector: state => state.courses,
+	path: (draft, { courseId, id }) => draft.items[courseId].assignments.items[id],
+	fetch: ({ courseId, id }) => getAssignment(courseId, id)
+});
 
 export default handleActions<CourseState, any & never>({
 	...courseMapActions.actions,
@@ -106,18 +122,52 @@ export default handleActions<CourseState, any & never>({
 	...assignmentActions.actions
 }, initialState);
 
-export const fetchCourses = () => courseMapActions.fetch();
+export const actions = {
+	courses: (): FetchableAction => ({
+		fetch: () => courseMapActions.fetch(),
+		fetchIfExpired: () => courseMapActions.fetchIfExpired(undefined, moment.duration(60, 'minutes')),
+		timeout: () => courseMapActions.timeout()
+	}),
 
-export const fetchCourse = (id: ID) => courseActions.fetch(id);
+	course: (id: ID): FetchableAction => ({
+		fetch: () => courseActions.fetch(id),
+		fetchIfExpired: () => courseActions.fetchIfExpired(id, moment.duration(1, 'days')),
+		timeout: () => courseActions.timeout(id)
+	}),
 
-export const fetchNotices = (courseId: ID) => noticeMapActions.fetch(courseId);
+	notices: (courseId: ID): FetchableAction => ({
+		fetch: () => noticeMapActions.fetch(courseId),
+		fetchIfExpired: () => noticeMapActions.fetchIfExpired(courseId, moment.duration(30, 'minutes')),
+		timeout: () => noticeMapActions.timeout(courseId),
+	}),
 
-export const fetchNotice = (courseId: ID, id: ID) => noticeActions.fetch({ courseId, id });
+	notice: (courseId: ID, id: ID): FetchableAction => ({
+		fetch: () => noticeActions.fetch({ courseId, id }),
+		fetchIfExpired: () => noticeActions.fetchIfExpired({ courseId, id }, moment.duration(1, 'hours')),
+		timeout: () => noticeActions.timeout({ courseId, id })
+	}),
 
-export const fetchLectures = (courseId: ID) => lectureMapActions.fetch(courseId);
+	lectures: (courseId: ID): FetchableAction => ({
+		fetch: () => lectureMapActions.fetch(courseId),
+		fetchIfExpired: () => lectureMapActions.fetchIfExpired(courseId, moment.duration(30, 'minutes')),
+		timeout: () => lectureMapActions.timeout(courseId)
+	}),
 
-export const fetchLectureByWeek = (courseId: ID, week: ID) => lectureActions.fetch({ courseId, id: week });
+	lectureByWeek: (courseId: ID, week: ID): FetchableAction => ({
+		fetch: () => lectureActions.fetch({ courseId, id: week }),
+		fetchIfExpired: () => lectureActions.fetchIfExpired({ courseId, id: week }, moment.duration(1, 'hours')),
+		timeout: () => lectureActions.timeout({ courseId, id: week })
+	}),
 
-export const fetchAssignments = (courseId: ID) => assignmentMapActions.fetch(courseId);
+	assignments: (courseId: ID): FetchableAction => ({
+		fetch: () => assignmentMapActions.fetch(courseId),
+		fetchIfExpired: () => assignmentMapActions.fetchIfExpired(courseId, moment.duration(30, 'minutes')),
+		timeout: () => assignmentMapActions.timeout(courseId)
+	}),
 
-export const fetchAssignment = (courseId: ID, id: ID) => assignmentActions.fetch({ courseId, id });
+	assignment: (courseId: ID, id: ID): FetchableAction => ({
+		fetch: () => assignmentActions.fetch({ courseId, id }),
+		fetchIfExpired: () => assignmentActions.fetchIfExpired({ courseId, id }, moment.duration(1, 'hours')),
+		timeout: () => assignmentActions.fetch({ courseId, id })
+	})
+};
