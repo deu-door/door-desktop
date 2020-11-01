@@ -1,4 +1,5 @@
 import { createStyles, Hidden, makeStyles } from '@material-ui/core';
+import { BackgroundService } from 'BackgroundService';
 import { Navigator } from 'components/Navigator';
 import { AutoLoginPage } from 'page/AutoLoginPage';
 import { CoursePage } from 'page/CoursePage';
@@ -39,6 +40,7 @@ export const Routes: React.FC = () => {
                   <Redirect path="*" to="/main/dashboard" />
                 </Switch>
               </div>
+              <BackgroundService />
             </Route>
             <Redirect path="*" to="/autologin" />
           </Switch>
