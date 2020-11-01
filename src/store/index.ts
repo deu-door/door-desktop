@@ -6,8 +6,7 @@ import modules from './modules';
 
 const persistConfig = {
 	key: 'root',
-	storage: createElectronStorage(),
-	// whitelist: ['courses']
+	storage: createElectronStorage()
 };
 
 // Redux Thunk 미들웨어 사용
@@ -19,6 +18,7 @@ const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ||
 // 미들웨어 적용
 const enhancer = composeEnhancers(applyMiddleware(...middlewares));
 
+// moduels import한 후 combine
 const rootReducer = combineReducers(modules);
 
 export type RootState = ReturnType<typeof rootReducer>;
@@ -26,11 +26,8 @@ export type RootState = ReturnType<typeof rootReducer>;
 // Reducer 저장
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-export default function configureStore() {
+// Redux Store 생성
+export const store = createStore(persistedReducer, enhancer);
 
-	const store = createStore(persistedReducer, enhancer);
-
-	const persistor = persistStore(store);
-
-	return { store, persistor };
-}
+// Redux Store 영구 저장 persistor 생성
+export const persistor = persistStore(store);

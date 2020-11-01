@@ -4,9 +4,9 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import axios from 'axios';
-import configureStore from './store';
 import door from 'service/door';
 import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from 'store';
 
 axios.interceptors.request.use(request => {
   console.log('[Axios] Starting Request', request);
@@ -17,8 +17,6 @@ axios.interceptors.response.use(response => {
   console.log('[Axios] Receive Response', response);
   return response;
 });
-
-const { store, persistor } = configureStore();
 
 // Debug door APIs (i.e. getCourses(), getNotices(), ...)
 (window as any).door = door;
