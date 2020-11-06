@@ -1,8 +1,8 @@
 import cheerio from 'cheerio';
+import { secure } from 'service/secure';
 import { doorAxios } from ".";
 import { fulfilledFetchable } from './interfaces';
 import { Profile, User } from './interfaces/user';
-import Keytar from 'keytar';
 
 export type LoginOptions = { saveCredential: boolean };
 
@@ -106,7 +106,7 @@ export async function login(id: string, password: string, options?: LoginOptions
 	};
 
 	if(options && options.saveCredential){
-		savePasswordSecurely(id, password);
+		secure.save(id, password);
 	}
 
 	return user;
@@ -117,7 +117,7 @@ export async function logout(): Promise<void> {
 		// check user logined
 		const profile = await getProfile();
 
-		removeSecurelyStoredPassword(profile.id);
+		secure.remove(profile.id);
 	}catch(e){
 		// Not logined, quit
 		return;
@@ -153,20 +153,4 @@ export async function getProfile(): Promise<Profile> {
 	const major = document(`tbody > tr:nth-child(1) > td:nth-child(4)`, table).text();
 
 	return { id, name, type, major, ...fulfilledFetchable() };
-}
-
-const SERVICE_NAME = 'Door Desktop';
-
-const keytar: typeof Keytar = window.require('electron').remote.require('keytar');
-
-export async function getSecurelyStoredPassword(id: string): Promise<string|null> {
-	return keytar.getPassword(SERVICE_NAME, id);
-}
-
-async function savePasswordSecurely(id: string, password: string): Promise<void> {
-	return keytar.setPassword(SERVICE_NAME, id, password);
-}
-
-async function removeSecurelyStoredPassword(id: string): Promise<boolean> {
-	return keytar.deletePassword(SERVICE_NAME, id);
 }

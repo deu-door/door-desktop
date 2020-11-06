@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-import { getSecurelyStoredPassword } from 'service/door/user';
 import { RootState } from 'store/modules';
 import { UserState } from 'store/modules/user';
 import { ReactComponent as Logo } from 'resources/logo-original-white.svg';
 import { Container, createStyles, Grid, LinearProgress, makeStyles, Typography } from '@material-ui/core';
 import { actions } from 'store/modules';
 import { CourseFetchIterator } from 'store/background';
+import { secure } from 'service/secure';
 
 const useStyles = makeStyles(theme => createStyles({
 	main: {
@@ -47,14 +47,14 @@ export const InitializePage: React.FC = () => {
 		const authorize = async () => {
 			if(!user.profile) return history.push('/login');
 
-			const secure = await getSecurelyStoredPassword(user.profile.id);
+			const p = await secure.get(user.profile.id);
 
 			// secure was not found
-			if(!secure) return history.push('/login');
+			if(!p) return history.push('/login');
 
 			setTitle('Door Desktop');
 			setSubtitle('자동 로그인 중...');
-			await dispatch(actions.login(user.profile.id, secure).fetch());
+			await dispatch(actions.login(user.profile.id, p).fetch());
 		}
 
 		if(user.error) {
