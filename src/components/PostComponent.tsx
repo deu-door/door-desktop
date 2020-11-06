@@ -11,6 +11,7 @@ import { Notice } from 'service/door/interfaces/notice';
 import { Lecture } from 'service/door/interfaces/lecture';
 import { downloader } from 'service/downloader';
 import { Reference } from 'service/door/interfaces/reference';
+import VisibilitySensor from 'react-visibility-sensor';
 
 const useStyles = makeStyles(theme => createStyles({
 	post: {
@@ -168,6 +169,7 @@ export const ReferenceComponent: React.FC<Omit<PostComponentProps, 'post'> & { r
 export const LectureComponent: React.FC<Omit<PostComponentProps, 'post'> & { lecture: Lecture }> = props => {
 	const { lecture, ...postProps } = props;
 	const [linkType, setLinkType] = useState('');
+	const [lazyLoad, setLazyLoad] = useState(false);
 
 	useEffect(() => {
 		const fetch = async () => {
@@ -178,32 +180,36 @@ export const LectureComponent: React.FC<Omit<PostComponentProps, 'post'> & { lec
 			}
 		};
 
-		fetch();
-	}, [lecture.link]);
+		lazyLoad && fetch();
+	}, [lazyLoad, lecture.link]);
 
 	return (
 		<PostComponent {...postProps} post={lecture}>
-			{lecture.link && linkType === 'html' &&
-				<CardMedia>
-					<iframe
-						title={lecture.title}
-						src={lecture.link}
-						width="100%"
-						height="480"
-						allowFullScreen
-						frameBorder="0"
-					/>
-				</CardMedia>}
+			<VisibilitySensor onChange={isVisible => isVisible && setLazyLoad(true)}>
+				<div>
+					{lecture.link && linkType === 'html' &&
+						<CardMedia>
+							<iframe
+								title={lecture.title}
+								src={lecture.link}
+								width="100%"
+								height="480"
+								allowFullScreen
+								frameBorder="0"
+							/>
+						</CardMedia>}
 
-			<CardContent>
-				{lecture.contents && <PostContent content={lecture.contents} />}
+					<CardContent>
+						{lecture.contents && <PostContent content={lecture.contents} />}
 
-				{lecture.link && linkType === 'downloadable' &&
-					<PostAttachment attachment={{
-						title: '첨부파일',
-						link: lecture.link
-					}} />}
-			</CardContent>
+						{lecture.link && linkType === 'downloadable' &&
+							<PostAttachment attachment={{
+								title: '첨부파일',
+								link: lecture.link
+							}} />}
+					</CardContent>
+				</div>
+			</VisibilitySensor>
 		</PostComponent>
 	);
 }
