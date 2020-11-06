@@ -4,7 +4,8 @@ import { Attachment, FetchableMap, fulfilledFetchable, ID, notFulfilledFetchable
 import { Reference } from './interfaces/reference';
 
 export async function getReference(courseId: ID, id: ID): Promise<Reference> {
-	const document = cheerio.load((await doorAxios.get(`/BBS/Board/Detail/CourseReference/${id}`)).data);
+	// /BBS/Board/Read 로 요청을 보내면 서버 자체적으로 "읽음" 처리된 후 /BBS/Board/Detail로 리다이렉트됨
+	const document = cheerio.load((await doorAxios.get(`/BBS/Board/Read/CourseReference/${id}`)).data);
 
 	const detailTable = document(`#boardForm > div.form_table > table`).toArray().pop();
 

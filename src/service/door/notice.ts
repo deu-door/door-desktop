@@ -4,7 +4,8 @@ import { Attachment, FetchableMap, fulfilledFetchable, ID, notFulfilledFetchable
 import { Notice } from './interfaces/notice';
 
 export async function getNotice(courseId: ID, id: ID): Promise<Notice> {
-	const document = cheerio.load((await doorAxios.get(`/BBS/Board/Detail/CourseNotice/${id}`)).data);
+	// /BBS/Board/Read 로 요청을 보내면 서버 자체적으로 "읽음" 처리된 후 /BBS/Board/Detail로 리다이렉트됨
+	const document = cheerio.load((await doorAxios.get(`/BBS/Board/Read/CourseNotice/${id}`)).data);
 
 	const detailTable = document(`#boardForm > div.form_table > table`).toArray().pop();
 
