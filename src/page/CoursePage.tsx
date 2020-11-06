@@ -164,7 +164,7 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 
 				<TabPanel value={tab} index="assignments">
 					<FetchableList fetchableMap={course.assignments} action={actions.assignments(course.id)}>
-						{Object.values(course.assignments.items).reverse().map(assignment => (
+						{Object.values(course.assignments.items).map(assignment => (
 							<AssignmentComponent key={assignment.id} assignment={assignment} />
 						))}
 					</FetchableList>

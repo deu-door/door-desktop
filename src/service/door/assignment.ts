@@ -112,7 +112,8 @@ export async function getAssignments(courseId: ID): Promise<FetchableMap<Assignm
 	} as Assignment));
 
 	return {
-		items: Object.fromEntries(assignments.map(assignment => [assignment.id, assignment])),
+		// Ascending order to descending order
+		items: Object.fromEntries(assignments.map(assignment => [assignment.id, assignment]).reverse()),
 
 		...fulfilledFetchable()
 	};
