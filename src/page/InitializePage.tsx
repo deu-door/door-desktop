@@ -38,6 +38,12 @@ export const InitializePage: React.FC = () => {
 	const history = useHistory();
 
 	useEffect(() => {
+		/**
+		 * Phase 1: Authorize.
+		 * 
+		 * Try to authenticate with saved id & password.
+		 * If failed(Never logined or password changes), Go to /login
+		 */
 		const authorize = async () => {
 			if(!user.profile) return history.push('/login');
 
@@ -65,8 +71,11 @@ export const InitializePage: React.FC = () => {
 
 		console.log(`Successfully logined with ${user.profile?.id}`);
 		
-		// 로그인 후 최소한의 데이터가 갖추어져있는지 확인.
-		// 데이터가 없다면 fetch
+		/**
+		 * Phase 2: Initialize data
+		 * 
+		 * Fetch necessary data to program run.
+		 */
 		const fetch = async () => {
 			const iterator = new CourseFetchIterator();
 
