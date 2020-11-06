@@ -13,6 +13,8 @@ import { storage } from 'store/storage';
 import moment from 'moment';
 import { persistReducer } from 'redux-persist';
 import { FetchableAction } from '.';
+import { Reference } from 'service/door/interfaces/reference';
+import { getReference, getReferences } from 'service/door/references';
 
 export interface CourseState extends FetchableMap<Course>, AsyncState {
 	categories: string[],
@@ -136,6 +138,26 @@ const assignmentActions = fetchableActions<CourseState, Assignment, { courseId: 
 	}
 });
 
+const referenceMapActions = fetchableMapActions<CourseState, Reference, ID>({
+	name: 'REFERENCE',
+	selector: state => state.courses,
+	path: (draft, courseId) => draft.items[courseId].references,
+	fetch: courseId => getReferences(courseId),
+	options: {
+		validDuration: moment.duration(30, 'minutes')
+	}
+});
+
+const referenceActions = fetchableActions<CourseState, Reference, { courseId: ID, id: ID }>({
+	name: 'REFERENCE',
+	selector: state => state.courses,
+	path: (draft, { courseId, id }) => draft.items[courseId].references.items[id],
+	fetch: ({ courseId, id }) => getReference(courseId, id),
+	options: {
+		validDuration: moment.duration(60, 'minutes')
+	}
+});
+
 export default persistReducer(
 	{
 		key: 'courses',
@@ -150,7 +172,9 @@ export default persistReducer(
 		...lectureMapActions.reduxActions,
 		...lectureActions.reduxActions,
 		...assignmentMapActions.reduxActions,
-		...assignmentActions.reduxActions
+		...assignmentActions.reduxActions,
+		...referenceMapActions.reduxActions,
+		...referenceActions.reduxActions
 	}, initialState)
 );
 
@@ -169,5 +193,9 @@ export const actions = {
 
 	assignments: (courseId: ID): FetchableAction => assignmentMapActions.actions(courseId),
 
-	assignment: (courseId: ID, id: ID): FetchableAction => assignmentActions.actions({ courseId, id })
+	assignment: (courseId: ID, id: ID): FetchableAction => assignmentActions.actions({ courseId, id }),
+
+	references: (courseId: ID): FetchableAction => referenceMapActions.actions(courseId),
+
+	reference: (courseId: ID, id: ID): FetchableAction => referenceActions.actions({ courseId, id })
 };

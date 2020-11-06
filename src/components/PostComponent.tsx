@@ -10,6 +10,7 @@ import { Assignment } from 'service/door/interfaces/assignment';
 import { Notice } from 'service/door/interfaces/notice';
 import { Lecture } from 'service/door/interfaces/lecture';
 import { downloader } from 'service/downloader';
+import { Reference } from 'service/door/interfaces/reference';
 
 const useStyles = makeStyles(theme => createStyles({
 	post: {
@@ -153,6 +154,14 @@ export const NoticeComponent: React.FC<Omit<PostComponentProps, 'post'> & { noti
 
 	return (
 		<PostComponent {...postProps} post={notice} action={actions.notice(notice.courseId, notice.id)} />
+	);
+}
+
+export const ReferenceComponent: React.FC<Omit<PostComponentProps, 'post'> & { reference: Reference }> = props => {
+	const { reference, ...postProps } = props;
+
+	return (
+		<PostComponent {...postProps} post={reference} action={actions.reference(reference.courseId, reference.id)} />
 	);
 }
 

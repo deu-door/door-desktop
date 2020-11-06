@@ -1,6 +1,6 @@
 import { Container, createStyles, CssBaseline, makeStyles, Typography } from '@material-ui/core';
 import { Timeline, TimelineConnector, TimelineContent, TimelineDot, TimelineItem, TimelineOppositeContent, TimelineSeparator } from '@material-ui/lab';
-import { AssignmentComponent, NoticeComponent, PostComponent } from 'components/PostComponent';
+import { AssignmentComponent, LectureComponent, NoticeComponent, PostComponent, ReferenceComponent } from 'components/PostComponent';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Post, sortPostByCreatedAtComparator } from 'service/door/interfaces';
@@ -10,6 +10,8 @@ import { CourseState } from 'store/modules/courses';
 import moment from 'moment';
 import { DateTime } from 'components/DateTime';
 import { Notice } from 'service/door/interfaces/notice';
+import { Reference } from 'service/door/interfaces/reference';
+import { Lecture } from 'service/door/interfaces/lecture';
 
 const useStyles = makeStyles(theme => createStyles({
 	paper: {
@@ -23,7 +25,7 @@ const useStyles = makeStyles(theme => createStyles({
 	}
 }));
 
-type PostType = 'notice' | 'lecture' | 'assignment';
+type PostType = 'notice' | 'lecture' | 'assignment' | 'reference';
 
 export const TimelinePage: React.FC = () => {
 	const classes = useStyles();
@@ -39,6 +41,7 @@ export const TimelinePage: React.FC = () => {
 		pushToPost('notice', course.notices.items);
 		Object.values(course.lectures.items).forEach(lecturesByWeek => pushToPost('lecture', lecturesByWeek.items));
 		pushToPost('assignment', course.assignments.items);
+		pushToPost('reference', course.references.items);
 	});
 
 	// Sort descend order
@@ -59,9 +62,11 @@ export const TimelinePage: React.FC = () => {
 			case 'notice':
 				return (<NoticeComponent defaultCollapsed key={post.id} notice={post as Notice} />);
 			case 'lecture':
-				return (<PostComponent defaultCollapsed key={post.id} post={post} />);
+				return (<LectureComponent defaultCollapsed key={post.id} lecture={post as Lecture} />);
 			case 'assignment':
-				return (<AssignmentComponent defaultCollapsed key={post.id} assignment={post as Assignment} />)
+				return (<AssignmentComponent defaultCollapsed key={post.id} assignment={post as Assignment} />);
+			case 'reference':
+				return (<ReferenceComponent defaultCollapsed key={post.id} reference={post as Reference} />);
 		}
 	};
 

@@ -1,13 +1,10 @@
-import { AppBar, CardMedia, Collapse, Container, createStyles, CssBaseline, IconButton, List, ListItem, ListItemText, makeStyles, Step, StepButton, StepContent, Stepper, Tab, Tabs, Typography } from '@material-ui/core';
+import { AppBar, Collapse, Container, createStyles, CssBaseline, IconButton, List, ListItem, ListItemText, makeStyles, Step, StepButton, StepContent, Stepper, Tab, Tabs, Typography } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { FetchableList } from 'components/FetchableList';
 import { FetchButton } from 'components/FetchButton';
-import { AssignmentComponent, LectureComponent, NoticeComponent, PostComponent } from 'components/PostComponent';
+import { AssignmentComponent, LectureComponent, NoticeComponent, ReferenceComponent } from 'components/PostComponent';
 import React, { useState } from 'react';
-import { Assignment } from 'service/door/interfaces/assignment';
 import { Course } from 'service/door/interfaces/course';
-import { Lecture } from 'service/door/interfaces/lecture';
-import { Notice } from 'service/door/interfaces/notice';
 import { actions } from 'store/modules';
 
 const useStyles = makeStyles(theme => createStyles({
@@ -131,7 +128,8 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 	const tabs = [
 		{ key: 'notices', label: '공지사항' },
 		{ key: 'lectures', label: '온라인강의' },
-		{ key: 'assignments', label: '과제' }
+		{ key: 'assignments', label: '과제' },
+		{ key: 'references', label: '강의자료' }
 	];
 
 	return (
@@ -166,6 +164,14 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 					<FetchableList fetchableMap={course.assignments} action={actions.assignments(course.id)}>
 						{Object.values(course.assignments.items).map(assignment => (
 							<AssignmentComponent key={assignment.id} assignment={assignment} />
+						))}
+					</FetchableList>
+				</TabPanel>
+
+				<TabPanel value={tab} index="references">
+					<FetchableList fetchableMap={course.references} action={actions.references(course.id)}>
+						{Object.values(course.references.items).map(reference => (
+							<ReferenceComponent key={reference.id} reference={reference} />
 						))}
 					</FetchableList>
 				</TabPanel>

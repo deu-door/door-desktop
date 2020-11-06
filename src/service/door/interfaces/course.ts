@@ -2,6 +2,7 @@ import { Fetchable, FetchableMap, Identifiable } from ".";
 import { Assignment } from "./assignment";
 import { LecturesByWeek } from "./lecture";
 import { Notice } from "./notice";
+import { Reference } from "./reference";
 
 /**
  * @description 강의에 대한 정보를 얻을 수 있습니다.
@@ -42,17 +43,21 @@ export interface Course extends Identifiable, Fetchable {
 	// 아래부터는 자식 객체 관련 내용
 
 	/**
-	 * @description 강의 영상 목록. 주차 별 구분 없이 배열로 저장
-	 */
-	lectures: FetchableMap<LecturesByWeek>,
-	/**
 	 * @description 공지사항 목록
 	 */
 	notices: FetchableMap<Notice>,
 	/**
+	 * @description 강의 영상 목록. 주차 별 구분 없이 배열로 저장
+	 */
+	lectures: FetchableMap<LecturesByWeek>,
+	/**
 	 * @description 과제 목록
 	 */
 	assignments: FetchableMap<Assignment>,
+	/**
+	 * @description 강의자료 목록
+	 */
+	references: FetchableMap<Reference>,
 
 	// 아래부터는 수업계획서 내용임 (추가적인 fetch 필요)
 
@@ -206,5 +211,6 @@ export interface CourseSchedule {
 export const initializeCourse = () => ({
 	notices: { items: {}, fulfilled: false },
 	lectures: { items: {}, fulfilled: false },
-	assignments: { items: {}, fulfilled: false }
+	assignments: { items: {}, fulfilled: false },
+	references: { items: {}, fulfilled: false }
 });

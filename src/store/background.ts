@@ -33,6 +33,11 @@ const courseRefreshGenerator = function *() {
 			title: `${course.name}`,
 			subtitle: '과제목록을 가져오는 중입니다',
 			action: actions.assignments(course.id)
+		},
+		{
+			title: `${course.name}`,
+			subtitle: '강의자료를 가져오는 중입니다',
+			action: actions.references(course.id)
 		}
 	]).flat();
 
