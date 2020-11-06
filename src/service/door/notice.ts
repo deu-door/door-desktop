@@ -42,7 +42,7 @@ export async function getNotice(courseId: ID, id: ID): Promise<Notice> {
 }
 
 export async function getNotices(courseId: ID): Promise<FetchableMap<Notice>> {
-	const document = cheerio.load((await doorAxios.get(`/BBS/Board/List/CourseNotice?cNo=${courseId}`)).data);
+	const document = cheerio.load((await doorAxios.get(`/BBS/Board/List/CourseNotice?cNo=${courseId}&pageRowSize=200`)).data);
 
 	const table = document(`#sub_content2 > div.form_table > table`).toArray().pop();
 
