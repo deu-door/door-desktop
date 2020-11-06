@@ -42,14 +42,14 @@ export const DateTime: React.FC<DateTimeProps> = props => {
 	const [text, setText] = useState('');
 
 	useEffect(() => {
+		setText(getRelativeTime());
+
 		const timer = setInterval(() => {
 			setText(getRelativeTime());
 		}, 1000);
 
 		return () => clearInterval(timer);
-	});
-
-	useEffect(() => setText(getRelativeTime()), [date]);
+	}, [date]);
 
 	return (
 		<span>{text}</span>

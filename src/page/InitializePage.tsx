@@ -1,87 +1,103 @@
-import {  Container, CssBaseline, LinearProgress, makeStyles, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RouteComponentProps } from 'react-router';
-import { RootState } from 'store';
+import { useHistory } from 'react-router';
+import { getSecurelyStoredPassword } from 'service/door/user';
+import { RootState } from 'store/modules';
+import { UserState } from 'store/modules/user';
+import { ReactComponent as Logo } from 'resources/logo-original-white.svg';
+import { Container, createStyles, Grid, LinearProgress, makeStyles, Typography } from '@material-ui/core';
 import { actions } from 'store/modules';
-import { CourseState } from 'store/modules/courses';
+import { CourseFetchIterator } from 'store/background';
 
-const useStyles = makeStyles(theme => ({
-	paper: {
-		width: '100%',
-		display: 'flex',
-		flexDirection: 'column',
-		placeItems: 'center',
-		placeContent: 'center'
+const useStyles = makeStyles(theme => createStyles({
+	main: {
+		flex: 1,
+		backgroundColor: theme.palette.primary.main
 	},
-	fetchingCourse: {
-		
+	title: {
+		color: theme.palette.primary.contrastText,
+		marginTop: theme.spacing(3)
 	},
-	fetching: {
+	subtitle: {
+		color: theme.palette.primary.contrastText,
 		marginTop: theme.spacing(2)
 	},
 	progress: {
+		color: theme.palette.primary.contrastText,
 		width: '100%',
 		marginTop: theme.spacing(3)
 	}
 }));
 
-export const InitializePage: React.FC<RouteComponentProps> = props => {
-	const { history } = props;
+export const InitializePage: React.FC = () => {
 	const classes = useStyles();
-
-	const courses = useSelector<RootState, CourseState>(state => state.courses);
-	const [ fetchingCourse, setFetchingCourse ] = useState('');
-	const [ fetching, setFetching ] = useState('');
+	const user = useSelector<RootState, UserState>(state => state.user);
+	const [title, setTitle] = useState('');
+	const [subtitle, setSubtitle] = useState('');
 	const dispatch = useDispatch();
+	const history = useHistory();
 
 	useEffect(() => {
+		const authorize = async () => {
+			if(!user.profile) return history.push('/login');
+
+			const secure = await getSecurelyStoredPassword(user.profile.id);
+
+			// secure was not found
+			if(!secure) return history.push('/login');
+
+			setTitle('Door Desktop');
+			setSubtitle('자동 로그인 중...');
+			await dispatch(actions.login(user.profile.id, secure).fetch());
+		}
+
+		if(user.error) {
+			dispatch(actions.login('', '').clear());
+
+			history.push('/login');
+			return;
+		}
+		
+		if(!user.authenticated) {
+			authorize();
+			return;
+		}
+
+		console.log(`Successfully logined with ${user.profile?.id}`);
+		
+		// 로그인 후 최소한의 데이터가 갖추어져있는지 확인.
+		// 데이터가 없다면 fetch
 		const fetch = async () => {
-			if(!courses.fulfilled) {
-				setFetching('강의 목록을 가져오는 중입니다');
-				await dispatch(actions.courses().fetch());
-			}
-		};
+			const iterator = new CourseFetchIterator();
+
+			let next;
+			do {
+				next = iterator.next();
+
+				if(next.value) {
+					setTitle(next.value.title);
+					setSubtitle(next.value.subtitle || '');
+					await dispatch(next.value.action.fetchIfNotFulfilled());
+				}
+			} while(!next.done)
+
+			history.push('/main');
+		}
 
 		fetch();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
-		const fetch = async () => {
-			for(const course of Object.values(courses.items)) {
-				setFetchingCourse(course.name);
-				if(!course.fulfilled) {
-					setFetching('강의 정보를 가져오는 중입니다');
-					await dispatch(actions.course(course.id).fetch());
-				}
-				if(!course.notices?.fulfilled){
-					setFetching('공지사항을 가져오는 중입니다');
-					await dispatch(actions.notices(course.id).fetch());
-				}
-				if(!course.lectures?.fulfilled){
-					setFetching('강의 목록을 가져오는 중입니다');
-					await dispatch(actions.lectures(course.id).fetch());
-				}
-				if(!course.assignments?.fulfilled){
-					setFetching('과제 목록을 가져오는 중입니다');
-					await dispatch(actions.assignments(course.id).fetch());
-				}
-			}
-
-			history.push('/main/dashboard');
-		};
-
-		courses.fulfilled && fetch();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [courses.fulfilled]);
+	}, [user.error, user.authenticated]);
 
 	return (
-		<Container maxWidth="xs" className={classes.paper}>
-			<CssBaseline />
-			<Typography variant="h4" className={classes.fetchingCourse}>{fetchingCourse}</Typography>
-			<Typography variant="h6" color="textSecondary" className={classes.fetching}>{fetching}</Typography>
-			<LinearProgress className={classes.progress} />
-		</Container>
+		<Grid container alignItems="center" justify="center" className={classes.main}>
+			<Container maxWidth="xs">
+				<Grid item container direction="column" alignItems="center">
+					<Logo />
+					<Typography variant="h4" className={classes.title}>{title}</Typography>
+					<Typography variant="h6" className={classes.subtitle}>{subtitle}</Typography>
+					<LinearProgress className={classes.progress} />
+				</Grid>
+			</Container>
+		</Grid>
 	);
-};
+}

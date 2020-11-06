@@ -1,7 +1,7 @@
 import cheerio from 'cheerio';
-import { doorAxios, parseTableElement } from '.';
+import { doorAxios, parseInfomaticTableElement, parseTableElement } from '.';
 import { FetchableMap, fulfilledFetchable, ID, notFulfilledFetchable } from './interfaces';
-import { Course } from './interfaces/course';
+import { Course, CourseSchedule } from './interfaces/course';
 
 export async function getCourses(): Promise<FetchableMap<Course>>{
 	const document = cheerio.load((await doorAxios.get('/MyPage')).data);
@@ -52,58 +52,63 @@ export async function getCourseDetail(id: ID): Promise<Course> {
 	const document = cheerio.load((await doorAxios.get(`/LMS/LectureRoom/CourseLetureDetail/${id}`)).data);
 
 	// 수업계획 (수업계획서)
-	const detail = document(`#wrap > div.subpageCon > div:nth-child(5) > div:nth-child(3) > table`);
+	const descriptionTable = document(`#wrap > div.subpageCon > div:nth-child(5) > div:nth-child(3) > table`).toArray().pop();
 
 	// 수업평가방법 (수업계획서)
-	const rates = document(`#wrap > div.subpageCon > div:nth-child(5) > div:nth-child(5) > table:nth-child(1)`);
+	const ratesTable = document(`#wrap > div.subpageCon > div:nth-child(5) > div:nth-child(5) > table:nth-child(1)`).toArray().pop();
 
 	// 주차별 강의계획
-	const schedule = document(`#wrap > div.subpageCon > div:nth-child(5) > div.form_table > table`).toArray().pop();
+	const scheduleTable = document(`#wrap > div.subpageCon > div:nth-child(5) > div.form_table > table`).toArray().pop();
 
-	if(!detail || !rates || !schedule) throw new Error('강의 정보를 불러올 수 없습니다. 로그인 상태를 확인해주세요.');
+	if(!descriptionTable || !ratesTable || !scheduleTable) throw new Error('강의 정보를 불러올 수 없습니다. 로그인 상태를 확인해주세요.');
 
-	const course = { id } as Course;
+	const description = parseInfomaticTableElement(descriptionTable);
 
-	// 학점/시간
-	const creditsAndHours = detail.find(`tbody > tr:nth-child(2) > td:nth-child(2)`).text().match(/([\d.]+) ?\/ ?(\d+)/);
-	const credits = Number(creditsAndHours?.[1]);
-	const hours = Number(creditsAndHours?.[2]);
-	if(!isNaN(credits)) course.credits = credits;
-	if(!isNaN(hours)) course.hours = hours;
+	const rates = parseTableElement(ratesTable).find(row => row['평가항목'].text === '비율');
 
-	// 연락처 및 이메일
-	const contactAndEmail = detail.find(`tbody > tr:nth-child(4) > td:nth-child(4)`).text().match(/(w+) ?\/ ?(\w+)/);
-	const contact = contactAndEmail?.[1];
-	const email = contactAndEmail?.[2];
-	if(contact) course.contact = contact;
-	if(email) course.email = email;
-
-	// 교과목개요
-	const description = detail.find(`tbody > tr:nth-child(5) > td`).text();
-	if(description) course.description = description;
-
-	// 교과 교육목표
-	const goal = detail.find(`tbody > tr:nth-child(6) > td`).text();
-	if(goal) course.goal = goal;
-
-	// 주교재
-	const book = detail.find(`tbody > tr:nth-child(8) > td`).text();
-	if(book) course.book = book;
-
-	// 주차별 강의계획
-	course.schedule = Object.fromEntries(parseTableElement(schedule).map(row => [
-		row['주차'],
-		{
-			id: row['주차'].text,
-			from: new Date(row['출석기간'].text.split('~')[0]),
-			to: new Date(row['출석기간'].text.split('~')[1]),
-			contents: row['강의내용'].text,
-			remark: row['과제/비고'].text
-		}
-	]));
+	const schedule = parseTableElement(scheduleTable);
 
 	return {
-		...course,
+		id: id,
+
+		name: description['교과목명'].text,
+		// NOTE: Door 메인에서 이수구분과 수업계획서의 이수구분이 다를 수 있음
+		// type: description['이수구분'].text,
+		major: description['주관학과'].text,
+		target: description['대상학년'].text,
+		professor: description['담당교원'].text,
+		contact: description['연락처/이메일'].text.split('/')[0].trim(),
+		email: description['연락처/이메일'].text.split('/')[1].trim(),
+		description: description['교과목개요'].text,
+		goal: description['교과 교육목표'].text,
+		book: description['주교재'].text,
+
+		rates: rates ? {
+			midterm: Number(rates['중간고사'].text),
+			finalterm: Number(rates['기말고사'].text),
+			quiz: Number(rates['퀴즈'].text),
+			assignment: Number(rates['과제'].text),
+			teamProject: Number(rates['팀PJ'].text),
+			attendance: Number(rates['출석'].text),
+			etc1: Number(rates['기타1'].text),
+			etc2: Number(rates['기타2'].text),
+			etc3: Number(rates['기타3'].text),
+			presentation: Number(rates['발표'].text),
+			participation: Number(rates['참여도'].text)
+		} : undefined,
+
+		schedule: schedule ? Object.fromEntries(schedule.map(row => {
+			const schedule: CourseSchedule = {
+				week: row['주차'].text,
+				from: new Date(row['출석기간'].text.split('~')[0].trim()),
+				to: new Date(row['출석기간'].text.split('~')[1].trim()),
+				contents: row['강의내용'].text,
+				remark: row['과제/비고'].text
+			};
+
+			return [schedule.week, schedule];
+		})) : undefined,
+
 		...fulfilledFetchable()
-	};
+	} as Course;
 }

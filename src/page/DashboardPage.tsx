@@ -1,7 +1,7 @@
 import { Typography, CssBaseline, Card, createStyles, makeStyles, CardContent } from '@material-ui/core';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from 'store';
+import { RootState } from 'store/modules';
 import { CourseState } from 'store/modules/courses';
 import { UserState } from 'store/modules/user';
 
@@ -36,18 +36,10 @@ export const DashboardPage: React.FC = props => {
 		courses: state.courses
 	}));
 
-	const [ unreadNotices, unreadAssignments ] = [
-		Object.values(courses.items).reduce((acc, course) => acc + Object.values(course.notices.items).filter(notice => !notice.read).length, 0),
-		Object.values(courses.items).reduce((acc, course) => acc + Object.values(course.assignments.items).filter(assignment => !assignment.read).length, 0)
-	];
-
 	return (
 		<div>
 			<CssBaseline />
 			<Typography component="h1" variant="h3">Hello User {user.profile?.name}</Typography>
-
-			<NumberCard title="공지사항" number={unreadNotices} />
-			<NumberCard title="과제" number={unreadAssignments} />
 		</div>
 	);
 };

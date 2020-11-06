@@ -6,12 +6,12 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
-import { RootState } from 'store';
 import { useSelector } from 'react-redux';
 import { Course } from 'service/door/interfaces/course';
 import { CourseState } from 'store/modules/courses';
 import { useHistory } from 'react-router';
 import { Drawer, ListSubheader } from '@material-ui/core';
+import { RootState } from 'store/modules';
 
 const drawerWidth = 240;
 
@@ -77,15 +77,12 @@ export const Navigator: React.FC = props => {
   return (
     <Drawer variant="permanent" ModalProps={{ keepMounted: true }} className={classes.drawer} classes={{ paper: classes.drawer }}>
       <List>
-        <ListItem>
-          Door Desktop
-        </ListItem>
-        <ListItem>
+        <ListItem button onClick={() => history.push('/main')}>
           <ListItemIcon>
             <HomeIcon />
           </ListItemIcon>
           <ListItemText>
-            Project Overview
+            Door Desktop
           </ListItemText>
         </ListItem>
       </List>

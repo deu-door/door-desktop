@@ -3,7 +3,7 @@ import Alert from '@material-ui/lab/Alert';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-import { RootState } from 'store';
+import { RootState } from 'store/modules';
 import { actions } from 'store/modules';
 import { UserState } from 'store/modules/user';
 
@@ -33,24 +33,17 @@ export const LoginPage: React.FC = props => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [saveCredential, setSaveCredential] = useState(true);
-	const [validate, setValidate] = useState(false);
 
 	const handleSubmit = async (e: React.FormEvent<EventTarget>) => {
 		e.preventDefault();
 
 		await dispatch(actions.login(username, password, { saveCredential }).fetch());
-
-		setValidate(true);
 	};
 
 	useEffect(() => {
-		if(validate){
-			if(user.profile) history.push('/init');
-
-			setValidate(false);
-		}
+		if(user.authenticated) history.push('/init');
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [validate]);
+	}, [user.authenticated]);
 
 	return (
 		<Container component="main" maxWidth="xs">
@@ -64,10 +57,7 @@ export const LoginPage: React.FC = props => {
 					className={classes.form}
 					onSubmit={handleSubmit}
 				>
-					{/* Redirect to /init if login succeed */}
-					{/*  user.profile ? <Redirect to="/init" /> : null */}
-					{/* Show error message when login failed */}
-					{ user.error ? <Alert variant="filled" severity="error">{user.error}</Alert> : null }
+					{user.error && <Alert variant="filled" severity="error">{user.error}</Alert>}
 
 					<TextField
 						variant="outlined"
@@ -100,6 +90,7 @@ export const LoginPage: React.FC = props => {
 								color="primary"
 								checked={saveCredential}
 								onChange={e => setSaveCredential(e.target.checked)}
+								disabled={user.pending}
 							/>
 						}
 						label="자동 로그인"

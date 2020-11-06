@@ -1,7 +1,8 @@
-import { app, BrowserWindow, session } from 'electron';
+import { app, BrowserWindow, ipcMain, session } from 'electron';
 import * as isDev from 'electron-is-dev';
 import * as path from 'path';
 import installExtension, { REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } from 'electron-devtools-installer';
+import unusedFilename from 'unused-filename';
 
 // Garbage Collection이 일어나지 않도록 함수 밖에 선언함.
 let mainWindow: BrowserWindow;
@@ -38,13 +39,30 @@ function configureSession(){
 			details.responseHeaders['set-cookie'] = cookies;
 		}
 
+		// X-Frame-Options 비활성화. Door 컨텐츠를 iframe으로 띄우기 위함임
+		const headers = details.responseHeaders;
+		details.responseHeaders = {};
+		Object.keys(headers).forEach(header => {
+			if(header.toLowerCase() === 'x-frame-options') return;
+
+			details.responseHeaders[header] = headers[header];
+		});
+
 		callback({ cancel: false, responseHeaders: details.responseHeaders });
 	});
 }
 
+function configureDownload(){
+	session.defaultSession.on('will-download', (event, item, webContents) => {
+		const filepath = unusedFilename.sync(path.join(app.getPath('downloads'), item.getFilename()));
+
+		item.setSavePath(filepath);
+	});
+}
 
 async function createWindow() {
 	configureSession();
+	configureDownload();
 
 	mainWindow = new BrowserWindow({
 		center: true,

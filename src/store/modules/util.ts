@@ -4,6 +4,8 @@ import { Action } from "redux-actions";
 import { Fetchable, FetchableMap } from "service/door/interfaces";
 import moment from 'moment';
 import { RootStateOrAny } from "react-redux";
+import { FetchableAction } from ".";
+import { createTransform } from "redux-persist";
 
 export interface AsyncState extends Fetchable {
 	pending?: boolean,
@@ -16,13 +18,18 @@ export interface AsyncState extends Fetchable {
 
 type PendingPayload<Params> = { params: Params };
 type FailurePayload<Params> = { params: Params, error: Error & string };
-type TimeoutPayload<Params> = { params: Params };
+type ClearPayload<Params> = { params: Params };
 type SuccessPayload<Params, Result> = { params: Params, result: Result };
 
 type PayloadHandler<Params, Result> = {
 	pending?: (action: Action<PendingPayload<Params>>, draft: Result) => void,
 	failure?: (action: Action<FailurePayload<Params>>, draft: Result) => void,
-	success?: (action: Action<SuccessPayload<Params, Result>>, draft: Result) => void
+	success?: (action: Action<SuccessPayload<Params, Result>>, draft: Result) => void,
+	clear?: (action: Action<ClearPayload<Params>>, draft: Result) => void
+}
+
+type FetchableActionsOptions = {
+	validDuration?: moment.Duration|string|number
 }
 
 type FetchableActionsProps<State, Result, Params> = {
@@ -30,28 +37,30 @@ type FetchableActionsProps<State, Result, Params> = {
 	selector: (state: RootStateOrAny) => State,
 	path: (draft: State, params: Params) => Result,
 	fetch: (params: Params) => Promise<Result>,
-	handler?: PayloadHandler<Params, Result>
+	handler?: PayloadHandler<Params, Result>,
+	options?: FetchableActionsOptions
 };
 
 export function fetchableActions<State, Result extends Fetchable, Params>(props: FetchableActionsProps<State, Result, Params>){
-	const { name, selector, path, fetch, handler } = props;
+	const { name, selector, path, fetch, handler, options } = props;
 
-	const [ PENDING, FAILURE, TIMEOUT, SUCCESS ] = ['PENDING', 'FAILURE', 'TIMEOUT', 'SUCCESS'].map(state => name.toUpperCase() + '_' + state);
+	const [ PENDING, FAILURE, CLEAR, SUCCESS ] = ['PENDING', 'FAILURE', 'CLEAR', 'SUCCESS'].map(state => name.toUpperCase() + '_' + state);
 
 	const context = {
 		PENDING,
 		FAILURE,
-		TIMEOUT,
+		CLEAR,
 		SUCCESS,
 
 		pending: (params: Params) => ({ type: PENDING, payload: { params } }),
 		failure: (params: Params, error: Error & string) => ({ type: FAILURE, payload: { params, error } }),
-		timeout: (params: Params) => ({ type: TIMEOUT, payload: { params } }),
+		clear: (params: Params) => ({ type: CLEAR, payload: { params } }),
 		success: (params: Params, result: Result) => ({ type: SUCCESS, payload: { params, result } }),
 
 		path: path,
 		selector: selector,
-		handler: handler || {},
+		handler: handler,
+		options: options,
 
 		_fetch: fetch,
 
@@ -66,17 +75,36 @@ export function fetchableActions<State, Result extends Fetchable, Params>(props:
 			}
 		},
 
-		fetchIfExpired: (params: Params, validDuration: moment.Duration|string|number) => async (dispatch: Dispatch, getState: () => State) => {
-			if(moment(context.path(context.selector(getState()), params).fetchedAt || 0).add(moment.duration(validDuration)) > moment()) {
-				// valid. nothing to do.
-				return;
-			}
+		fetchIfExpired: (params: Params) => async (dispatch: Dispatch, getState: () => State) => {
+			// valid duration is not defined.
+			if(!context.options?.validDuration) return;
+			
+			const fetchedAt = moment(context.path(context.selector(getState()), params).fetchedAt || 0);
+			const validDuration = moment.duration(context.options.validDuration);
+
+			// Fetched data was expired, nothing to do.
+			if(fetchedAt.add(validDuration) > moment()) return;
 
 			// fetch
 			return context.fetch(params)(dispatch, getState);
 		},
 
-		actions: {
+		fetchIfNotFulfilled: (params: Params) => async (dispatch: Dispatch, getState: () => State) => {
+			// Already fulfilled, nothing to do.
+			if(context.path(context.selector(getState()), params).fulfilled) return;
+
+			// fetch
+			return context.fetch(params)(dispatch, getState);
+		},
+
+		actions: (params: Params): FetchableAction => ({
+			fetch: () => context.fetch(params),
+			fetchIfExpired: () => context.fetchIfExpired(params),
+			fetchIfNotFulfilled: () => context.fetchIfNotFulfilled(params),
+			clear: () => context.clear(params)
+		}),
+
+		reduxActions: {
 			[PENDING]: (state: State, action: Action<PendingPayload<Params>>) => produce(state, draft => {
 				const _draft = context.path(draft as State, action.payload.params);
 
@@ -89,12 +117,19 @@ export function fetchableActions<State, Result extends Fetchable, Params>(props:
 				_draft.pending = false;
 				_draft.error = action.payload.error.message || action.payload.error;
 
-				context.handler.failure?.(action, _draft as Result);
+				console.error('Error occured while process redux action.');
+				console.error('action: ' + FAILURE);
+				console.error('error: ', action.payload.error);
+
+				context.handler?.failure?.(action, _draft as Result);
 			}),
-			[TIMEOUT]: (state: State, action: Action<TimeoutPayload<Params>>) => produce(state, draft => {
+			[CLEAR]: (state: State, action: Action<ClearPayload<Params>>) => produce(state, draft => {
 				const _draft = context.path(draft as State, action.payload.params);
 
 				_draft.pending = false;
+				_draft.error = undefined;
+
+				context.handler?.clear?.(action, _draft as Result);
 			}),
 			[SUCCESS]: (state: State, action: Action<SuccessPayload<Params, Result>>) => produce(state, draft => {
 				const _draft = context.path(draft as State, action.payload.params);
@@ -104,7 +139,7 @@ export function fetchableActions<State, Result extends Fetchable, Params>(props:
 
 				Object.assign(_draft, action.payload.result);
 
-				context.handler.success?.(action, _draft as Result);
+				context.handler?.success?.(action, _draft as Result);
 			})
 		}
 	};
@@ -112,14 +147,7 @@ export function fetchableActions<State, Result extends Fetchable, Params>(props:
 	return context;
 }
 
-export function fetchableMapActions<State, Result extends Fetchable, Params>(props: FetchableActionsProps<State, FetchableMap<Result>, Params>)
-// (
-// 	name: string,
-// 	path: (draft: State, params: Params) => FetchableMap<Result>,
-// 	fetch: (params: Params) => Promise<FetchableMap<Result>>,
-// 	handler?: PayloadHandler<Params, FetchableMap<Result>>
-// )
-{
+export function fetchableMapActions<State, Result extends Fetchable, Params>(props: FetchableActionsProps<State, FetchableMap<Result>, Params>) {
 	const { name, selector, path, fetch, handler } = props;
 
 	const context = fetchableActions<State, FetchableMap<Result>, Params>({
@@ -131,7 +159,7 @@ export function fetchableMapActions<State, Result extends Fetchable, Params>(pro
 	});
 
 	// Override success action
-	context.actions[context.SUCCESS] = (state: State, action: Action<SuccessPayload<Params, FetchableMap<Result>>>) => produce(state, draft => {
+	context.reduxActions[context.SUCCESS] = (state: State, action: Action<SuccessPayload<Params, FetchableMap<Result>>>) => produce(state, draft => {
 		const _draft = context.path(draft as State, action.payload.params);
 
 		_draft.pending = false;
@@ -142,11 +170,36 @@ export function fetchableMapActions<State, Result extends Fetchable, Params>(pro
 		const previousItems = _draft.items;
 		_draft.items = {};
 		Object.entries(action.payload.result.items).forEach(([id, item]) => {
-			_draft.items[id] = Object.assign(previousItems[id] || {}, item);
+			// Only add new
+			if(previousItems[id]?.fulfilled) {
+				_draft.items[id] = previousItems[id];
+
+			// New item found
+			}else {
+				_draft.items[id] = Object.assign(previousItems[id] || {}, item);
+			}
+
+			// // fulfilled is once true, it never fall back to false
+			// _draft.items[id].fulfilled = previousItems[id]?.fulfilled || item.fulfilled;
 		});
 
-		context.handler.success?.(action, _draft);
+		context.handler?.success?.(action, _draft);
 	});
 
 	return context;
 }
+
+export const FetchableTransform = createTransform(
+	// transform state on its way to being serialized and persisted.
+	(inboundState, key) => {
+		if(key === 'pending') return false;
+
+		return inboundState;
+	},
+	// transform state being rehydrated
+	(outboundState, key) => {
+		if(key === 'pending') return false;
+		
+		return outboundState;
+	}
+);

@@ -1,11 +1,34 @@
-import { Achievable, Post } from ".";
+import { Achievable, Attachment, CourseSubordinated, FetchableMap, Identifiable, Post } from ".";
+
+export interface LecturesByWeek extends Identifiable, CourseSubordinated, FetchableMap<Lecture> {
+	/**
+	 * @description 주차
+	 * 
+	 * @example 3
+	 */
+	readonly id: string,
+	/**
+	 * @description 주차 주제
+	 * 
+	 * @example 8장 포인터
+	 */
+	description: string,
+	/**
+	 * @description 조회수
+	 */
+	views: number,
+	/**
+	 * @description 강의 수
+	 */
+	count: number
+}
 
 /**
  * @description 강의 동영상 또는 유튜브 정보를 담은 인터페이스
  * 
  * door.deu.ac.kr/Door/DoorView?DoorNo={id}&InningNo={}&CoursesNo={}
  */
-export interface Lecture extends Post, Achievable {
+export interface Lecture extends Post, Attachment, Achievable {
 	/**
 	 * @description Door ID
 	 * 
@@ -23,7 +46,7 @@ export interface Lecture extends Post, Achievable {
 	 * 
 	 * @example youtu.be/~~~
 	 */
-	url: string,
+	link: string,
 	/**
 	 * @description 강의 제목
 	 * 
@@ -35,7 +58,17 @@ export interface Lecture extends Post, Achievable {
 	 * 
 	 * @example 포인터 관련 내용에 대한 강의
 	 */
-	description: string,
+	contents: string,
+	/**
+	 * @description 강의 등록 날짜
+	 * 
+	 * @exampel 2020.10.24
+	 */
+	createdAt: Date,
+	/**
+	 * @description 조회수
+	 */
+	views: number,
 	/**
 	 * @description 강의 태그
 	 * 

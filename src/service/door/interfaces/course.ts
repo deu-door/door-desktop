@@ -1,6 +1,6 @@
 import { Fetchable, FetchableMap, Identifiable } from ".";
 import { Assignment } from "./assignment";
-import { Lecture } from "./lecture";
+import { LecturesByWeek } from "./lecture";
 import { Notice } from "./notice";
 
 /**
@@ -44,7 +44,7 @@ export interface Course extends Identifiable, Fetchable {
 	/**
 	 * @description 강의 영상 목록. 주차 별 구분 없이 배열로 저장
 	 */
-	lectures: FetchableMap<FetchableMap<Lecture> & Identifiable>,
+	lectures: FetchableMap<LecturesByWeek>,
 	/**
 	 * @description 공지사항 목록
 	 */
@@ -62,6 +62,12 @@ export interface Course extends Identifiable, Fetchable {
 	 * @example 컴퓨터공학과
 	 */
 	major?: string,
+	/**
+	 * @description 대상학년
+	 * 
+	 * @example 2학년
+	 */
+	target?: string,
 	/**
 	 * @description 학점
 	 * 
@@ -105,20 +111,100 @@ export interface Course extends Identifiable, Fetchable {
 	 */
 	book?: string
 	/**
+	 * @description 수업 평가 방법 (비율)
+	 */
+	rates?: {
+		/**
+		 * @description 중간고사
+		 */
+		midterm: number,
+		/**
+		 * @description 기말고사
+		 */
+		finalterm: number,
+		/**
+		 * @description 퀴즈
+		 */
+		quiz: number,
+		/**
+		 * @description 과제
+		 */
+		assignment: number,
+		/**
+		 * @description 팀PJ
+		 */
+		teamProject: number,
+		/**
+		 * @description 출석
+		 */
+		attendance: number,
+		/**
+		 * @description 기타1
+		 */
+		etc1: number,
+		/**
+		 * @description 기타2
+		 */
+		etc2: number,
+		/**
+		 * @description 기타3
+		 */
+		etc3: number,
+		/**
+		 * @description 발표
+		 */
+		presentation: number,
+		/**
+		 * @description 참여도
+		 */
+		participation: number
+	},
+	/**
 	 * @description 주차별 강의계획
 	 */
 	schedule?: {
 		/**
-		 * @description 주차 정보
+		 * @description 키: 주차 정보
 		 * 
 		 * @example 3 (3주차)
 		 */
-		[key: string]: {
-			id: string,
-			from: Date,
-			to: Date,
-			contents?: string,
-			remark?: string
-		}
+		[key: string]: CourseSchedule
 	}
 }
+
+export interface CourseSchedule {
+	/**
+	 * @description 주차
+	 * 
+	 * @example 3
+	 */
+	week: string,
+	/**
+	 * @description 주차에 해당되는 날짜 (부터~)
+	 * 
+	 * @example 2020-11-03
+	 */
+	from: Date,
+	/**
+	 * @description 주차에 해당되는 날짜 (~까지)
+	 */
+	to: Date,
+	/**
+	 * @description 강의내용
+	 * 
+	 * @example 9장 변수 유효범위와 함수 활용(1)
+	 */
+	contents?: string,
+	/**
+	 * @description 과제/비고
+	 * 
+	 * @example 프로그램 수시 평가 / 1차 과제 제출
+	 */
+	remark?: string
+}
+
+export const initializeCourse = () => ({
+	notices: { items: {}, fulfilled: false },
+	lectures: { items: {}, fulfilled: false },
+	assignments: { items: {}, fulfilled: false }
+});

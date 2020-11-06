@@ -1,8 +1,11 @@
 import { handleActions } from 'redux-actions';
+import { createTransform, persistReducer } from 'redux-persist';
 import door from 'service/door';
 import { User } from 'service/door/interfaces/user';
 import { LoginOptions } from 'service/door/user';
-import { AsyncState, fetchableActions } from './util';
+import { storage } from 'store/storage';
+import { FetchableAction } from '.';
+import { AsyncState, fetchableActions, FetchableTransform } from './util';
 
 export interface UserState extends User, AsyncState { }
 
@@ -28,17 +31,39 @@ const userActions = fetchableActions<UserState, User, { id: string, password: st
 		},
 		success: (action, draft) => {
 			draft.authenticated = true;
+		},
+		clear: (action, draft) => {
+			draft.authenticated = false;
 		}
 	}
 });
 
-export default handleActions<UserState, any>({
-	...userActions.actions
-}, initialState);
+const AuthenticatedTransform = createTransform(
+	(inboundState, key) => {
+		if(key === 'authenticated') return false;
+		if(key === 'error') return undefined;
+
+		return inboundState;
+	},
+	(outboundState, key) => {
+		if(key === 'authenticated') return false;
+		if(key === 'error') return undefined;
+		
+		return outboundState;
+	}
+)
+
+export default persistReducer(
+	{
+		key: 'user',
+		storage: storage,
+		transforms: [FetchableTransform, AuthenticatedTransform]
+	},
+	handleActions<UserState, any>({
+		...userActions.reduxActions
+	}, initialState)
+);
 
 export const actions = {
-	login: (id: string, password: string, options?: LoginOptions) => ({
-		fetch: () => userActions.fetch({ id, password, options }),
-		timeout: () => userActions.timeout({ id, password, options })
-	})
+	login: (id: string, password: string, options?: LoginOptions): FetchableAction => userActions.actions({ id, password, options })
 };

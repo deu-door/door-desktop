@@ -1,16 +1,18 @@
 import { handleActions } from 'redux-actions';
 import { FetchableMap, ID } from 'service/door/interfaces';
-import { Course } from 'service/door/interfaces/course';
+import { Course, initializeCourse } from 'service/door/interfaces/course';
 import { Lecture } from 'service/door/interfaces/lecture';
 import { Notice } from 'service/door/interfaces/notice';
-import { AsyncState, fetchableActions, fetchableMapActions } from './util';
+import { AsyncState, fetchableActions, fetchableMapActions, FetchableTransform } from './util';
 import { getCourseDetail, getCourses } from 'service/door/course';
 import { getNotice, getNotices } from 'service/door/notice';
 import { getLectures, getLecturesByWeek } from 'service/door/lecture';
 import { Assignment } from 'service/door/interfaces/assignment';
 import { getAssignment, getAssignments } from 'service/door/assignment';
-import { FetchableAction } from '.';
+import { storage } from 'store/storage';
 import moment from 'moment';
+import { persistReducer } from 'redux-persist';
+import { FetchableAction } from '.';
 
 export interface CourseState extends FetchableMap<Course>, AsyncState {
 	categories: string[],
@@ -33,6 +35,11 @@ const courseMapActions = fetchableMapActions<CourseState, Course, void>({
 	fetch: getCourses,
 	handler: {
 		success: (action, draft) => {
+			// Initialize Course
+			Object.values(draft.items).forEach(course => {
+				Object.assign(course, initializeCourse(), course);
+			});
+
 			// Make category by course.type
 			const categories = Array.from(new Set(Object.values(action.payload.result.items).map(course => course.type))).sort((a, b) => {
 				const [ a_, b_ ] = [a,b].map(word =>
@@ -53,121 +60,114 @@ const courseMapActions = fetchableMapActions<CourseState, Course, void>({
 			(draft as CourseState).categories = categories;
 			(draft as CourseState).itemsByCategory = itemsByCategory;
 		}
+	},
+	options: {
+		validDuration: moment.duration(60, 'minutes')
 	}
 });
-
-const returnOrSetDefault = <T, R>(path: T, defaul: R): typeof path => {
-	if(path) return path;
-	Object.assign(path, defaul);
-	return path;
-}
 
 const courseActions = fetchableActions<CourseState, Course, ID>({
 	name: 'COURSE',
 	selector: state => state.courses,
 	path: (draft, id) => draft.items[id],
-	fetch: id => getCourseDetail(id)
+	fetch: id => getCourseDetail(id),
+	options: {
+		validDuration: moment.duration(1, 'days')
+	}
 });
 
 const noticeMapActions = fetchableMapActions<CourseState, Notice, ID>({
 	name: 'NOTICE',
 	selector: state => state.courses,
-	path: (draft, courseId) => returnOrSetDefault(draft.items[courseId].notices, { items: {}, fulfilled: false }),
-	fetch: courseId => getNotices(courseId)
+	path: (draft, courseId) => draft.items[courseId].notices,
+	fetch: courseId => getNotices(courseId),
+	options: {
+		validDuration: moment.duration(30, 'minutes')
+	}
 });
 
 const noticeActions = fetchableActions<CourseState, Notice, { courseId: ID, id: ID }>({
 	name: 'NOTICE',
 	selector: state => state.courses,
 	path: (draft, { courseId, id }) => draft.items[courseId].notices.items[id],
-	fetch: ({ id }) => getNotice(id)
+	fetch: ({ courseId, id }) => getNotice(courseId, id),
+	options: {
+		validDuration: moment.duration(60, 'minutes')
+	}
 });
 
 const lectureMapActions = fetchableMapActions<CourseState, FetchableMap<Lecture>, ID>({
 	name: 'LECTURE',
 	selector: state => state.courses,
-	path: (draft, courseId) => returnOrSetDefault(draft.items[courseId].lectures, { items: {}, fulfilled: false }),
-	fetch: courseId => getLectures(courseId)
+	path: (draft, courseId) => draft.items[courseId].lectures,
+	fetch: courseId => getLectures(courseId),
+	options: {
+		validDuration: moment.duration(30, 'minutes')
+	}
 });
 
 const lectureActions = fetchableActions<CourseState, FetchableMap<Lecture>, { courseId: ID, id: ID }>({
 	name: 'LECTURE',
 	selector: state => state.courses,
 	path: (draft, { courseId, id }) => draft.items[courseId].lectures.items[id],
-	fetch: ({ courseId, id}) => getLecturesByWeek(courseId, id)
+	fetch: ({ courseId, id}) => getLecturesByWeek(courseId, id),
+	options: {
+		validDuration: moment.duration(60, 'minutes')
+	}
 });
 
 const assignmentMapActions = fetchableMapActions<CourseState, Assignment, ID>({
 	name: 'ASSIGNMENT',
 	selector: state => state.courses,
-	path: (draft, courseId) => returnOrSetDefault(draft.items[courseId].assignments, { items: {}, fulfilled: false }),
-	fetch: courseId => getAssignments(courseId)
+	path: (draft, courseId) => draft.items[courseId].assignments,
+	fetch: courseId => getAssignments(courseId),
+	options: {
+		validDuration: moment.duration(30, 'minutes')
+	}
 });
 
 const assignmentActions = fetchableActions<CourseState, Assignment, { courseId: ID, id: ID }>({
 	name: 'ASSIGNMENT',
 	selector: state => state.courses,
 	path: (draft, { courseId, id }) => draft.items[courseId].assignments.items[id],
-	fetch: ({ courseId, id }) => getAssignment(courseId, id)
+	fetch: ({ courseId, id }) => getAssignment(courseId, id),
+	options: {
+		validDuration: moment.duration(60, 'minutes')
+	}
 });
 
-export default handleActions<CourseState, any & never>({
-	...courseMapActions.actions,
-	...courseActions.actions,
-	...noticeMapActions.actions,
-	...noticeActions.actions,
-	...lectureMapActions.actions,
-	...lectureActions.actions,
-	...assignmentMapActions.actions,
-	...assignmentActions.actions
-}, initialState);
+export default persistReducer(
+	{
+		key: 'courses',
+		storage: storage,
+		transforms: [FetchableTransform]
+	},
+	handleActions<CourseState, any & never>({
+		...courseMapActions.reduxActions,
+		...courseActions.reduxActions,
+		...noticeMapActions.reduxActions,
+		...noticeActions.reduxActions,
+		...lectureMapActions.reduxActions,
+		...lectureActions.reduxActions,
+		...assignmentMapActions.reduxActions,
+		...assignmentActions.reduxActions
+	}, initialState)
+);
 
 export const actions = {
-	courses: (): FetchableAction => ({
-		fetch: () => courseMapActions.fetch(),
-		fetchIfExpired: () => courseMapActions.fetchIfExpired(undefined, moment.duration(60, 'minutes')),
-		timeout: () => courseMapActions.timeout()
-	}),
+	courses: (): FetchableAction => courseMapActions.actions(),
 
-	course: (id: ID): FetchableAction => ({
-		fetch: () => courseActions.fetch(id),
-		fetchIfExpired: () => courseActions.fetchIfExpired(id, moment.duration(1, 'days')),
-		timeout: () => courseActions.timeout(id)
-	}),
+	course: (id: ID): FetchableAction => courseActions.actions(id),
 
-	notices: (courseId: ID): FetchableAction => ({
-		fetch: () => noticeMapActions.fetch(courseId),
-		fetchIfExpired: () => noticeMapActions.fetchIfExpired(courseId, moment.duration(30, 'minutes')),
-		timeout: () => noticeMapActions.timeout(courseId),
-	}),
+	notices: (courseId: ID): FetchableAction => noticeMapActions.actions(courseId),
 
-	notice: (courseId: ID, id: ID): FetchableAction => ({
-		fetch: () => noticeActions.fetch({ courseId, id }),
-		fetchIfExpired: () => noticeActions.fetchIfExpired({ courseId, id }, moment.duration(1, 'hours')),
-		timeout: () => noticeActions.timeout({ courseId, id })
-	}),
+	notice: (courseId: ID, id: ID): FetchableAction => noticeActions.actions({ courseId, id }),
 
-	lectures: (courseId: ID): FetchableAction => ({
-		fetch: () => lectureMapActions.fetch(courseId),
-		fetchIfExpired: () => lectureMapActions.fetchIfExpired(courseId, moment.duration(30, 'minutes')),
-		timeout: () => lectureMapActions.timeout(courseId)
-	}),
+	lectures: (courseId: ID): FetchableAction => lectureMapActions.actions(courseId),
 
-	lectureByWeek: (courseId: ID, week: ID): FetchableAction => ({
-		fetch: () => lectureActions.fetch({ courseId, id: week }),
-		fetchIfExpired: () => lectureActions.fetchIfExpired({ courseId, id: week }, moment.duration(1, 'hours')),
-		timeout: () => lectureActions.timeout({ courseId, id: week })
-	}),
+	lectureByWeek: (courseId: ID, week: ID): FetchableAction => lectureActions.actions({ courseId, id: week }),
 
-	assignments: (courseId: ID): FetchableAction => ({
-		fetch: () => assignmentMapActions.fetch(courseId),
-		fetchIfExpired: () => assignmentMapActions.fetchIfExpired(courseId, moment.duration(30, 'minutes')),
-		timeout: () => assignmentMapActions.timeout(courseId)
-	}),
+	assignments: (courseId: ID): FetchableAction => assignmentMapActions.actions(courseId),
 
-	assignment: (courseId: ID, id: ID): FetchableAction => ({
-		fetch: () => assignmentActions.fetch({ courseId, id }),
-		fetchIfExpired: () => assignmentActions.fetchIfExpired({ courseId, id }, moment.duration(1, 'hours')),
-		timeout: () => assignmentActions.fetch({ courseId, id })
-	})
+	assignment: (courseId: ID, id: ID): FetchableAction => assignmentActions.actions({ courseId, id })
 };

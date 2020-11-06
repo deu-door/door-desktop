@@ -7,6 +7,7 @@ import axios from 'axios';
 import door from 'service/door';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from 'store';
+import { downloader } from 'service/downloader';
 
 axios.interceptors.request.use(request => {
   console.log('[Axios] Starting Request', request);
@@ -24,14 +25,17 @@ axios.interceptors.response.use(response => {
 // Debug current redux state (store.getState())
 (window as any).store = store;
 
+// Debug downloader
+(window as any).downloader = downloader;
+
 ReactDOM.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <App/>
       </PersistGate>
-    </Provider>
-  </React.StrictMode>,
+    </Provider>,
+  // </React.StrictMode>
   document.getElementById('root')
 );
 

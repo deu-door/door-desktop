@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
-import { service } from 'store/background';
+import { backgroundFetchIterator } from 'store/background';
 
 export const BackgroundService: React.FC = () => {
 	useEffect(() => {
-		service.start();
+		backgroundFetchIterator.start();
 
-		return () => service.stop();
-	});
+		return () => backgroundFetchIterator.stop();
+	}, []);
 
 	return (
 		<div></div>
