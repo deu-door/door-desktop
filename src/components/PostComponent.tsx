@@ -1,5 +1,5 @@
 import { Button, Card, CardActions, CardContent, CardHeader, CardMedia, createStyles, Divider, Grid, Link, Icon, makeStyles, Paper, PaperProps, TextField, Typography } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import React, { IframeHTMLAttributes, useEffect, useState } from 'react';
 import { Attachment, Post } from 'service/door/interfaces';
 import { FetchableAction } from 'store/modules';
 import { DateTime } from './DateTime';
@@ -14,6 +14,7 @@ import { Reference } from 'service/door/interfaces/reference';
 import VisibilitySensor from 'react-visibility-sensor';
 import { deepOrange, indigo, purple, teal } from '@material-ui/core/colors';
 import clsx from 'clsx';
+import ReactDOM from 'react-dom';
 
 const useStyles = makeStyles(theme => createStyles({
 	post: {
@@ -105,6 +106,26 @@ export const PostTag: React.FC<PaperProps & { name?: string, icon: React.ReactEl
 			</Grid>
 		}
 	</Paper>);
+}
+
+export const ResponsiveIFrame: React.FC<{ link: string }> = props => {
+	const { link } = props;
+
+	return (
+		<div style={{ width: '100%', height: '0', paddingBottom: '56.25%', position: 'relative' }}>
+			<div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 }}>
+				<iframe
+					title={link}
+					src={link}
+					width="100%"
+					height="100%"
+					type="text/html"
+					allowFullScreen
+					frameBorder="0"
+				/>
+			</div>
+		</div>
+	);
 }
 
 export type PostComponentProps = { post: Post, tag?: React.ReactElement, action?: FetchableAction, defaultCollapsed?: boolean };
@@ -243,14 +264,7 @@ export const LectureComponent: React.FC<Omit<PostComponentProps, 'post'> & { lec
 				<div>
 					{lecture.link && linkType === 'html' &&
 						<CardMedia>
-							<iframe
-								title={lecture.title}
-								src={lecture.link}
-								width="100%"
-								height="480"
-								allowFullScreen
-								frameBorder="0"
-							/>
+							<ResponsiveIFrame link={lecture.link} />
 						</CardMedia>}
 
 					<CardContent>
