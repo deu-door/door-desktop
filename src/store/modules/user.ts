@@ -1,3 +1,4 @@
+import { AnyAction } from 'redux';
 import { handleActions } from 'redux-actions';
 import { createTransform, persistReducer } from 'redux-persist';
 import door from 'service/door';
@@ -5,7 +6,7 @@ import { User } from 'service/door/interfaces/user';
 import { LoginOptions } from 'service/door/user';
 import { storage } from 'store/storage';
 import { FetchableAction } from '.';
-import { AsyncState, fetchableActions, FetchableTransform } from './util';
+import { AsyncState, fetchableActions, FetchableTransform, ResetOnVersionChange } from './util';
 
 export interface UserState extends User, AsyncState { }
 
@@ -57,7 +58,9 @@ export default persistReducer(
 	{
 		key: 'user',
 		storage: storage,
-		transforms: [FetchableTransform, AuthenticatedTransform]
+		transforms: [FetchableTransform, AuthenticatedTransform],
+		version: 1,
+		migrate: ResetOnVersionChange()
 	},
 	handleActions<UserState, any>({
 		...userActions.reduxActions

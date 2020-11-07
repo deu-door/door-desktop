@@ -5,7 +5,7 @@ import { Fetchable, FetchableMap } from "service/door/interfaces";
 import moment from 'moment';
 import { RootStateOrAny } from "react-redux";
 import { FetchableAction } from ".";
-import { createTransform } from "redux-persist";
+import { createMigrate, createTransform, PersistedState, PersistMigrate } from "redux-persist";
 
 export interface AsyncState extends Fetchable {
 	pending?: boolean,
@@ -207,3 +207,10 @@ export const FetchableTransform = createTransform(
 		return outboundState;
 	}
 );
+
+export const ResetOnVersionChange = (): PersistMigrate => {
+	return createMigrate({
+		// No migration yet. Data will be reseted when version change.
+		1: (state) => undefined
+	}, { debug: true });
+}

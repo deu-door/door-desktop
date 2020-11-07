@@ -3,7 +3,7 @@ import { FetchableMap, ID } from 'service/door/interfaces';
 import { Course, initializeCourse } from 'service/door/interfaces/course';
 import { Lecture } from 'service/door/interfaces/lecture';
 import { Notice } from 'service/door/interfaces/notice';
-import { AsyncState, fetchableActions, fetchableMapActions, FetchableTransform } from './util';
+import { AsyncState, fetchableActions, fetchableMapActions, FetchableTransform, ResetOnVersionChange } from './util';
 import { getCourseDetail, getCourses } from 'service/door/course';
 import { getNotice, getNotices } from 'service/door/notice';
 import { getLectures, getLecturesByWeek } from 'service/door/lecture';
@@ -15,6 +15,7 @@ import { persistReducer } from 'redux-persist';
 import { FetchableAction } from '.';
 import { Reference } from 'service/door/interfaces/reference';
 import { getReference, getReferences } from 'service/door/references';
+import { AnyAction } from 'redux';
 
 export interface CourseState extends FetchableMap<Course>, AsyncState {
 	categories: string[],
@@ -162,7 +163,9 @@ export default persistReducer(
 	{
 		key: 'courses',
 		storage: storage,
-		transforms: [FetchableTransform]
+		transforms: [FetchableTransform],
+		version: 1,
+		migrate: ResetOnVersionChange()
 	},
 	handleActions<CourseState, any>({
 		...courseMapActions.reduxActions,
