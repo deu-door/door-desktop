@@ -3,6 +3,7 @@ import { doorAxios, parseTableElement } from '.';
 import { FetchableMap, fulfilledFetchable, ID, notFulfilledFetchable } from './interfaces';
 import { Lecture, LecturesByWeek } from './interfaces/lecture';
 import { YouTubeURLParser } from '@iktakahiro/youtube-url-parser';
+import moment from 'moment';
 
 // Example data
 // viewDoor(cn, dn, dt, dst, dd, df, dw, dh, fid, inningno, astatus)
@@ -87,7 +88,6 @@ const parseViewDoorFunction = (func: string) => {
 export async function getLecturesByWeek(courseId: ID, week: string|number): Promise<FetchableMap<Lecture>> {
 	const document = cheerio.load((await doorAxios.get(`/LMS/LectureRoom/DoorWeekDoors/${courseId}?w=${week}`)).data);
 
-
 	const lectures: Lecture[] = document(`#subDoorListCon div.listItem`).toArray().map(lecture => {
 		const viewDoor = parseViewDoorFunction(document(`a[title=바로보기]`, lecture).attr('onclick') || '');
 		
@@ -120,34 +120,43 @@ export async function getLecturesByWeek(courseId: ID, week: string|number): Prom
 }
 
 export async function getLectures(courseId: ID): Promise<FetchableMap<LecturesByWeek>> {
-	const document = cheerio.load((await doorAxios.get(`/LMS/LectureRoom/DoorWeeks/${courseId}`)).data);
+	const lecturesDocument = cheerio.load((await doorAxios.get(`/LMS/LectureRoom/DoorWeeks/${courseId}`)).data);
 
-	const table = document(`#mainForm > div > table`).toArray().pop();
+	const detailDocument = cheerio.load((await doorAxios.get(`/LMS/LectureRoom/CourseLetureDetail/${courseId}`)).data);
 
-	if(!table) throw new Error('온라인 강의 목록을 불러올 수 없습니다. 로그인 상태를 확인해주세요.');
+	const lecturesTable = lecturesDocument(`#mainForm > div > table`).toArray().pop();
 
-	/**
-	 * 주차: "1",
-	 * 주제: "과목소개 및 강의 개요",
-	 * 수업기간: "09-01 ~ 09-07",
-	 * DOOR: 3,
-	 * 조회: 35,
-	 * 의견: 0
-	 */
-	const lecturesByWeekTable = parseTableElement(table);
+	const detailTable = detailDocument(`#wrap > div.subpageCon > div:nth-child(5) > div.form_table > table`).toArray().pop();
 
-	const weeks: LecturesByWeek[] = lecturesByWeekTable.map(row => ({
-		id: row['주차'].text,
-		courseId: courseId,
+	if(!lecturesTable || !detailTable) throw new Error('온라인 강의 목록을 불러올 수 없습니다. 로그인 상태를 확인해주세요.');
 
-		description: row['주제'].text,
-		views: Number(row['조회'].text),
-		count: Number(row['DOOR'].text),
+	const lecturesByWeek = parseTableElement(lecturesTable);
 
-		items: {},
+	const detail = Object.fromEntries(parseTableElement(detailTable).map(row => [row['주차'].text, row]));
 
-		...notFulfilledFetchable()
-	}));
+	const weeks: LecturesByWeek[] = lecturesByWeek.map(row => {
+		const week = row['주차'].text;
+
+		const from = moment(detail[week]['출석기간'].text.split('~')[0].trim()).startOf('days').toDate();
+		const to = moment(detail[week]['출석기간'].text.split('~')[1].trim()).endOf('days').toDate();
+
+		return {
+			id: week,
+			courseId: courseId,
+
+			description: row['주제'].text,
+			remark: detail[week]['과제/비고'].text,
+
+			views: Number(row['조회'].text),
+			count: Number(row['DOOR'].text),
+
+			period: { from, to },
+
+			items: {},
+
+			...notFulfilledFetchable()
+		}
+	});
 
 	return {
 		items: Object.fromEntries(weeks.map(week => [week.id, week])),

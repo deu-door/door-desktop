@@ -14,13 +14,26 @@ export interface LecturesByWeek extends Identifiable, CourseSubordinated, Fetcha
 	 */
 	description: string,
 	/**
+	 * @description 과제/비고
+	 * 
+	 * @example 정보공학관 수요일 816/817 실습 수업
+	 */
+	remark: string,
+	/**
 	 * @description 조회수
 	 */
 	views: number,
 	/**
 	 * @description 강의 수
 	 */
-	count: number
+	count: number,
+	/**
+	 * @description 주차에 해당되는 기간
+	 */
+	period: {
+		from: Date,
+		to: Date
+	}
 }
 
 /**

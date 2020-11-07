@@ -97,17 +97,17 @@ export async function getCourseDetail(id: ID): Promise<Course> {
 			participation: Number(rates['참여도'].text)
 		} : undefined,
 
-		schedule: schedule ? Object.fromEntries(schedule.map(row => {
-			const schedule: CourseSchedule = {
-				week: row['주차'].text,
-				from: new Date(row['출석기간'].text.split('~')[0].trim()),
-				to: new Date(row['출석기간'].text.split('~')[1].trim()),
-				contents: row['강의내용'].text,
-				remark: row['과제/비고'].text
-			};
+		// schedule: schedule ? Object.fromEntries(schedule.map(row => {
+		// 	const schedule: CourseSchedule = {
+		// 		week: row['주차'].text,
+		// 		from: new Date(row['출석기간'].text.split('~')[0].trim()),
+		// 		to: new Date(row['출석기간'].text.split('~')[1].trim()),
+		// 		contents: row['강의내용'].text,
+		// 		remark: row['과제/비고'].text
+		// 	};
 
-			return [schedule.week, schedule];
-		})) : undefined,
+		// 	return [schedule.week, schedule];
+		// })) : undefined,
 
 		...fulfilledFetchable()
 	} as Course;
