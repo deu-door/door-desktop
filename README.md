@@ -1,3 +1,4 @@
+<p align="center"><img src="https://github.com/deu-door/door-desktop/blob/master/public/logo192.png"></p>
 <h1 align="center">Door Desktop</h1>
 <p align="center">
 Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Dong-eui University</a></strong>
