@@ -162,12 +162,11 @@ export function fetchableMapActions<State, Result extends Fetchable, Params>(pro
 	context.reduxActions[context.SUCCESS] = (state: State, action: Action<SuccessPayload<Params, FetchableMap<Result>>>) => produce(state, draft => {
 		const _draft = context.path(draft as State, action.payload.params);
 
-		_draft.pending = false;
-		_draft.error = undefined;
-		_draft.fetchedAt = action.payload.result.fetchedAt;
-		_draft.fulfilled = action.payload.result.fulfilled;
-
 		const previousItems = _draft.items;
+
+		// Merge result properties
+		Object.assign(_draft, action.payload.result);
+
 		_draft.items = {};
 		Object.entries(action.payload.result.items).forEach(([id, item]) => {
 			// Only add new
@@ -182,6 +181,11 @@ export function fetchableMapActions<State, Result extends Fetchable, Params>(pro
 			// // fulfilled is once true, it never fall back to false
 			// _draft.items[id].fulfilled = previousItems[id]?.fulfilled || item.fulfilled;
 		});
+
+		_draft.pending = false;
+		_draft.error = undefined;
+		_draft.fetchedAt = action.payload.result.fetchedAt;
+		_draft.fulfilled = action.payload.result.fulfilled;
 
 		context.handler?.success?.(action, _draft);
 	});
