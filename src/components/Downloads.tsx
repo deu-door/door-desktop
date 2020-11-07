@@ -51,7 +51,7 @@ const bytesToSize = (bytes: number): string => {
 	if(bytes === 0) return '0Byte';
 
 	const i = Number(Math.floor(Math.log(bytes) / Math.log(1024)));
-	return Math.round(bytes / Math.pow(1024, i), 2) + sizes[i];
+	return (Math.round(bytes / Math.pow(1024, i) * 100) / 100) + sizes[i];
 }
 
 export const Download: React.FC<{ item: DownloadProgress }> = props => {
@@ -97,7 +97,7 @@ downloader.on('progress', item => listeners.progress?.(item));
 downloader.on('complete', item => listeners.complete?.(item));
 
 export const Downloads: React.FC = props => {
-	const [items, setItems] = useState<{ [key: string]: DownloadProgress }>([]);
+	const [items, setItems] = useState<{ [key: string]: DownloadProgress }>({});
 	const classes = useStyles();
 
 	useEffect(() => {
