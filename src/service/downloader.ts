@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import Electron from 'electron';
 import { doorAxios } from './door';
+import { useEffect, useRef } from 'react';
 
 const { session } = window.require('electron').remote;
 
@@ -12,15 +13,14 @@ export interface Progress {
 	totalBytes: number;
 }
 
+type DownloadEvent = 'start' | 'progress' | 'pause' | 'cancel' | 'failed' | 'complete';
+
 type Listener = (item: Electron.DownloadItem) => void;
 
 export const downloader = {
-	onStarted: (listener: Listener): EventEmitter => eventEmitter.addListener('start', listener),
-	onProgress: (listener: Listener): EventEmitter => eventEmitter.addListener('progress', listener),
-	onPause: (listener: Listener): EventEmitter => eventEmitter.addListener('pause', listener),
-	onCancel: (listener: Listener): EventEmitter => eventEmitter.addListener('cancel', listener),
-	onFailed: (listener: Listener): EventEmitter => eventEmitter.addListener('failed', listener),
-	onComplete: (listener: Listener): EventEmitter => eventEmitter.addListener('complete', listener),
+	on: (event: DownloadEvent, listener: Listener): EventEmitter => eventEmitter.addListener(event, listener),
+	emit: (event: DownloadEvent, item: Electron.DownloadItem): boolean => eventEmitter.emit(event, item),
+	remove: (event: DownloadEvent, listener: Listener): EventEmitter => eventEmitter.removeListener(event, listener),
 	
 	download: async (url: string): Promise<void> => {
 		if(url.startsWith('/')) url = 'http://door.deu.ac.kr' + url;
@@ -42,38 +42,37 @@ export const downloader = {
 	}
 };
 
-
-downloader.onStarted(item => console.log('Starting download ...', item));
-downloader.onProgress(item => console.log('Received bytes: ' + item.getReceivedBytes(), item));
-downloader.onPause(item => console.log('Download is paused.', item));
-downloader.onCancel(item => console.log('Download cancelled.', item));
-downloader.onFailed(item => console.log('Download failed.', item));
-downloader.onComplete(item => console.log('Download complete.', item));
+downloader.on('start', item => console.log('Starting download ...', item));
+downloader.on('progress', item => console.log('Received bytes: ' + item.getReceivedBytes(), item));
+downloader.on('pause', item => console.log('Download is paused.', item));
+downloader.on('cancel', item => console.log('Download cancelled.', item));
+downloader.on('failed', item => console.log('Download failed.', item));
+downloader.on('complete', item => console.log('Download complete.', item));
 
 session.defaultSession.on('will-download', (event, item) => {
-	eventEmitter.emit('start', item);
+	downloader.emit('start', item);
 
 	item.on('updated', (event, state) => {
 		if(state === 'interrupted') {
 			console.log('Download is interrupted but can be resumed.');
 
-			eventEmitter.emit('pause', item);
+			downloader.emit('pause', item);
 		}else if(state === 'progressing') {
 			if(item.isPaused()) {
-				eventEmitter.emit('pause', item);
+				downloader.emit('pause', item);
 			}else{
-				eventEmitter.emit('progress', item);
+				downloader.emit('progress', item);
 			}
 		}
 	});
 
 	item.once('done', (event, state) => {
 		if(state === 'completed') {
-			eventEmitter.emit('complete', item);
+			downloader.emit('complete', item);
 		}else if(state === 'cancelled') {
-			eventEmitter.emit('cancel', item);
+			downloader.emit('cancel', item);
 		}else {
-			eventEmitter.emit('failed', item);
+			downloader.emit('failed', item);
 		}
 	});
 });
