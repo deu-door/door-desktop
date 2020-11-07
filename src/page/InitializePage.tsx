@@ -88,9 +88,9 @@ export const InitializePage: React.FC = () => {
 					setSubtitle(next.value.subtitle || '');
 					await dispatch(next.value.action.fetchIfNotFulfilled());
 				}
-			} while(!next.done)
+			} while(!next.done);
 
-			history.push('/main');
+			history.push('/main/timeline');
 		}
 
 		fetch();
