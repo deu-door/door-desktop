@@ -16,8 +16,8 @@ const initialState: UserState = {
 	pending: false
 };
 
-const userActions = fetchableActions<UserState, User, { id: string, password: string, options?: LoginOptions }>({
-	name: 'USER',
+const loginActions = fetchableActions<UserState, User, { id: string, password: string, options?: LoginOptions }>({
+	name: 'USER_LOGIN',
 	selector: state => state.user,
 	path: draft => draft,
 	fetch: ({ id, password, options }) => door.login(id, password, options),
@@ -38,6 +38,26 @@ const userActions = fetchableActions<UserState, User, { id: string, password: st
 		}
 	}
 });
+
+const logoutActions = fetchableActions<UserState, User, void>({
+	name: 'USER_LOGOUT',
+	selector: state => state.user,
+	path: draft => draft,
+	fetch: () => door.logout(),
+	handler: {
+		pending: (action, draft) => {
+			draft.authenticated = false;
+			draft.profile = undefined;
+		},
+		failure: (action, draft) => {
+			draft.authenticated = false;
+			draft.profile = undefined;
+		},
+		success: (action, draft) => {
+			draft.authenticated = false;
+		}
+	}
+})
 
 const AuthenticatedTransform = createTransform(
 	(inboundState, key) => {
@@ -63,10 +83,13 @@ export default persistReducer(
 		migrate: ResetOnVersionChange()
 	},
 	handleActions<UserState, any>({
-		...userActions.reduxActions
+		...loginActions.reduxActions,
+		...logoutActions.reduxActions
 	}, initialState)
 );
 
 export const actions = {
-	login: (id: string, password: string, options?: LoginOptions): FetchableAction => userActions.actions({ id, password, options })
+	login: (id: string, password: string, options?: LoginOptions): FetchableAction => loginActions.actions({ id, password, options }),
+
+	logout: (): FetchableAction => logoutActions.actions()
 };

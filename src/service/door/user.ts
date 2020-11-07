@@ -112,7 +112,14 @@ export async function login(id: string, password: string, options?: LoginOptions
 	return user;
 }
 
-export async function logout(): Promise<void> {
+export async function logout(): Promise<User> {
+	const logoutUser: User = {
+		profile: undefined,
+		authenticated: false,
+
+		...fulfilledFetchable()
+	};
+
 	try{
 		// check user logined
 		const profile = await getProfile();
@@ -120,7 +127,7 @@ export async function logout(): Promise<void> {
 		secure.remove(profile.id);
 	}catch(e){
 		// Not logined, quit
-		return;
+		return logoutUser;
 	}
 
 	// GET http://door.deu.ac.kr/Account/LogOff
@@ -135,6 +142,8 @@ export async function logout(): Promise<void> {
 	await doorAxios.post('https://door.deu.ac.kr/sso/business.aspx', {
 		secureToken: '', secureSessionId: '', isToken: 'N', reTry: 'Y', method: 'checkToken', incorrectCount: 0
 	});
+
+	return logoutUser;
 }
 
 export async function getProfile(): Promise<Profile> {
