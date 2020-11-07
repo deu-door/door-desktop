@@ -1,4 +1,5 @@
 import cheerio from 'cheerio';
+import moment from 'moment';
 import { doorAxios, parseInfomaticTableElement, parseTableElement } from '.';
 import { Attachment, FetchableMap, fulfilledFetchable, ID, notFulfilledFetchable } from './interfaces';
 import { Assignment } from './interfaces/assignment';
@@ -47,6 +48,9 @@ export async function getAssignment(courseId: ID, id: ID): Promise<Assignment> {
 	const resultComment = result?.['코멘트'].text;
 	const resultScore = Number(result?.['점수']?.text?.match(/\d+/)?.[0]) || undefined;
 
+	const from = moment(description['제출기간'].text.split('~')[0].trim(), 'YY-MM-DD HH:mm').toDate();
+	const to = moment(description['제출기간'].text.split('~')[1].trim(), 'YY-MM-DD HH:mm').toDate();
+
 	return {
 		id: id,
 		courseId: courseId,
@@ -55,11 +59,8 @@ export async function getAssignment(courseId: ID, id: ID): Promise<Assignment> {
 		title: description['제목'].text,
 		contents: document(description['내용'].element).html() || undefined,
 
-		createdAt: new Date('20' + description['제출기간'].text.split('~')[0].trim()),
-		period: {
-			from: new Date('20' + description['제출기간'].text.split('~')[0].trim()),
-			to: new Date('20' + description['제출기간'].text.split('~')[1].trim())
-		},
+		createdAt: from,
+		period: { from, to },
 
 		attachments: attachments,
 
@@ -84,32 +85,25 @@ export async function getAssignments(courseId: ID): Promise<FetchableMap<Assignm
 
 	if(!table) throw new Error(`Cannot fetch Assignment List. Please check login status.`);
 
-	/**
-	 * 주차-차시: "1-1",
-	 * 과제유형: "개인과제",
-	 * 과제제목: "[1주차] 실습과제 제출",
-	 * 제출기간: "20-09-01 10:00~20-09-01 11:59",
-	 * 제출여부: "제출",
-	 * 점수: ""
-	 */	
-	const assignments = parseTableElement(table).map(assignment => ({
-		id: assignment['과제제목'].url?.match(/HomeworkNo=(\w+)/)?.[1],
-		courseId: courseId,
+	const assignments = parseTableElement(table).map(assignment => {
+		const from = moment(assignment['제출기간'].text.split('~')[0].trim(), 'YY-MM-DD HH:mm').toDate();
+		const to = moment(assignment['제출기간'].text.split('~')[1].trim(), 'YY-MM-DD HH:mm').toDate();
+		
+		return {
+			id: assignment['과제제목'].url?.match(/HomeworkNo=(\w+)/)?.[1],
+			courseId: courseId,
 
-		title: assignment['과제제목'].text,
-		type: assignment['과제유형'].text,
+			title: assignment['과제제목'].text,
+			type: assignment['과제유형'].text,
 
-		createdAt: new Date('20' + assignment['제출기간'].text.split('~')[0].trim()),
-		period: {
-			// TODO: Date Format이 변경되어도 유연한 처리가 될 수 있도록
-			// Boilerplate가 필요
-			from: new Date('20' + assignment['제출기간'].text.split('~')[0].trim()),
-			to: new Date('20' + assignment['제출기간'].text.split('~')[1].trim())
-		},
-		achieved: assignment['제출여부'].text === '제출',
+			createdAt: from,
+			period: { from, to },
 
-		...notFulfilledFetchable()
-	} as Assignment));
+			achieved: assignment['제출여부'].text === '제출',
+
+			...notFulfilledFetchable()
+		};
+	});
 
 	return {
 		// Ascending order to descending order
