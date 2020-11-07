@@ -13,11 +13,6 @@ export interface FetchableAction {
 
 const modules = { user, courses };
 
-const persistConfig = {
-	key: 'root',
-	storage: storage
-};
-
 export type RootState = ReturnType<typeof rootReducer>;
 
 // export const rootReducer = persistReducer(persistConfig, combineReducers(modules));
