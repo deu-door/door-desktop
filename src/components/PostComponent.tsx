@@ -119,7 +119,6 @@ export const ResponsiveIFrame: React.FC<{ link: string }> = props => {
 					src={link}
 					width="100%"
 					height="100%"
-					type="text/html"
 					allowFullScreen
 					frameBorder="0"
 				/>
