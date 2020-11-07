@@ -192,6 +192,7 @@ export const AssignmentComponent: React.FC<Omit<PostComponentProps, 'post'> & { 
 					fullWidth
 					rows={4}
 					variant="outlined"
+					disabled
 					value={assignment.submittedContents}
 				/>
 
