@@ -1,8 +1,8 @@
 import { Container, createStyles, CssBaseline, makeStyles, Typography } from '@material-ui/core';
-import { Timeline, TimelineConnector, TimelineContent, TimelineDot, TimelineItem, TimelineOppositeContent, TimelineSeparator } from '@material-ui/lab';
+import { Alert, Timeline, TimelineConnector, TimelineContent, TimelineDot, TimelineItem, TimelineOppositeContent, TimelineSeparator } from '@material-ui/lab';
 import { AssignmentComponent, LectureComponent, NoticeComponent, PostComponent, ReferenceComponent } from 'components/PostComponent';
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Post, sortPostByCreatedAtComparator } from 'service/door/interfaces';
 import { Assignment } from 'service/door/interfaces/assignment';
 import { RootState } from 'store/modules';
@@ -12,10 +12,12 @@ import { DateTime } from 'components/DateTime';
 import { Notice } from 'service/door/interfaces/notice';
 import { Reference } from 'service/door/interfaces/reference';
 import { Lecture } from 'service/door/interfaces/lecture';
+import { CourseFetchIterator } from 'store/background';
 
 const useStyles = makeStyles(theme => createStyles({
 	paper: {
-		flex: 1
+		flex: 1,
+		paddingTop: theme.spacing(2)
 	},
 	container: {
 		marginLeft: 'unset'
@@ -26,6 +28,38 @@ const useStyles = makeStyles(theme => createStyles({
 }));
 
 type PostType = 'notice' | 'lecture' | 'assignment' | 'reference';
+
+const Fetcher: React.FC = props => {
+	const dispatch = useDispatch();
+	const [title, setTitle] = useState('');
+	const [subtitle, setSubtitle] = useState('');
+
+	useEffect(() => {
+		const fetch = async () => {
+			const iterator = new CourseFetchIterator();
+
+			let next;
+			do {
+				next = iterator.next();
+
+				if(next.value) {
+					setTitle(next.value.title);
+					setSubtitle(next.value.subtitle || '');
+					await dispatch(next.value.action.fetchIfExpired());
+				}
+			} while(!next.done);
+
+			setTitle('데이터가 현재 최신 상태입니다.');
+			setSubtitle('');
+		};
+
+		fetch();
+	}, []);
+
+	return (
+		<Alert severity="info" variant="filled">{title} {subtitle}</Alert>
+	);
+}
 
 export const TimelinePage: React.FC = () => {
 	const classes = useStyles();
@@ -45,9 +79,11 @@ export const TimelinePage: React.FC = () => {
 	});
 
 	// Sort descend order
-	posts = posts.sort((a, b) => sortPostByCreatedAtComparator(a.post, b.post)).reverse();
+	posts = posts.sort((a, b) => sortPostByCreatedAtComparator(b.post, a.post));
 
-	const postsByDay: { [key: string]: { type: PostType, post: Post }[] } = {};
+	const postsByDay: { [key: string]: { type: PostType, post: Post }[] } = {
+		[moment().format('YYYY-MM-DD')]: []
+	};
 
 	posts.forEach(postInfo => {
 		const day = moment(postInfo.post.createdAt).startOf('days').format('YYYY-MM-DD');
@@ -74,6 +110,8 @@ export const TimelinePage: React.FC = () => {
 		<div className={classes.paper}>
 			<CssBaseline />
 			<Container className={classes.container}>
+				<Fetcher />
+
 				<Timeline>
 					{Object.entries(postsByDay).map(([day, posts]) => (
 						<TimelineItem key={day}>
