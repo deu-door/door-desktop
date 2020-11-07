@@ -23,9 +23,12 @@ app.commandLine.appendSwitch('disable-features', 'SameSiteByDefaultCookies');
 app.commandLine.appendSwitch('disable-features', 'CookiesWithoutSameSiteMustBeSecure');
 
 function configureSession(){
-	const filter = { urls: ["http://*/*", "https://*/*"] };
-	
-	session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
+	session.defaultSession.webRequest.onBeforeSendHeaders({
+		urls: [
+			'*://deu.ac.kr/*',
+			'*://*.deu.ac.kr/*'
+		]
+	}, (details, callback) => {
 		details.requestHeaders['Origin'] = '';
 		// 교내 네트워크 사용 시 User-Agent 부분을 수정해야 넷클라이언트 설치 페이지가 뜨지 않음`
 		// 크롬 정책 상 XHR에서 설정 불가.
@@ -33,7 +36,11 @@ function configureSession(){
 		callback({ cancel: false, requestHeaders: details.requestHeaders });
 	});
 	
-	session.defaultSession.webRequest.onHeadersReceived(filter, (details, callback) => {
+	session.defaultSession.webRequest.onHeadersReceived({
+		urls: [
+			'*://*/*'
+		]
+	}, (details, callback) => {
 		const cookies = (details.responseHeaders['set-cookie'] || []).map(cookie => cookie.replace('SameSite=Lax', 'SameSite=None'));
 		if(cookies.length > 0){
 			details.responseHeaders['set-cookie'] = cookies;
