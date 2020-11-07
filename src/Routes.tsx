@@ -1,5 +1,6 @@
 import { createStyles, Hidden, makeStyles } from '@material-ui/core';
 import { BackgroundService } from 'BackgroundService';
+import { Downloads } from 'components/Downloads';
 import { Navigator } from 'components/Navigator';
 import { CoursePage } from 'page/CoursePage';
 import { InitializePage } from 'page/InitializePage';
@@ -39,13 +40,9 @@ export const Routes: React.FC = () => {
           <Switch>
             <Route path="/init" component={InitializePage} />
             <Route path="/login" component={LoginPage} />
+
             <Route path="/main">
-              <Hidden xsDown>
-                <Navigator />
-              </Hidden>
-              <Hidden smUp>
-                <Navigator />
-              </Hidden>
+              <Navigator />
               <div className={classes.main}>
                 <Switch>
                   <Route path="/main/timeline" component={TimelinePage} />
@@ -56,10 +53,10 @@ export const Routes: React.FC = () => {
                   </ScrollToTop>
                 </Switch>
               </div>
+              <Downloads />
               <BackgroundService />
-              <Redirect path="*" to="/main/timeline" />
             </Route>
-            <Redirect path="*" to="/init" />
+            <Redirect to="/init" />
           </Switch>
         </Router>
 	);
