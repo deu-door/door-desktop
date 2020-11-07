@@ -60,13 +60,13 @@ export const TimelinePage: React.FC = () => {
 	const makePost = ({ type, post }: { type: PostType, post: Post }) => {
 		switch(type){
 			case 'notice':
-				return (<NoticeComponent defaultCollapsed key={post.id} notice={post as Notice} />);
+				return (<NoticeComponent defaultCollapsed key={'notice-' + post.id} notice={post as Notice} />);
 			case 'lecture':
-				return (<LectureComponent defaultCollapsed key={post.id} lecture={post as Lecture} />);
+				return (<LectureComponent defaultCollapsed key={'lecture-' + post.id} lecture={post as Lecture} />);
 			case 'assignment':
-				return (<AssignmentComponent defaultCollapsed key={post.id} assignment={post as Assignment} />);
+				return (<AssignmentComponent defaultCollapsed key={'assignment-' + post.id} assignment={post as Assignment} />);
 			case 'reference':
-				return (<ReferenceComponent defaultCollapsed key={post.id} reference={post as Reference} />);
+				return (<ReferenceComponent defaultCollapsed key={'reference-' + post.id} reference={post as Reference} />);
 		}
 	};
 
