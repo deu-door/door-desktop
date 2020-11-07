@@ -164,7 +164,7 @@ export default persistReducer(
 		storage: storage,
 		transforms: [FetchableTransform]
 	},
-	handleActions<CourseState, any & never>({
+	handleActions<CourseState, any>({
 		...courseMapActions.reduxActions,
 		...courseActions.reduxActions,
 		...noticeMapActions.reduxActions,
