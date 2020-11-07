@@ -26,7 +26,7 @@ function configureSession(){
 	const filter = { urls: ["http://*/*", "https://*/*"] };
 	
 	session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
-		details.requestHeaders['Origin'] = null;
+		details.requestHeaders['Origin'] = '';
 		// 교내 네트워크 사용 시 User-Agent 부분을 수정해야 넷클라이언트 설치 페이지가 뜨지 않음`
 		// 크롬 정책 상 XHR에서 설정 불가.
 		details.requestHeaders['User-Agent'] = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Mobile Safari/537.36';
@@ -64,11 +64,13 @@ async function createWindow() {
 	configureSession();
 	configureDownload();
 
+	console.log('main.ts is running on ' + __dirname);
+
 	mainWindow = new BrowserWindow({
 		center: true,
-		kiosk: !isDev,
+		// kiosk: !isDev,
 		resizable: true,
-		icon: path.join(__dirname, 'public/favicon.ico'),
+		icon: path.join(__dirname, '../favicon.ico'),
 		webPreferences: {
 			//preload: path.join(__dirname, 'preload.js'),
 			// 웹 앱을 데스크탑으로 모양만 바꾼다면 false
@@ -96,7 +98,8 @@ async function createWindow() {
 		});
 	}else{
 		// 프로덕션 환경에서는 패키지 내부 리소스에 접근
-		mainWindow.loadFile(path.join(__dirname, '../build/index.html'));
+		// build/index.html
+		mainWindow.loadURL(`file://${__dirname}/../index.html`);
 	}
 
 	mainWindow.on('closed', () => {
