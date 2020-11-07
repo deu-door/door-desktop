@@ -3,8 +3,9 @@
   "description": "Enhanced Dong-eui University Door Desktop App",
   "license": "MIT",
   "author": "solo5star",
-  "main": "main.js",
+  "main": "build/electron/main.js",
   "version": "0.0.1",
+  "homepage": "./",
   "dependencies": {
     "@craco/craco": "^5.7.0",
     "@iktakahiro/youtube-url-parser": "^1.0.2",
@@ -15,6 +16,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@types/cheerio": "^0.22.22",
+    "@types/electron-devtools-installer": "^2.2.0",
     "@types/jest": "^24.0.0",
     "@types/keytar": "^4.4.2",
     "@types/moment": "^2.13.0",
@@ -34,16 +36,16 @@
     "clsx": "^1.1.1",
     "concurrently": "^5.3.0",
     "cross-env": "^7.0.2",
-    "electron": "^10.1.3",
-    "electron-builder": "^22.8.1",
     "electron-devtools-installer": "^3.1.1",
     "electron-dl": "^3.0.2",
     "electron-download-manager": "^2.1.2",
     "electron-is-dev": "^1.2.0",
+    "electron-reload": "^1.5.0",
     "electron-store": "^6.0.1",
     "immer": "^7.0.14",
     "keytar": "^7.0.0",
     "moment": "^2.29.1",
+    "notistack": "^1.0.1",
     "qs": "^6.9.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -65,6 +67,8 @@
     "@typescript-eslint/eslint-plugin": "^4.5.0",
     "@typescript-eslint/parser": "^4.5.0",
     "babel-eslint": "^10.1.0",
+    "electron": "^10.1.3",
+    "electron-builder": "^22.8.1",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-config-react-app": "^6.0.0",
     "eslint-plugin-flowtype": "^5.2.0",
@@ -80,9 +84,9 @@
     "react-build": "craco build",
     "react-test": "craco test",
     "react-eject": "react-scripts eject",
-    "start": "concurrently \"cross-env BROWSER=none yarn react-start\" \"tsc main.ts && wait-on http://localhost:3000 && electron .\"",
-    "build": "yarn react-build && electron-builder",
-    "release": "yarn react-build && electron-builder --publish=always",
+    "start": "concurrently \"cross-env BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && tsc -p electron && electron .\"",
+    "build": "set DEBUG=electron-packager && yarn react-build && tsc -p electron && electron-builder",
+    "release": "yarn react-build && tsc -p electron && electron-builder",
     "lint": "eslint src",
     "lint:fix": "eslint --fix src"
   },
@@ -97,5 +101,17 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "build": {
+    "extends": null,
+    "files": [
+      "build/**/*"
+    ],
+    "directories": {
+      "buildResources": "build"
+    },
+    "productName": "Door Desktop",
+    "appId": "enhancedapps.door-desktop",
+    "icon": "build/favicon.ico"
   }
 }
