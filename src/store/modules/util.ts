@@ -82,7 +82,7 @@ export function fetchableActions<State, Result extends Fetchable, Params>(props:
 			const fetchedAt = moment(context.path(context.selector(getState()), params).fetchedAt || 0);
 			const validDuration = moment.duration(context.options.validDuration);
 
-			// Fetched data was expired, nothing to do.
+			// Fetched data was not expired yet, nothing to do.
 			if(fetchedAt.add(validDuration) > moment()) return;
 
 			// fetch
