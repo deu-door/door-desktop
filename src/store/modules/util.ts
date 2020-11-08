@@ -148,14 +148,15 @@ export function fetchableActions<State, Result extends Fetchable, Params>(props:
 }
 
 export function fetchableMapActions<State, Result extends Fetchable, Params>(props: FetchableActionsProps<State, FetchableMap<Result>, Params>) {
-	const { name, selector, path, fetch, handler } = props;
+	const { name, selector, path, fetch, handler, options } = props;
 
 	const context = fetchableActions<State, FetchableMap<Result>, Params>({
 		name: name + '_LIST',
 		selector,
 		path,
 		fetch,
-		handler
+		handler,
+		options
 	});
 
 	// Override success action
