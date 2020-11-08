@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => createStyles({
 		marginTop: theme.spacing(2)
 	},
 	progress: {
-		color: theme.palette.primary.contrastText,
+		background: theme.palette.primary.contrastText,
 		width: '100%',
 		marginTop: theme.spacing(3)
 	}
