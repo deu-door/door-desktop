@@ -65,7 +65,7 @@ const courseMapActions = fetchableMapActions<CourseState, Course, void>({
 		}
 	},
 	options: {
-		validDuration: moment.duration(60, 'minutes')
+		validDuration: moment.duration(1, 'hour')
 	}
 });
 
@@ -85,7 +85,7 @@ const noticeMapActions = fetchableMapActions<CourseState, Notice, ID>({
 	path: (draft, courseId) => draft.items[courseId].notices,
 	fetch: courseId => getNotices(courseId),
 	options: {
-		validDuration: moment.duration(30, 'minutes')
+		validDuration: moment.duration(1, 'hour')
 	}
 });
 
@@ -95,7 +95,7 @@ const noticeActions = fetchableActions<CourseState, Notice, { courseId: ID, id: 
 	path: (draft, { courseId, id }) => draft.items[courseId].notices.items[id],
 	fetch: ({ courseId, id }) => getNotice(courseId, id),
 	options: {
-		validDuration: moment.duration(60, 'minutes')
+		validDuration: moment.duration(1, 'hour')
 	}
 });
 
@@ -105,7 +105,7 @@ const lectureMapActions = fetchableMapActions<CourseState, FetchableMap<Lecture>
 	path: (draft, courseId) => draft.items[courseId].lectures,
 	fetch: courseId => getLectures(courseId),
 	options: {
-		validDuration: moment.duration(30, 'minutes')
+		validDuration: moment.duration(1, 'hour')
 	}
 });
 
@@ -115,7 +115,7 @@ const lectureActions = fetchableActions<CourseState, FetchableMap<Lecture>, { co
 	path: (draft, { courseId, id }) => draft.items[courseId].lectures.items[id],
 	fetch: ({ courseId, id}) => getLecturesByWeek(courseId, id),
 	options: {
-		validDuration: moment.duration(60, 'minutes')
+		validDuration: moment.duration(1, 'hour')
 	}
 });
 
@@ -125,7 +125,7 @@ const assignmentMapActions = fetchableMapActions<CourseState, Assignment, ID>({
 	path: (draft, courseId) => draft.items[courseId].assignments,
 	fetch: courseId => getAssignments(courseId),
 	options: {
-		validDuration: moment.duration(30, 'minutes')
+		validDuration: moment.duration(1, 'hour')
 	}
 });
 
@@ -135,7 +135,7 @@ const assignmentActions = fetchableActions<CourseState, Assignment, { courseId: 
 	path: (draft, { courseId, id }) => draft.items[courseId].assignments.items[id],
 	fetch: ({ courseId, id }) => getAssignment(courseId, id),
 	options: {
-		validDuration: moment.duration(60, 'minutes')
+		validDuration: moment.duration(1, 'hour')
 	}
 });
 
@@ -145,7 +145,7 @@ const referenceMapActions = fetchableMapActions<CourseState, Reference, ID>({
 	path: (draft, courseId) => draft.items[courseId].references,
 	fetch: courseId => getReferences(courseId),
 	options: {
-		validDuration: moment.duration(30, 'minutes')
+		validDuration: moment.duration(1, 'hour')
 	}
 });
 
@@ -155,7 +155,7 @@ const referenceActions = fetchableActions<CourseState, Reference, { courseId: ID
 	path: (draft, { courseId, id }) => draft.items[courseId].references.items[id],
 	fetch: ({ courseId, id }) => getReference(courseId, id),
 	options: {
-		validDuration: moment.duration(60, 'minutes')
+		validDuration: moment.duration(1, 'hour')
 	}
 });
 
