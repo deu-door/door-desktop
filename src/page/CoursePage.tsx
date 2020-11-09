@@ -9,6 +9,7 @@ import { FetchableList } from 'components/FetchableList';
 import { FetchButton } from 'components/FetchButton';
 import { AssignmentComponent, LectureComponent, NoticeComponent, ReferenceComponent } from 'components/PostComponent';
 import React, { useState } from 'react';
+import { sortPostByCreatedAt } from 'service/door/interfaces';
 import { Course } from 'service/door/interfaces/course';
 import { actions } from 'store/modules';
 
@@ -242,7 +243,7 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 
 				<TabPanel value={tab} index="notices">
 					<FetchableList fetchableMap={course.notices} action={actions.notices(course.id)}>
-						{Object.values(course.notices.items).map(notice => (
+						{sortPostByCreatedAt(course.notices).reverse().map(notice => (
 							<NoticeComponent key={notice.id} notice={notice} />
 						))}
 					</FetchableList>
@@ -254,7 +255,7 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 
 				<TabPanel value={tab} index="assignments">
 					<FetchableList fetchableMap={course.assignments} action={actions.assignments(course.id)}>
-						{Object.values(course.assignments.items).map(assignment => (
+						{sortPostByCreatedAt(course.assignments).reverse().map(assignment => (
 							<AssignmentComponent key={assignment.id} assignment={assignment} />
 						))}
 					</FetchableList>
@@ -262,7 +263,7 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 
 				<TabPanel value={tab} index="references">
 					<FetchableList fetchableMap={course.references} action={actions.references(course.id)}>
-						{Object.values(course.references.items).map(reference => (
+						{sortPostByCreatedAt(course.references).reverse().map(reference => (
 							<ReferenceComponent key={reference.id} reference={reference} />
 						))}
 					</FetchableList>
