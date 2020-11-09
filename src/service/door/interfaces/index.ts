@@ -105,7 +105,7 @@ export interface Link {
 	/**
 	 * @description 링크 METHOD (GET, POST...)
 	 */
-	method?: string,
+	method?: 'GET' | 'POST',
 	/**
 	 * @description AJAX data
 	 */
