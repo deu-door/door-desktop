@@ -2,6 +2,7 @@ import { AnyAction } from 'redux';
 import { handleActions } from 'redux-actions';
 import { createTransform, persistReducer } from 'redux-persist';
 import door from 'service/door';
+import { fulfilledFetchable } from 'service/door/interfaces';
 import { User } from 'service/door/interfaces/user';
 import { LoginOptions } from 'service/door/user';
 import { storage } from 'store/storage';
@@ -57,7 +58,34 @@ const logoutActions = fetchableActions<UserState, User, void>({
 			draft.authenticated = false;
 		}
 	}
-})
+});
+
+const pingActions = fetchableActions<UserState, User, void>({
+	name: 'USER_PING',
+	selector: state => state.user,
+	path: draft => draft,
+	fetch: async () => {
+		return {
+			profile: await door.getProfile(),
+			authenticated: true,
+			
+			...fulfilledFetchable()
+		}
+	},
+	handler: {
+		pending: (action, draft) => {
+			draft.authenticated = false;
+			draft.profile = undefined;
+		},
+		failure: (action, draft) => {
+			draft.authenticated = false;
+			draft.profile = undefined;
+		},
+		success: (action, draft) => {
+			draft.authenticated = false;
+		}
+	}
+});
 
 const AuthenticatedTransform = createTransform(
 	(inboundState, key) => {
@@ -91,5 +119,7 @@ export default persistReducer(
 export const actions = {
 	login: (id: string, password: string, options?: LoginOptions): FetchableAction => loginActions.actions({ id, password, options }),
 
-	logout: (): FetchableAction => logoutActions.actions()
+	logout: (): FetchableAction => logoutActions.actions(),
+
+	ping: (): FetchableAction => pingActions.actions()
 };

@@ -1,6 +1,7 @@
 import { createStyles, Hidden, makeStyles } from '@material-ui/core';
 import { BackgroundService } from 'BackgroundService';
 import { Downloads } from 'components/Downloads';
+import { KeepAlive } from 'components/KeepAlive';
 import { Navigator } from 'components/Navigator';
 import { CoursePage } from 'page/CoursePage';
 import { InitializePage } from 'page/InitializePage';
@@ -53,8 +54,10 @@ export const Routes: React.FC = () => {
                   </ScrollToTop>
                 </Switch>
               </div>
+              
               <Downloads />
               <BackgroundService />
+              <KeepAlive />
             </Route>
             <Redirect to="/init" />
           </Switch>
