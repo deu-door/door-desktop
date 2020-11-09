@@ -1,6 +1,7 @@
-import { AppBar, Collapse, Container, createStyles, CssBaseline, IconButton, List, ListItem, ListItemText, makeStyles, Step, StepButton, StepContent, Stepper, Tab, Tabs, Typography } from '@material-ui/core';
-import { ExpandLess, ExpandMore, Favorite } from '@material-ui/icons';
+import { AppBar, Collapse, Container, createStyles, CssBaseline, Grid, IconButton, List, ListItem, ListItemText, makeStyles, Step, StepButton, StepContent, Stepper, Tab, Tabs, Typography } from '@material-ui/core';
+import { Bookmarks, BookmarksOutlined, ExpandLess, ExpandMore, Favorite, Flag, FlagOutlined, Person, PersonOutlined, Schedule, ScheduleOutlined } from '@material-ui/icons';
 import { ChatComponent } from 'components/ChatComponent';
+import { CourseInformation } from 'components/CourseInformation';
 import { CourseRefresher } from 'components/CourseRefresher';
 import { CourseTimeline } from 'components/CourseTimeline';
 import { DateTime } from 'components/DateTime';
@@ -14,6 +15,9 @@ import { actions } from 'store/modules';
 const useStyles = makeStyles(theme => createStyles({
 	paper: {
 		flex: 1
+	},
+	courseSubtitle: {
+		paddingTop: theme.spacing(1)
 	},
 	appBarContainer: {
 		marginLeft: 'unset'
@@ -44,7 +48,7 @@ const TabPanel: React.FC<{ value: string|number, index: string|number, children?
 	)
 }
 
-const CourseInformation: React.FC<{ name: string, description: string }> = props => {
+const CourseDetailField: React.FC<{ name: string, description: string }> = props => {
 	const { name, description } = props;
 
 	return (
@@ -55,6 +59,38 @@ const CourseInformation: React.FC<{ name: string, description: string }> = props
 			</ListItemText>
 		</ListItem>
 	);
+};
+
+const CourseDetail: React.FC<{ name: string, fields: Array<{ name: string, text?: string|number }> }> = props => {
+	const { name, fields } = props;
+
+	return (
+		<ListItem>
+			<ListItemText>
+				<Grid container direction="column">
+					<Grid item>
+						<Typography variant="subtitle1">{name}</Typography>
+					</Grid>
+					{fields.map(({ name, text }) => (
+						<Grid item>
+							<Typography variant="body2">{name}: {text}</Typography>
+						</Grid>
+					))}
+				</Grid>
+			</ListItemText>
+		</ListItem>
+	);
+};
+
+const CourseHeaderField: React.FC<{ icon: React.ReactElement, text: string }> = props => {
+	const { icon, text } = props;
+
+	return (
+		<Grid container alignItems="center" spacing={1}>
+			{icon}
+			<Grid item>{text}</Grid>
+		</Grid>
+	)
 };
 
 const CourseHeader: React.FC<{ course: Course }> = props => {
@@ -69,24 +105,46 @@ const CourseHeader: React.FC<{ course: Course }> = props => {
 			<ListItem>
 				<ListItemText>
 					<Typography variant="h4" component="h1">{course.name}</Typography>
-					<Typography variant="subtitle1">{course.professor}</Typography>
+					<Typography variant="subtitle1" className={classes.courseSubtitle}>
+						<Grid container spacing={4}>
+							<Grid item>
+								<CourseHeaderField icon={<PersonOutlined fontSize="inherit" />} text={course.professor} />
+							</Grid>
+							<Grid item>
+								<CourseHeaderField icon={<FlagOutlined fontSize="inherit" />} text={`${course.division}분반`} />
+							</Grid>
+							<Grid item>
+								<CourseHeaderField icon={<BookmarksOutlined fontSize="inherit" />} text={`${course.credits}학점`} />
+							</Grid>
+							<Grid item>
+								<CourseHeaderField icon={<ScheduleOutlined fontSize="inherit" />} text={`${course.hours}시간`} />
+							</Grid>
+						</Grid>
+					</Typography>
 				</ListItemText>
 				<IconButton onClick={handleClick} color="inherit">
 					{open ? <ExpandLess /> : <ExpandMore />}
 				</IconButton>
 			</ListItem>
 			<Collapse in={open}>
-				{[
-					{ name: '개요', description: course.description },
-					{ name: '목표', description: course.goal }
-				].map(information => (
-					information.description &&
-						<CourseInformation
-							key={information.name}
-							name={information.name}
-							description={information.description}
-						/>
-				))}
+				<CourseDetail
+					name="강의 정보"
+					fields={[
+						{ name: '구분', text: course.type },
+						{ name: '전공', text: course.major },
+						{ name: '대상학년', text: course.target },
+						{ name: '주교재', text: course.book }
+					]}
+				/>
+
+				<CourseDetail
+					name="교수 정보"
+					fields={[
+						{ name: '교수', text: course.professor },
+						{ name: '연락처', text: course.contact },
+						{ name: '이메일', text: course.email }
+					]}
+				/>
 
 				<ListItem>
 					<FetchButton
@@ -212,6 +270,10 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 
 				<TabPanel value={tab} index="chat">
 					{/* <ChatComponent course={course} /> */}
+				</TabPanel>
+
+				<TabPanel value={tab} index="info">
+					<CourseInformation course={course} />
 				</TabPanel>
 
 			</Container>
