@@ -76,6 +76,8 @@ export async function getCourseDetail(id: ID): Promise<Course> {
 		// type: description['이수구분'].text,
 		major: description['주관학과'].text,
 		target: description['대상학년'].text,
+		credits: Number(description['학점/시간'].text.split('/')[0].trim()),
+		hours: Number(description['학점/시간'].text.split('/')[1].trim()),
 		professor: description['담당교원'].text,
 		contact: description['연락처/이메일'].text.split('/')[0].trim(),
 		email: description['연락처/이메일'].text.split('/')[1].trim(),
