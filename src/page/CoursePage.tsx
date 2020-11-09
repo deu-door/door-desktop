@@ -1,5 +1,9 @@
 import { AppBar, Collapse, Container, createStyles, CssBaseline, IconButton, List, ListItem, ListItemText, makeStyles, Step, StepButton, StepContent, Stepper, Tab, Tabs, Typography } from '@material-ui/core';
-import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import { ExpandLess, ExpandMore, Favorite } from '@material-ui/icons';
+import { ChatComponent } from 'components/ChatComponent';
+import { CourseRefresher } from 'components/CourseRefresher';
+import { CourseTimeline } from 'components/CourseTimeline';
+import { DateTime } from 'components/DateTime';
 import { FetchableList } from 'components/FetchableList';
 import { FetchButton } from 'components/FetchButton';
 import { AssignmentComponent, LectureComponent, NoticeComponent, ReferenceComponent } from 'components/PostComponent';
@@ -11,17 +15,22 @@ const useStyles = makeStyles(theme => createStyles({
 	paper: {
 		flex: 1
 	},
-	container: {
+	appBarContainer: {
 		marginLeft: 'unset'
+	},
+	contentsContainer: {
+		marginLeft: 'unset',
+		marginTop: theme.spacing(2)
 	},
 	courseHeaderFetchButton: {
 		color: 'inherit'
 	},
-	fetchButton: {
-		margin: theme.spacing(2, 0)
-	},
 	lecturesByWeek: {
 		flexDirection: 'column-reverse'
+	},
+	tab: {
+		minWidth: 100,
+		width: 100
 	}
 }));
 
@@ -46,9 +55,9 @@ const CourseInformation: React.FC<{ name: string, description: string }> = props
 			</ListItemText>
 		</ListItem>
 	);
-}
+};
 
-export const CourseHeader: React.FC<{ course: Course }> = props => {
+const CourseHeader: React.FC<{ course: Course }> = props => {
 	const { course } = props;
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
@@ -134,30 +143,44 @@ export const LectureList: React.FC<{ course: Course }> = props => {
 export const CoursePage: React.FC<{ course: Course }> = props => {
 	const { course } = props;
 	const classes = useStyles();
-	const [ tab, setTab ] = useState('notices');
 
 	const tabs = [
+		{ key: 'dashboard', label: '대시보드' },
 		{ key: 'notices', label: '공지사항' },
 		{ key: 'lectures', label: '온라인강의' },
 		{ key: 'assignments', label: '과제' },
-		{ key: 'references', label: '강의자료' }
+		{ key: 'references', label: '강의자료' },
+		{ key: 'chat', label: '채팅' }
 	];
+
+	const [ tab, setTab ] = useState(tabs[0].key);
 
 	return (
 		<div className={classes.paper}>
 			<CssBaseline />
 			<AppBar position="sticky">
-				<Container className={classes.container}>
+				<Container className={classes.appBarContainer}>
 					<CourseHeader course={course} />
 
 					<Tabs value={tab} onChange={(event, newTab) => setTab(newTab)}>
 						{tabs.map(({ key, label }) => (
-							<Tab key={key} value={key} label={label} />
+							<Tab
+								className={classes.tab}
+								key={key}
+								value={key}
+								label={label}
+							/>
 						))}
 					</Tabs>
 				</Container>
 			</AppBar>
-			<Container className={classes.container}>
+			<Container className={classes.contentsContainer}>
+
+				<TabPanel value={tab} index="dashboard">
+					<CourseRefresher course={course} />
+
+					<CourseTimeline course={course} />
+				</TabPanel>
 
 				<TabPanel value={tab} index="notices">
 					<FetchableList fetchableMap={course.notices} action={actions.notices(course.id)}>
@@ -185,6 +208,10 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 							<ReferenceComponent key={reference.id} reference={reference} />
 						))}
 					</FetchableList>
+				</TabPanel>
+
+				<TabPanel value={tab} index="chat">
+					{/* <ChatComponent course={course} /> */}
 				</TabPanel>
 
 			</Container>
