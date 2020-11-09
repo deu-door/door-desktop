@@ -46,19 +46,6 @@ const TabPanel: React.FC<{ value: string|number, index: string|number, children?
 	)
 }
 
-const CourseDetailField: React.FC<{ name: string, description: string }> = props => {
-	const { name, description } = props;
-
-	return (
-		<ListItem>
-			<ListItemText>
-				<Typography variant="subtitle1">{name}</Typography>
-				<Typography variant="body2">{description}</Typography>
-			</ListItemText>
-		</ListItem>
-	);
-};
-
 const CourseDetail: React.FC<{ name: string, fields: Array<{ name: string, text?: string|number }> }> = props => {
 	const { name, fields } = props;
 
@@ -205,8 +192,7 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 		{ key: 'notices', label: '공지사항' },
 		{ key: 'lectures', label: '온라인강의' },
 		{ key: 'assignments', label: '과제' },
-		{ key: 'references', label: '강의자료' },
-		{ key: 'chat', label: '채팅' }
+		{ key: 'references', label: '강의자료' }
 	];
 
 	const [ tab, setTab ] = useState(tabs[0].key);
@@ -271,7 +257,7 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 				</TabPanel>
 
 				<TabPanel value={tab} index="info">
-					<CourseInformation course={course} />
+					{/* <CourseInformation course={course} /> */}
 				</TabPanel>
 
 			</Container>
