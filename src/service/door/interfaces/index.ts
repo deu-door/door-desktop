@@ -154,11 +154,11 @@ export interface Post extends Identifiable, Fetchable, CourseSubordinated {
 	attachments?: Attachment[]
 }
 
-export const sortPostById = (map: FetchableMap<Post>): Post[] => {
+export const sortPostById = <T extends Post>(map: FetchableMap<T>): T[] => {
 	return Object.values(map.items).sort(sortPostByIdComparator);
 }
 
-export const sortPostByIdComparator = (postA: Post, postB: Post): number => {
+export const sortPostByIdComparator = <T extends Post>(postA: T, postB: T): number => {
 	const a = Number(postA.id);
 	const b = Number(postB.id);
 
@@ -167,11 +167,11 @@ export const sortPostByIdComparator = (postA: Post, postB: Post): number => {
 	return a - b;
 }
 
-export const sortPostByCreatedAt = (map: FetchableMap<Post>): Post[] => {
+export const sortPostByCreatedAt = <T extends Post>(map: FetchableMap<T>): T[] => {
 	return Object.values(map.items).sort(sortPostByCreatedAtComparator);
 }
 
-export const sortPostByCreatedAtComparator = (postA: Post, postB: Post): number => {
+export const sortPostByCreatedAtComparator = <T extends Post>(postA: T, postB: T): number => {
 	const a = new Date(postA.createdAt);
 	const b = new Date(postB.createdAt);
 
