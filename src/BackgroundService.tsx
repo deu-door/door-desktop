@@ -3,9 +3,9 @@ import { backgroundFetchIterator } from 'store/background';
 
 export const BackgroundService: React.FC = () => {
 	useEffect(() => {
-		backgroundFetchIterator.start();
+		// backgroundFetchIterator.start();
 
-		return () => backgroundFetchIterator.stop();
+		// return () => backgroundFetchIterator.stop();
 	}, []);
 
 	return (

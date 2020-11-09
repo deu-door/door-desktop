@@ -53,7 +53,7 @@ const Fetcher: React.FC = props => {
 			setSubtitle('');
 		};
 
-		fetch();
+		// fetch();
 	}, []);
 
 	return (
