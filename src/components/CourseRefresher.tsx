@@ -32,7 +32,7 @@ export const CourseRefresher: React.FC<{ course: Course }> = props => {
 		setPending(true);
 		setDescription('잠시만 기다려주세요 ...');
 
-		const timer = setTimeout(() => setPhase(PHASE_POSTS), 1000);
+		const timer = setTimeout(() => setPhase(PHASE_POSTS), 500);
 
 		return () => clearTimeout(timer);
 	}, [phase]);
