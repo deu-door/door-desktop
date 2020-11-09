@@ -90,7 +90,7 @@ export const InitializePage: React.FC = () => {
 				}
 			} while(!next.done);
 
-			history.push('/main/timeline');
+			history.push('/main/dashboard');
 		}
 
 		fetch();

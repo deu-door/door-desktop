@@ -71,7 +71,7 @@ const ListDoorItem: React.FC = () => {
     <ListItem
       button
       className={classes.header}
-      onClick={() => history.push('/main/timeline')}
+      onClick={() => history.push('/main/dashboard')}
     >
       <Grid container spacing={3} alignItems="center">
         <Grid item>
