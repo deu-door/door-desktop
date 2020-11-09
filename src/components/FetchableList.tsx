@@ -23,7 +23,7 @@ export const FetchableList: React.FC<FetchableListProps> = props => {
 				fetchable={fetchableMap}
 				action={action}
 			/>
-			{children || <Typography variant="h6" color="textSecondary">목록에 표시할 항목이 없는 것 같습니다 -_-a;;</Typography>}
+			{children}
 		</div>
 	);
 }
