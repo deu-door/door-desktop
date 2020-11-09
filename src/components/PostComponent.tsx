@@ -1,4 +1,4 @@
-import { Button, Card, CardActions, CardContent, CardHeader, CardMedia, createStyles, Divider, Grid, Link, Icon, makeStyles, Paper, PaperProps, TextField, Typography } from '@material-ui/core';
+import { Button, Card, CardActions, CardContent, CardHeader, CardMedia, createStyles, Divider, Grid, Link, Icon, makeStyles, Paper, PaperProps, TextField, Typography, ButtonProps } from '@material-ui/core';
 import React, { IframeHTMLAttributes, useEffect, useState } from 'react';
 import { Attachment, Post } from 'service/door/interfaces';
 import { FetchableAction } from 'store/modules';
@@ -14,7 +14,8 @@ import { Reference } from 'service/door/interfaces/reference';
 import VisibilitySensor from 'react-visibility-sensor';
 import { deepOrange, indigo, purple, teal } from '@material-ui/core/colors';
 import clsx from 'clsx';
-import ReactDOM from 'react-dom';
+import { Skeleton } from '@material-ui/lab';
+import { doorAxios } from 'service/door';
 
 const useStyles = makeStyles(theme => createStyles({
 	post: {
@@ -48,6 +49,11 @@ const useStyles = makeStyles(theme => createStyles({
 	},
 	referenceTag: {
 		background: deepOrange[500]
+	},
+	lectureOverlay: {
+		width: '100%',
+		height: '100%',
+		background: '#E3E3E3'
 	}
 }));
 
@@ -108,20 +114,13 @@ export const PostTag: React.FC<PaperProps & { name?: string, icon: React.ReactEl
 	</Paper>);
 }
 
-export const ResponsiveIFrame: React.FC<{ link: string }> = props => {
-	const { link } = props;
+export const ResponsiveDiv: React.FC = props => {
+	const { children } = props;
 
 	return (
 		<div style={{ width: '100%', height: '0', paddingBottom: '56.25%', position: 'relative' }}>
 			<div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 }}>
-				<iframe
-					title={link}
-					src={link}
-					width="100%"
-					height="100%"
-					allowFullScreen
-					frameBorder="0"
-				/>
+				{children}
 			</div>
 		</div>
 	);
@@ -235,11 +234,28 @@ export const AssignmentComponent: React.FC<Omit<PostComponentProps, 'post'> & { 
 	);
 }
 
+const LectureOverlay: React.FC<ButtonProps> = props => {
+	const { ...buttonProps } = props;
+	const classes = useStyles();
+
+	return (
+		<Grid container alignItems="center" justify="center" className={classes.lectureOverlay}>
+			<Grid item>
+				<Button variant="contained" color="primary" {...buttonProps}>강의 시청</Button>
+			</Grid>
+		</Grid>
+	);
+}
+
 export const LectureComponent: React.FC<Omit<PostComponentProps, 'post'> & { lecture: Lecture }> = props => {
 	const { lecture, ...postProps } = props;
 	const classes = useStyles();
-	const [linkType, setLinkType] = useState('');
+
+	type LinkType = 'downloadable' | 'html' | 'not-clear';
+	const [linkType, setLinkType] = useState<LinkType>('not-clear');
+
 	const [lazyLoad, setLazyLoad] = useState(false);
+	const [show, setShow] = useState(false);
 
 	useEffect(() => {
 		const fetch = async () => {
@@ -253,6 +269,18 @@ export const LectureComponent: React.FC<Omit<PostComponentProps, 'post'> & { lec
 		lazyLoad && fetch();
 	}, [lazyLoad, lecture.link]);
 
+	const onOpenLecture = () => {
+		setShow(true);
+
+		if(lecture.historyLink?.method) {
+			doorAxios({
+				url: lecture.historyLink.url,
+				method: lecture.historyLink.method,
+				data: lecture.historyLink.data
+			});
+		}
+	};
+
 	return (
 		<PostComponent
 			post={lecture}
@@ -263,7 +291,19 @@ export const LectureComponent: React.FC<Omit<PostComponentProps, 'post'> & { lec
 				<div>
 					{lecture.link && linkType === 'html' &&
 						<CardMedia>
-							<ResponsiveIFrame link={lecture.link} />
+							<ResponsiveDiv>
+								{show ? <iframe
+										title={lecture.title}
+										src={lecture.link}
+										width="100%"
+										height="100%"
+										allowFullScreen
+										frameBorder="0"
+									/>
+									: <LectureOverlay
+										onClick={onOpenLecture}
+									/>}
+							</ResponsiveDiv>
 						</CardMedia>}
 
 					<CardContent>
