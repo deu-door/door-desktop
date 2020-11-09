@@ -4,7 +4,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import axios from 'axios';
-import door from 'service/door';
+import door, { doorAxios } from 'service/door';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from 'store';
 import { downloader } from 'service/downloader';
@@ -27,6 +27,9 @@ axios.interceptors.response.use(response => {
 
 // Debug downloader
 (window as any).downloader = downloader;
+
+// Debug with doorAxios
+(window as any).doorAxios = doorAxios;
 
 ReactDOM.render(
   // <React.StrictMode>
