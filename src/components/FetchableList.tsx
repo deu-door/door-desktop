@@ -1,4 +1,4 @@
-import { createStyles, makeStyles, Typography } from '@material-ui/core';
+import { createStyles, makeStyles } from '@material-ui/core';
 import React from 'react';
 import { Fetchable, FetchableMap } from 'service/door/interfaces';
 import { FetchableAction } from 'store/modules';

@@ -12,6 +12,7 @@ export const KeepAlive: React.FC<{ heartbeatInterval?: number }> = props => {
 		}, heartbeatInterval);
 
 		return () => clearInterval(timer);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (

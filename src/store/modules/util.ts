@@ -5,7 +5,7 @@ import { Fetchable, FetchableMap } from "service/door/interfaces";
 import moment from 'moment';
 import { RootStateOrAny } from "react-redux";
 import { FetchableAction } from ".";
-import { createMigrate, createTransform, PersistedState, PersistMigrate } from "redux-persist";
+import { createMigrate, createTransform, PersistMigrate } from "redux-persist";
 
 export interface AsyncState extends Fetchable {
 	pending?: boolean,

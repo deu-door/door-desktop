@@ -35,6 +35,7 @@ export const CourseRefresher: React.FC<{ course: Course }> = props => {
 		const timer = setTimeout(() => setPhase(PHASE_POSTS), 500);
 
 		return () => clearTimeout(timer);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [phase]);
 
 	useEffect(() => {
@@ -55,6 +56,7 @@ export const CourseRefresher: React.FC<{ course: Course }> = props => {
 		};
 
 		fetch();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [phase]);
 
 	useEffect(() => {
@@ -79,6 +81,7 @@ export const CourseRefresher: React.FC<{ course: Course }> = props => {
 		};
 
 		fetch();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [phase, course.lectures])
 
 	return (

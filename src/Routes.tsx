@@ -1,4 +1,4 @@
-import { createStyles, CssBaseline, Grid, Hidden, makeStyles, Paper, SvgIcon, Typography } from '@material-ui/core';
+import { createStyles, CssBaseline, Grid, makeStyles, Typography } from '@material-ui/core';
 import { BackgroundService } from 'BackgroundService';
 import { Downloads } from 'components/Downloads';
 import { KeepAlive } from 'components/KeepAlive';
@@ -6,7 +6,6 @@ import { Navigator } from 'components/Navigator';
 import { CoursePage } from 'page/CoursePage';
 import { InitializePage } from 'page/InitializePage';
 import { LoginPage } from 'page/LoginPage';
-import { TimelinePage } from 'page/TimelinePage';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { HashRouter as Router, Redirect, Route, Switch, useLocation } from 'react-router-dom';

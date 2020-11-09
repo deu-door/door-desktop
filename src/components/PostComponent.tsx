@@ -1,5 +1,5 @@
-import { Button, Card, CardActions, CardContent, CardHeader, CardMedia, createStyles, Divider, Grid, Link, Icon, makeStyles, Paper, PaperProps, TextField, Typography, ButtonProps } from '@material-ui/core';
-import React, { IframeHTMLAttributes, useEffect, useState } from 'react';
+import { Button, Card, CardActions, CardContent, CardHeader, CardMedia, createStyles, Divider, Grid, Link, makeStyles, Paper, PaperProps, TextField, Typography, ButtonProps } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
 import { Attachment, Post } from 'service/door/interfaces';
 import { FetchableAction } from 'store/modules';
 import { DateTime } from './DateTime';
@@ -14,7 +14,6 @@ import { Reference } from 'service/door/interfaces/reference';
 import VisibilitySensor from 'react-visibility-sensor';
 import { deepOrange, indigo, purple, teal } from '@material-ui/core/colors';
 import clsx from 'clsx';
-import { Skeleton } from '@material-ui/lab';
 import { doorAxios } from 'service/door';
 
 const useStyles = makeStyles(theme => createStyles({

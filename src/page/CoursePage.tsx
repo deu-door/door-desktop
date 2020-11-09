@@ -1,10 +1,7 @@
 import { AppBar, Collapse, Container, createStyles, CssBaseline, Grid, IconButton, List, ListItem, ListItemText, makeStyles, Step, StepButton, StepContent, Stepper, Tab, Tabs, Typography } from '@material-ui/core';
-import { Bookmarks, BookmarksOutlined, ExpandLess, ExpandMore, Favorite, Flag, FlagOutlined, Person, PersonOutlined, Schedule, ScheduleOutlined } from '@material-ui/icons';
-import { ChatComponent } from 'components/ChatComponent';
-import { CourseInformation } from 'components/CourseInformation';
+import { BookmarksOutlined, ExpandLess, ExpandMore, FlagOutlined, PersonOutlined, ScheduleOutlined } from '@material-ui/icons';
 import { CourseRefresher } from 'components/CourseRefresher';
 import { CourseTimeline } from 'components/CourseTimeline';
-import { DateTime } from 'components/DateTime';
 import { FetchableList } from 'components/FetchableList';
 import { FetchButton } from 'components/FetchButton';
 import { AssignmentComponent, LectureComponent, NoticeComponent, ReferenceComponent } from 'components/PostComponent';

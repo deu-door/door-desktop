@@ -1,4 +1,3 @@
-import { AnyAction } from 'redux';
 import { handleActions } from 'redux-actions';
 import { createTransform, persistReducer } from 'redux-persist';
 import door from 'service/door';

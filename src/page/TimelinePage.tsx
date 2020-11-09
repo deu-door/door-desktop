@@ -1,6 +1,6 @@
 import { Container, createStyles, CssBaseline, makeStyles, Typography } from '@material-ui/core';
 import { Alert, Timeline, TimelineConnector, TimelineContent, TimelineDot, TimelineItem, TimelineOppositeContent, TimelineSeparator } from '@material-ui/lab';
-import { AssignmentComponent, LectureComponent, NoticeComponent, PostComponent, ReferenceComponent } from 'components/PostComponent';
+import { AssignmentComponent, LectureComponent, NoticeComponent, ReferenceComponent } from 'components/PostComponent';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Post, sortPostByCreatedAtComparator } from 'service/door/interfaces';
@@ -54,6 +54,7 @@ const Fetcher: React.FC = props => {
 		};
 
 		// fetch();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (

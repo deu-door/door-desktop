@@ -1,5 +1,5 @@
-import { Container, createStyles, CssBaseline, makeStyles, Typography } from '@material-ui/core';
-import { Alert, Timeline, TimelineConnector, TimelineContent, TimelineDot, TimelineItem, TimelineOppositeContent, TimelineSeparator } from '@material-ui/lab';
+import { createStyles, makeStyles, Typography } from '@material-ui/core';
+import { Timeline, TimelineConnector, TimelineContent, TimelineDot, TimelineItem, TimelineOppositeContent, TimelineSeparator } from '@material-ui/lab';
 import { AssignmentComponent, LectureComponent, NoticeComponent, PostComponent, ReferenceComponent } from 'components/PostComponent';
 import React from 'react';
 import { Post, sortPostByCreatedAtComparator } from 'service/door/interfaces';
