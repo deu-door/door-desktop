@@ -1,6 +1,6 @@
 import cheerio from 'cheerio';
 import { doorAxios, parseTableElement } from '.';
-import { FetchableMap, fulfilledFetchable, ID, notFulfilledFetchable } from './interfaces';
+import { FetchableMap, fulfilledFetchable, ID, Link, notFulfilledFetchable } from './interfaces';
 import { Lecture, LecturesByWeek } from './interfaces/lecture';
 import { YouTubeURLParser } from '@iktakahiro/youtube-url-parser';
 import moment from 'moment';
@@ -72,7 +72,11 @@ const parseViewDoorFunction = (func: string) => {
 
 	if(parser.isValid()) link = parser.getEmbeddingURL() || link;
 
-	const result = {
+	const result: {
+		doorId: string,
+		link: string,
+		historyLink: Link
+	} = {
 		doorId: namedParams.doorId,
 		link: link,
 		historyLink: {
