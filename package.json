@@ -4,7 +4,7 @@
   "license": "MIT",
   "author": "solo5star",
   "main": "build/electron/main.js",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "homepage": "./",
   "dependencies": {
     "@craco/craco": "^5.7.0",
