@@ -93,6 +93,9 @@ async function createWindow() {
 		}
 	});
 
+	// 툴바 제거
+	mainWindow.removeMenu();
+
 	if(isDev) {
 		// 개발자 도구 (DevTools) 설치
 		await installExtensions();
