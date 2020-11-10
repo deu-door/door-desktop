@@ -151,7 +151,7 @@ export const PostComponent: React.FC<PostComponentProps> = props => {
 
 			{show ?
 				<div>
-					{children ? children : post.contents &&
+					{post.fulfilled && children ? children : post.contents &&
 						<CardContent>
 							<PostContent content={post.contents} />
 								{post.attachments && post.attachments.map(attachment => <PostAttachment key={attachment.link} attachment={attachment} />)}
