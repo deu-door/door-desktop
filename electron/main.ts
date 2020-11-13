@@ -77,6 +77,8 @@ async function createWindow() {
 		center: true,
 		// kiosk: !isDev,
 		resizable: true,
+		width: 1120,
+		height: 760,
 		icon: path.join(__dirname, '../favicon.ico'),
 		webPreferences: {
 			//preload: path.join(__dirname, 'preload.js'),
