@@ -100,7 +100,7 @@ export const LectureComponent: React.FC<Omit<PostComponentProps, 'post'> & { lec
 						</CardMedia>}
 
 					<CardContent>
-						{lecture.contents && <PostContent content={lecture.contents} />}
+						{lecture.contents && <PostContent contents={lecture.contents} />}
 
 						{lecture.link && linkType === 'downloadable' &&
 							<PostAttachment attachment={{

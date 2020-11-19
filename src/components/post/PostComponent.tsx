@@ -2,8 +2,8 @@ import { Button, Card, CardActions, CardContent, CardHeader, createStyles, Grid,
 import React, { useState } from 'react';
 import { Attachment, Post, Submission } from 'service/door/interfaces';
 import { FetchableAction } from 'store/modules';
-import { DateTime } from '../DateTime';
-import { FetchButton } from '../FetchButton';
+import { DateTime } from '../core/DateTime';
+import { FetchButton } from '../fetchable/FetchButton';
 import { Attachment as AttachmentIcon } from '@material-ui/icons';
 import { downloader } from 'service/downloader';
 import clsx from 'clsx';
@@ -31,13 +31,17 @@ const useStyles = makeStyles(theme => createStyles({
 	}
 }));
 
-export const PostContent: React.FC<{ content: string }> = props => {
-	const { content } = props;
+export const PostContent: React.FC<{ contents: string, attachments?: Attachment[] }> = props => {
+	const { contents, attachments } = props;
 
 	return (
-		<Typography variant="body2" color="textSecondary" component="span" paragraph>
-			<div dangerouslySetInnerHTML={{ __html: content }} />
-		</Typography>
+		<>
+			{contents && <Typography variant="body2" color="textSecondary" component="span" paragraph>
+				<div dangerouslySetInnerHTML={{ __html: contents }} />
+			</Typography>}
+
+			{attachments && attachments.map(attachment => <PostAttachment key={attachment.title} attachment={attachment} />)}
+		</>
 	);
 }
 
@@ -136,10 +140,18 @@ export const PostEvaluationResult: React.FC<{ result: { score?: number, comment?
 	);
 }
 
-export type PostComponentProps = { post: Post, tag?: React.ReactElement, action?: FetchableAction, defaultCollapsed?: boolean };
+export type PostComponentProps = {
+	post: Post,
+	tag?: React.ReactElement,
+	action?: FetchableAction,
+	defaultCollapsed?: boolean,
+
+	submission?: Submission,
+	evaluationResult?: { score?: number, comment?: string }
+};
 
 export const PostComponent: React.FC<PostComponentProps> = props => {
-	const { post, tag, action, defaultCollapsed = false, children } = props;
+	const { post, tag, action, defaultCollapsed = false, submission, evaluationResult, children } = props;
 	const classes = useStyles();
 	const [show, setShow] = useState(!defaultCollapsed);
 
@@ -164,9 +176,13 @@ export const PostComponent: React.FC<PostComponentProps> = props => {
 				<div>
 					{post.fulfilled && children ? children : post.contents &&
 						<CardContent>
-							<PostContent content={post.contents} />
-								{post.attachments && post.attachments.map(attachment => <PostAttachment key={attachment.link} attachment={attachment} />)}
-						</CardContent>}
+							<PostContent contents={post.contents} attachments={post.attachments} />
+
+							{submission && <PostSubmission submission={submission} />}
+
+							{evaluationResult && <PostEvaluationResult result={evaluationResult} />}
+						</CardContent>
+					}
 
 					{action &&
 						<CardActions>
