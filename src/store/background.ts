@@ -21,23 +21,33 @@ const courseRefreshGenerator = function *() {
 	const targets_phase1: IteratorItem[] = Object.values(courses.items).map(course => [
 		{
 			title: `${course.name}`,
-			subtitle: '공지사항을 가져오는 중입니다',
+			subtitle: '공지사항 목록을 가져오는 중입니다',
 			action: actions.notices(course.id)
 		},
 		{
 			title: `${course.name}`,
-			subtitle: '강의목록을 가져오는 중입니다',
+			subtitle: '강의 목록을 가져오는 중입니다',
 			action: actions.lectures(course.id)
 		},
 		{
 			title: `${course.name}`,
-			subtitle: '과제목록을 가져오는 중입니다',
+			subtitle: '과제 목록을 가져오는 중입니다',
 			action: actions.assignments(course.id)
 		},
 		{
 			title: `${course.name}`,
-			subtitle: '강의자료를 가져오는 중입니다',
+			subtitle: '강의자료 목록을 가져오는 중입니다',
 			action: actions.references(course.id)
+		},
+		{
+			title: `${course.name}`,
+			subtitle: '수업활동일지 목록을 가져오는 중입니다',
+			action: actions.activities(course.id)
+		},
+		{
+			title: `${course.name}`,
+			subtitle: '팀 프로젝트 목록을 가져오는 중입니다',
+			action: actions.teamProjects(course.id)
 		}
 	]).flat();
 

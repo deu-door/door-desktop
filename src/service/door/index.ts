@@ -2,10 +2,13 @@ import axios from 'axios';
 import qs from 'qs';
 import cheerio from 'cheerio';
 
-import * as assignment from './assignment';
 import * as course from './course';
-import * as lecture from './lecture';
 import * as notice from './notice';
+import * as lecture from './lecture';
+import * as assignment from './assignment';
+import * as reference from './reference';
+import * as activity from './activity';
+import * as teamProject from './team-project';
 import * as user from './user';
 
 /**
@@ -47,9 +50,12 @@ doorAxios.interceptors.response.use(response => {
 // });
 
 export default {
-	...assignment,
 	...course,
-	...lecture,
 	...notice,
+	...lecture,
+	...assignment,
+	...reference,
+	...activity,
+	...teamProject,
 	...user
 };

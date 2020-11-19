@@ -1,8 +1,10 @@
 import { Fetchable, FetchableMap, Identifiable } from ".";
+import { Activity } from "./activity";
 import { Assignment } from "./assignment";
 import { LecturesByWeek } from "./lecture";
 import { Notice } from "./notice";
 import { Reference } from "./reference";
+import { TeamProject } from "./team-project";
 
 /**
  * @description 강의에 대한 정보를 얻을 수 있습니다.
@@ -58,6 +60,14 @@ export interface Course extends Identifiable, Fetchable {
 	 * @description 강의자료 목록
 	 */
 	references: FetchableMap<Reference>,
+	/**
+	 * @description 수업활동일지 목록
+	 */
+	activities: FetchableMap<Activity>,
+	/**
+	 * @description 팀 프로젝트 목록
+	 */
+	teamProjects: FetchableMap<TeamProject>,
 
 	// 아래부터는 수업계획서 내용임 (추가적인 fetch 필요)
 
@@ -212,5 +222,7 @@ export const initializeCourse = () => ({
 	notices: { items: {}, fulfilled: false },
 	lectures: { items: {}, fulfilled: false },
 	assignments: { items: {}, fulfilled: false },
-	references: { items: {}, fulfilled: false }
+	references: { items: {}, fulfilled: false },
+	activities: { items: {}, fulfilled: false },
+	teamProjects: { items: {}, fulfilled: false }
 });
