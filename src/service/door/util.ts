@@ -111,7 +111,7 @@ export const parseSubmission = (table: cheerio.Element): Submission => {
 	const $ = cheerio.load(table);
 	const tableParsed = parseInformaticTableElement(table);
 
-	const contents = tableParsed['제출 내용'].text;
+	const contents = (tableParsed['제출 내용'] || tableParsed['제출내용']).text;
 	const attachments: Attachment[] = [];
 	
 	$('.filelist .fileitembox a[title=다운로드]', tableParsed['첨부파일'].element).toArray().forEach(file => {
