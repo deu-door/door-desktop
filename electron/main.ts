@@ -95,8 +95,6 @@ async function createWindow() {
 		}
 	});
 
-	// 툴바 제거
-	mainWindow.removeMenu();
 
 	if(isDev) {
 		// 개발자 도구 (DevTools) 설치
@@ -109,6 +107,9 @@ async function createWindow() {
 			mainWindow.webContents.openDevTools();
 		});
 	}else{
+		// 툴바 제거
+		mainWindow.removeMenu();
+
 		// 프로덕션 환경에서는 패키지 내부 리소스에 접근
 		// build/index.html
 		mainWindow.loadURL(`file://${__dirname}/../index.html`);
