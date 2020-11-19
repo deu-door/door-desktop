@@ -39,6 +39,11 @@ export async function getAssignment(courseId: ID, id: ID): Promise<Assignment> {
 	const from = moment(description['제출기간'].text.split('~')[0].trim(), 'YY-MM-DD HH:mm').toDate();
 	const to = moment(description['제출기간'].text.split('~')[1].trim(), 'YY-MM-DD HH:mm').toDate();
 
+	const bonusPeriod = (description['추가 제출기간'].text.trim() === '없음') ? undefined : {
+		from: moment(description['추가 제출기간'].text.split('~')[0].trim(), 'YY-MM-DD HH:mm').toDate(),
+		to: moment(description['추가 제출기간'].text.split('~')[1].trim(), 'YY-MM-DD HH:mm').toDate()
+	};
+
 	return {
 		id: id,
 		courseId: courseId,
@@ -49,6 +54,7 @@ export async function getAssignment(courseId: ID, id: ID): Promise<Assignment> {
 
 		createdAt: from,
 		period: { from, to },
+		bonusPeriod,
 
 		attachments,
 		submission,
