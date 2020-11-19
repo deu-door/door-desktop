@@ -9,15 +9,15 @@ export async function getAssignment(courseId: ID, id: ID): Promise<Assignment> {
 
 	const descriptionTable = document(`#sub_content2 > div:nth-child(1) > table`).toArray().pop();
 	const resultTable = document(`#sub_content2 > div:nth-child(3) > table:not(.tbl_type)`).toArray().pop();
-	const submittedTable = document(`#sub_content2 > div.form_table_s > table`).toArray().pop();
+	const submissionTable = document(`#sub_content2 > div.form_table_s > table`).toArray().pop();
 
-	if(!descriptionTable || !submittedTable) throw new Error(`과제 정보를 불러올 수 없습니다. 로그인 상태를 확인해주세요.`);
+	if(!descriptionTable || !submissionTable) throw new Error(`과제 정보를 불러올 수 없습니다. 로그인 상태를 확인해주세요.`);
 
 	const description = parseInfomaticTableElement(descriptionTable);
 
 	// 시간이 많이 지나면 평가 결과 table은 없어질 수도 있음
-	const result = resultTable ? parseInfomaticTableElement(resultTable) : undefined;
-	const submitted = parseInfomaticTableElement(submittedTable);
+	const result = resultTable ? parseInformaticTableElement(resultTable) : undefined;
+	const submission = parseSubmission(submissionTable);
 
 	const attachments: Attachment[] = [];
 
@@ -66,6 +66,7 @@ export async function getAssignment(courseId: ID, id: ID): Promise<Assignment> {
 
 		submittedContents: submitted['제출 내용'].text,
 		submittedAttachments: submittedAttachments,
+		submission,
 
 		result: resultComment || resultScore ? {
 			score: resultScore,
