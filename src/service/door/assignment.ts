@@ -1,8 +1,9 @@
 import cheerio from 'cheerio';
 import moment from 'moment';
-import { doorAxios, parseInfomaticTableElement, parseTableElement } from '.';
+import { doorAxios } from '.';
 import { Attachment, FetchableMap, fulfilledFetchable, ID, notFulfilledFetchable } from './interfaces';
 import { Assignment } from './interfaces/assignment';
+import { parseInformaticTableElement, parseSubmission, parseTableElement } from './util';
 
 export async function getAssignment(courseId: ID, id: ID): Promise<Assignment> {
 	const document = cheerio.load((await doorAxios.get(`/LMS/LectureRoom/CourseHomeworkStudentDetail?CourseNo=${courseId}&HomeworkNo=${id}`)).data);
@@ -13,7 +14,7 @@ export async function getAssignment(courseId: ID, id: ID): Promise<Assignment> {
 
 	if(!descriptionTable || !submissionTable) throw new Error(`과제 정보를 불러올 수 없습니다. 로그인 상태를 확인해주세요.`);
 
-	const description = parseInfomaticTableElement(descriptionTable);
+	const description = parseInformaticTableElement(descriptionTable);
 
 	// 시간이 많이 지나면 평가 결과 table은 없어질 수도 있음
 	const result = resultTable ? parseInformaticTableElement(resultTable) : undefined;

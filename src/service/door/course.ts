@@ -1,7 +1,8 @@
 import cheerio from 'cheerio';
-import { doorAxios, parseInfomaticTableElement, parseTableElement } from '.';
+import { doorAxios } from '.';
 import { FetchableMap, fulfilledFetchable, ID, notFulfilledFetchable } from './interfaces';
 import { Course } from './interfaces/course';
+import { parseInformaticTableElement, parseTableElement } from './util';
 
 export async function getCourses(): Promise<FetchableMap<Course>>{
 	const document = cheerio.load((await doorAxios.get('/MyPage')).data);
@@ -62,7 +63,7 @@ export async function getCourseDetail(id: ID): Promise<Course> {
 
 	if(!descriptionTable || !ratesTable || !scheduleTable) throw new Error('강의 정보를 불러올 수 없습니다. 로그인 상태를 확인해주세요.');
 
-	const description = parseInfomaticTableElement(descriptionTable);
+	const description = parseInformaticTableElement(descriptionTable);
 
 	const rates = parseTableElement(ratesTable).find(row => row['평가항목'].text === '비율');
 
