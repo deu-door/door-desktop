@@ -161,5 +161,8 @@ export async function getProfile(): Promise<Profile> {
 	const type = document(`tbody > tr:nth-child(1) > td:nth-child(2)`, table).text();
 	const major = document(`tbody > tr:nth-child(1) > td:nth-child(4)`, table).text();
 
-	return { id, name, type, major, ...fulfilledFetchable() };
+	// 서버 측에서 세션 ID를 인식하여 사용자에 맞는 이미지를 전송하게끔 되어있음
+	const image = 'https://door.deu.ac.kr/Mypage/UserImage';
+
+	return { id, name, type, major, image, ...fulfilledFetchable() };
 }
