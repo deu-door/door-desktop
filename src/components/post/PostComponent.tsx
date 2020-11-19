@@ -82,7 +82,8 @@ export const PostTag: React.FC<PaperProps & { name?: string, color: string, icon
 		<Paper
 			style={{ background: color }}
 			className={clsx(classes.postTag, className)}
-			elevation={4} {...paperProps}
+			elevation={4}
+			{...paperProps}
 		>
 			{children ? children :
 				<Grid container direction="column" alignItems="center">
