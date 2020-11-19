@@ -41,5 +41,9 @@ export interface Profile extends Identifiable, Fetchable {
 	 * 
 	 * @example 컴퓨터공학과
 	 */
-	major: string
+	major: string,
+	/**
+	 * @description 프로필 사진 URL
+	 */
+	image: string
 }
