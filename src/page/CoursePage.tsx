@@ -13,6 +13,8 @@ import React, { useState } from 'react';
 import { sortPostByCreatedAt } from 'service/door/interfaces';
 import { Course } from 'service/door/interfaces/course';
 import { actions } from 'store/modules';
+import { ActivityComponent } from 'components/post/ActivityComponent';
+import { TeamProjectComponent } from 'components/post/TeamProjectComponent';
 
 const useStyles = makeStyles(theme => createStyles({
 	paper: {
@@ -39,8 +41,8 @@ const useStyles = makeStyles(theme => createStyles({
 		color: 'inherit'
 	},
 	tab: {
-		minWidth: 100,
-		width: 100
+		minWidth: 110,
+		width: 110
 	}
 }));
 
@@ -161,6 +163,8 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 		{ key: 'lectures', label: '온라인강의' },
 		{ key: 'assignments', label: '과제' },
 		{ key: 'references', label: '강의자료' },
+		{ key: 'activities', label: '수업활동일지' },
+		{ key: 'teamProjects', label: '팀 프로젝트' },
 		{ key: 'chat', label: '채팅' }
 	];
 
@@ -169,7 +173,7 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 	return (
 		<div className={classes.paper}>
 			<CssBaseline />
-			<AppBar position="sticky">
+			<AppBar position="sticky" color="default">
 				<Container className={classes.appBarContainer}>
 					<CourseHeader course={course} />
 
@@ -217,6 +221,22 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 					<FetchableList fetchableMap={course.references} action={actions.references(course.id)}>
 						{sortPostByCreatedAt(course.references).reverse().map(reference => (
 							<ReferenceComponent key={reference.id} reference={reference} />
+						))}
+					</FetchableList>
+				</TabPanel>
+
+				<TabPanel value={tab} index="activities">
+					<FetchableList fetchableMap={course.activities} action={actions.activities(course.id)}>
+						{sortPostByCreatedAt(course.activities).reverse().map(activity => (
+							<ActivityComponent key={activity.id} activity={activity} />
+						))}
+					</FetchableList>
+				</TabPanel>
+
+				<TabPanel value={tab} index="teamProjects">
+					<FetchableList fetchableMap={course.teamProjects} action={actions.teamProjects(course.id)}>
+						{sortPostByCreatedAt(course.teamProjects).reverse().map(teamProject => (
+							<TeamProjectComponent key={teamProject.id} teamProject={teamProject} />
 						))}
 					</FetchableList>
 				</TabPanel>

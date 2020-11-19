@@ -14,6 +14,10 @@ import { LectureComponent } from '../post/LectureComponent';
 import { AssignmentComponent } from '../post/AssignmentComponent';
 import { ReferenceComponent } from '../post/ReferenceComponent';
 import { PostComponent } from '../post/PostComponent';
+import { ActivityComponent } from 'components/post/ActivityComponent';
+import { Activity } from 'service/door/interfaces/activity';
+import { TeamProject } from 'service/door/interfaces/team-project';
+import { TeamProjectComponent } from 'components/post/TeamProjectComponent';
 
 const useStyles = makeStyles(theme => createStyles({
 	timelineOpposite: {
@@ -24,7 +28,7 @@ const useStyles = makeStyles(theme => createStyles({
 	}
 }));
 
-type PostType = 'notice' | 'lecture' | 'assignment' | 'reference';
+type PostType = 'notice' | 'lecture' | 'assignment' | 'reference' | 'activity' | 'teamProject';
 
 export type CourseTimelinePostProps = { type: PostType, post: Post };
 
@@ -32,15 +36,19 @@ export const CourseTimelinePost: React.FC<CourseTimelinePostProps> = props => {
 	const makePost = ({ type, post }: { type: PostType, post: Post }) => {
 		switch(type){
 			case 'notice':
-				return (<NoticeComponent defaultCollapsed key={'notice-' + post.id} notice={post as Notice} />);
+				return (<NoticeComponent defaultCollapsed key={type + post.id} notice={post as Notice} />);
 			case 'lecture':
-				return (<LectureComponent defaultCollapsed key={'lecture-' + post.id} lecture={post as Lecture} />);
+				return (<LectureComponent defaultCollapsed key={type + post.id} lecture={post as Lecture} />);
 			case 'assignment':
-				return (<AssignmentComponent defaultCollapsed key={'assignment-' + post.id} assignment={post as Assignment} />);
+				return (<AssignmentComponent defaultCollapsed key={type + post.id} assignment={post as Assignment} />);
 			case 'reference':
-				return (<ReferenceComponent defaultCollapsed key={'reference-' + post.id} reference={post as Reference} />);
+				return (<ReferenceComponent defaultCollapsed key={type + post.id} reference={post as Reference} />);
+			case 'activity':
+				return (<ActivityComponent defaultCollapsed key={type + post.id} activity={post as Activity} />);
+			case 'teamProject':
+				return (<TeamProjectComponent defaultCollapsed key={type + post.id} teamProject={post as TeamProject} />);
 			default:
-				return (<PostComponent defaultCollapsed key={'post' + post.id} post={post} />);
+				return (<PostComponent defaultCollapsed key={type + post.id} post={post} />);
 		}
 	};
 
@@ -63,6 +71,8 @@ export const CourseTimeline: React.FC<CourseTimelineProps> = props => {
 	Object.values(course.lectures.items).forEach(lecturesByWeek => pushToPost('lecture', lecturesByWeek.items));
 	pushToPost('assignment', course.assignments.items);
 	pushToPost('reference', course.references.items);
+	pushToPost('activity', course.activities.items);
+	pushToPost('teamProject', course.teamProjects.items);
 
 	// Sort descend order
 	posts = posts.sort((a, b) => sortPostByCreatedAtComparator(b.post, a.post));
