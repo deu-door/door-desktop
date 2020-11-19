@@ -80,7 +80,7 @@ export async function getAssignments(courseId: ID): Promise<FetchableMap<Assignm
 		const to = moment(assignment['제출기간'].text.split('~')[1].trim(), 'YY-MM-DD HH:mm').toDate();
 		
 		return {
-			id: assignment['과제제목'].url?.match(/HomeworkNo=(\w+)/)?.[1],
+			id: assignment['과제제목'].url?.match(/HomeworkNo=(\d+)/)?.[1],
 			courseId: courseId,
 
 			title: assignment['과제제목'].text,
