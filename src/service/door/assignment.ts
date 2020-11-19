@@ -33,19 +33,6 @@ export async function getAssignment(courseId: ID, id: ID): Promise<Assignment> {
 		if(attachment.link) attachments.push(attachment);
 	});
 
-	const submittedAttachments: Attachment[] = [];
-	
-	cheerio.load(submitted['첨부파일'].element)('.filelist .fileitembox a[title=다운로드]').toArray().forEach(file => {
-		const fileElement = document(file);
-
-		const attachment: Attachment = {
-			title: fileElement.text().trim(),
-			link: fileElement.attr('href') || ''
-		};
-
-		if(attachment.link) submittedAttachments.push(attachment);
-	});
-
 	const resultComment = result?.['코멘트'].text;
 	const resultScore = Number(result?.['점수']?.text?.match(/\d+/)?.[0]) || undefined;
 
@@ -63,18 +50,13 @@ export async function getAssignment(courseId: ID, id: ID): Promise<Assignment> {
 		createdAt: from,
 		period: { from, to },
 
-		attachments: attachments,
-
-		submittedContents: submitted['제출 내용'].text,
-		submittedAttachments: submittedAttachments,
+		attachments,
 		submission,
 
 		result: resultComment || resultScore ? {
 			score: resultScore,
 			comment: resultComment
 		} : undefined,
-
-		achieved: attachments.length > 0,
 
 		...fulfilledFetchable()
 	};

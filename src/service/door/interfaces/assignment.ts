@@ -1,11 +1,11 @@
-import { Achievable, Attachment, Post } from ".";
+import { Post, Submittable } from ".";
 
 /**
  * @description 과제 정보를 담은 인터페이스
  * 
  * door.deu.ac.kr/LMS/LectureRoom/CourseHomeworkStudentDetail?CourseNo={course.id}&HomeworkNo={id}
  */
-export interface Assignment extends Post, Achievable {
+export interface Assignment extends Post, Submittable {
 	/**
 	 * @description 과제 게시물 ID
 	 * URL을 통한 자원 접근 시 사용됨
@@ -35,23 +35,6 @@ export interface Assignment extends Post, Achievable {
 	 * @description 게시물 날짜 별 정렬을 위해 createdAt은 period.from 으로 설정
 	 */
 	createdAt: Date,
-	/**
-	 * @description 제출기간
-	 * 
-	 * @example { from: Date(20-09-01 10:00), to: Date(20-09-07 23:59) }
-	 */
-	period: {
-		from: Date,
-		to: Date
-	},
-	/**
-	 * @description 제출정보 - 제출 내용
-	 */
-	submittedContents?: string,
-	/**
-	 * @description 제출정보 - 첨부파일
-	 */
-	submittedAttachments?: Attachment[],
 	/**
 	 * @description 평가결과
 	 */
