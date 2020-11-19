@@ -128,9 +128,9 @@ export async function getLectures(courseId: ID): Promise<FetchableMap<LecturesBy
 
 	const detailDocument = cheerio.load((await doorAxios.get(`/LMS/LectureRoom/CourseLetureDetail/${courseId}`)).data);
 
-	const lecturesTable = lecturesDocument(`#mainForm > div > table`).toArray().pop();
+	const lecturesTable = lecturesDocument(`#mainForm > div > table`).toArray().shift();
 
-	const detailTable = detailDocument(`#wrap > div.subpageCon > div:nth-child(5) > div.form_table > table`).toArray().pop();
+	const detailTable = detailDocument(`#wrap > div.subpageCon > div:nth-child(5) > div.form_table > table`).toArray().shift();
 
 	if(!lecturesTable || !detailTable) throw new Error('온라인 강의 목록을 불러올 수 없습니다. 로그인 상태를 확인해주세요.');
 

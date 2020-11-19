@@ -7,7 +7,7 @@ export async function getNotice(courseId: ID, id: ID): Promise<Notice> {
 	// /BBS/Board/Read 로 요청을 보내면 서버 자체적으로 "읽음" 처리된 후 /BBS/Board/Detail로 리다이렉트됨
 	const document = cheerio.load((await doorAxios.get(`/BBS/Board/Read/CourseNotice/${id}`)).data);
 
-	const detailTable = document(`#boardForm > div.form_table > table`).toArray().pop();
+	const detailTable = document(`#boardForm > div.form_table > table`).toArray().shift();
 
 	if(!detailTable) throw new Error('공지사항을 불러올 수 없습니다. 로그인 상태를 확인해주세요.');
 
@@ -45,7 +45,7 @@ export async function getNotice(courseId: ID, id: ID): Promise<Notice> {
 export async function getNotices(courseId: ID): Promise<FetchableMap<Notice>> {
 	const document = cheerio.load((await doorAxios.get(`/BBS/Board/List/CourseNotice?cNo=${courseId}&pageRowSize=200`)).data);
 
-	const table = document(`#sub_content2 > div.form_table > table`).toArray().pop();
+	const table = document(`#sub_content2 > div.form_table > table`).toArray().shift();
 
 	if(!table) throw new Error('공지사항 목록을 불러올 수 없습니다. 로그인 상태를 확인해주세요.');
 

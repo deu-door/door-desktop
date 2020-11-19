@@ -8,9 +8,9 @@ import { parseInformaticTableElement, parseSubmission, parseTableElement } from 
 export async function getActivity(courseId: ID, id: ID): Promise<Activity> {
 	const document = cheerio.load((await doorAxios.get(`/LMS/LectureRoom/CourseHomeworkStudentDetail?CourseNo=${courseId}&HomeworkNo=${id}`)).data);
 
-	const descriptionTable = document(`#sub_content2 > div:nth-child(1) > table`).toArray().pop();
-	const resultTable = document(`#sub_content2 > div:nth-child(3) > table:not(.tbl_type)`).toArray().pop();
-	const submissionTable = document(`#sub_content2 > div.form_table_s > table`).toArray().pop();
+	const descriptionTable = document(`#sub_content2 > div:nth-child(1) > table`).toArray().shift();
+	const resultTable = document(`#sub_content2 > div:nth-child(3) > table:not(.tbl_type)`).toArray().shift();
+	const submissionTable = document(`#sub_content2 > div.form_table_s > table`).toArray().shift();
 
 	if(!descriptionTable || !submissionTable) throw new Error(`수업활동일지 정보를 불러올 수 없습니다. 로그인 상태를 확인해주세요.`);
 
@@ -66,7 +66,7 @@ export async function getActivity(courseId: ID, id: ID): Promise<Activity> {
 export async function getActivities(courseId: ID): Promise<FetchableMap<Activity>> {
 	const document = cheerio.load((await doorAxios.get(`/LMS/LectureRoom/CourseOutputs/${courseId}`)).data);
 
-	const table = document(`#sub_content2 > div > table`).toArray().pop();
+	const table = document(`#sub_content2 > div > table`).toArray().shift();
 
 	if(!table) throw new Error(`수업활동일지 목록을 불러올 수 없습니다. 로그인 상태를 확인해주세요.`);
 

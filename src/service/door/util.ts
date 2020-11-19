@@ -94,7 +94,7 @@ export function parseInformaticTableElement(table: cheerio.Element): Cell {
 	const data: Cell = {};
 	
 	$('tbody th').toArray().forEach(th => {
-		const td = $(th).next().toArray().pop();
+		const td = $(th).next().toArray().shift();
 		if(td?.name !== 'td') return;
 
 		data[$(th).text().trim()] = {

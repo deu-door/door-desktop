@@ -6,7 +6,7 @@ import { doorAxios, parseInformaticTableElement, parseTableElement } from './uti
 export async function getCourses(): Promise<FetchableMap<Course>>{
 	const document = cheerio.load((await doorAxios.get('/MyPage')).data);
 
-	const courseTable = document(`#wrap > div.subpageCon > div:nth-child(3) > div:nth-child(3) > table`).toArray().pop();
+	const courseTable = document(`#wrap > div.subpageCon > div:nth-child(3) > div:nth-child(3) > table`).toArray().shift();
 
 	if(!courseTable) throw new Error('강의 목록을 불러올 수 없습니다. 로그인 상태를 확인해주세요.');
 
@@ -52,13 +52,13 @@ export async function getCourseDetail(id: ID): Promise<Course> {
 	const document = cheerio.load((await doorAxios.get(`/LMS/LectureRoom/CourseLetureDetail/${id}`)).data);
 
 	// 수업계획 (수업계획서)
-	const descriptionTable = document(`#wrap > div.subpageCon > div:nth-child(5) > div:nth-child(3) > table`).toArray().pop();
+	const descriptionTable = document(`#wrap > div.subpageCon > div:nth-child(5) > div:nth-child(3) > table`).toArray().shift();
 
 	// 수업평가방법 (수업계획서)
-	const ratesTable = document(`#wrap > div.subpageCon > div:nth-child(5) > div:nth-child(5) > table:nth-child(1)`).toArray().pop();
+	const ratesTable = document(`#wrap > div.subpageCon > div:nth-child(5) > div:nth-child(5) > table:nth-child(1)`).toArray().shift();
 
 	// 주차별 강의계획
-	const scheduleTable = document(`#wrap > div.subpageCon > div:nth-child(5) > div.form_table > table`).toArray().pop();
+	const scheduleTable = document(`#wrap > div.subpageCon > div:nth-child(5) > div.form_table > table`).toArray().shift();
 
 	if(!descriptionTable || !ratesTable || !scheduleTable) throw new Error('강의 정보를 불러올 수 없습니다. 로그인 상태를 확인해주세요.');
 

@@ -7,8 +7,8 @@ import { doorAxios, parseInformaticTableElement, parseSubmission, parseTableElem
 export async function getTeamProject(courseId: ID, id: ID): Promise<TeamProject> {
 	const document = cheerio.load((await doorAxios.get(`/LMS/LectureRoom/CourseTeamProjectStudentDetail?CourseNo=${courseId}&ProjectNo=${id}`)).data);
 
-	const descriptionTable = document(`#sub_content2 > div.form_table_b > table`).toArray().pop();
-	const submissionTable = document(`#CourseLeture > div.form_table_s > table`).toArray().pop();
+	const descriptionTable = document(`#sub_content2 > div.form_table_b > table`).toArray().shift();
+	const submissionTable = document(`#CourseLeture > div.form_table_s > table`).toArray().shift();
 
 	if(!descriptionTable || !submissionTable) throw new Error(`팀 프로젝트 정보를 불러올 수 없습니다. 로그인 상태를 확인해주세요.`);
 
@@ -54,7 +54,7 @@ export async function getTeamProject(courseId: ID, id: ID): Promise<TeamProject>
 export async function getTeamProjects(courseId: ID): Promise<FetchableMap<TeamProject>> {
 	const document = cheerio.load((await doorAxios.get(`/LMS/LectureRoom/CourseTeamProjectStudentList/${courseId}`)).data);
 
-	const table = document(`#sub_content2 > div:nth-child(4) > table`).toArray().pop();
+	const table = document(`#sub_content2 > div:nth-child(4) > table`).toArray().shift();
 
 	if(!table) throw new Error(`팀 프로젝트 목록을 불러올 수 없습니다. 로그인 상태를 확인해주세요.`);
 
