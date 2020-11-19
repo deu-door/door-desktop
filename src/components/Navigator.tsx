@@ -121,7 +121,7 @@ const ListUserItem: React.FC = () => {
         onClick={() => setOpen(true)}
       >
         <ListItemAvatar>
-          <Avatar>{user.profile?.name.charAt(0)}</Avatar>
+          <Avatar src={user.profile?.image}>{user.profile?.name.charAt(0)}</Avatar>
         </ListItemAvatar>
         <ListItemText
           primary={`${user.profile?.name}(${user.profile?.id})`}
