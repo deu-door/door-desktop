@@ -17,13 +17,13 @@ export const FetchableList: React.FC<FetchableListProps> = props => {
 	const classes = useStyles();
 
 	return (
-		<div>
+		<>
 			<FetchButton
 				className={classes.fetchButton}
 				fetchable={fetchableMap}
 				action={action}
 			/>
 			{children}
-		</div>
+		</>
 	);
 }
