@@ -1,6 +1,5 @@
 import { createStyles, makeStyles, Typography } from '@material-ui/core';
 import { Timeline, TimelineConnector, TimelineContent, TimelineDot, TimelineItem, TimelineOppositeContent, TimelineSeparator } from '@material-ui/lab';
-import { AssignmentComponent, LectureComponent, NoticeComponent, PostComponent, ReferenceComponent } from 'components/PostComponent';
 import React from 'react';
 import { Post, sortPostByCreatedAtComparator } from 'service/door/interfaces';
 import { Assignment } from 'service/door/interfaces/assignment';
@@ -10,6 +9,11 @@ import { Notice } from 'service/door/interfaces/notice';
 import { Reference } from 'service/door/interfaces/reference';
 import { Lecture } from 'service/door/interfaces/lecture';
 import { Course } from 'service/door/interfaces/course';
+import { NoticeComponent } from '../post/NoticeComponent';
+import { LectureComponent } from '../post/LectureComponent';
+import { AssignmentComponent } from '../post/AssignmentComponent';
+import { ReferenceComponent } from '../post/ReferenceComponent';
+import { PostComponent } from '../post/PostComponent';
 
 const useStyles = makeStyles(theme => createStyles({
 	timelineOpposite: {
