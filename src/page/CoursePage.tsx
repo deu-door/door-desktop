@@ -12,7 +12,9 @@ import { actions } from 'store/modules';
 
 const useStyles = makeStyles(theme => createStyles({
 	paper: {
-		flex: 1
+		flex: 1,
+		display: 'flex',
+		flexDirection: 'column'
 	},
 	courseSubtitle: {
 		paddingTop: theme.spacing(1)
@@ -22,7 +24,12 @@ const useStyles = makeStyles(theme => createStyles({
 	},
 	contentsContainer: {
 		marginLeft: 'unset',
-		marginTop: theme.spacing(2)
+		marginTop: theme.spacing(2),
+		flex: 1,
+		display: 'flex',
+		'& > *': {
+			flex: 1
+		}
 	},
 	courseHeaderFetchButton: {
 		color: 'inherit'
@@ -192,7 +199,8 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 		{ key: 'notices', label: '공지사항' },
 		{ key: 'lectures', label: '온라인강의' },
 		{ key: 'assignments', label: '과제' },
-		{ key: 'references', label: '강의자료' }
+		{ key: 'references', label: '강의자료' },
+		{ key: 'chat', label: '채팅' }
 	];
 
 	const [ tab, setTab ] = useState(tabs[0].key);
@@ -253,13 +261,12 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 				</TabPanel>
 
 				<TabPanel value={tab} index="chat">
-					{/* <ChatComponent course={course} /> */}
+					<ChatComponent course={course} />
 				</TabPanel>
 
 				<TabPanel value={tab} index="info">
 					{/* <CourseInformation course={course} /> */}
 				</TabPanel>
-
 			</Container>
 		</div>
 	);
