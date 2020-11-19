@@ -2,11 +2,11 @@ import { Button, ButtonProps, CardContent, CardMedia, createStyles, Grid, makeSt
 import { purple } from '@material-ui/core/colors';
 import { OndemandVideo } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
-import { doorAxios } from 'service/door';
 import { Lecture } from 'service/door/interfaces/lecture';
 import { PostAttachment, PostComponent, PostComponentProps, PostContent, PostTag } from './PostComponent';
 import VisibilitySensor from 'react-visibility-sensor';
 import { downloader } from 'service/downloader';
+import { doorAxios } from 'service/door/util';
 
 const useStyles = makeStyles(theme => createStyles({
 	lectureOverlay: {
