@@ -22,7 +22,7 @@ export async function getAssignment(courseId: ID, id: ID): Promise<Assignment> {
 
 	const attachments: Attachment[] = [];
 
-	cheerio.load(description['첨부파일'].element)('a').toArray().forEach(file => {
+	document('a', description['첨부파일'].element).toArray().forEach(file => {
 		const fileElement = document(file);
 
 		const attachment: Attachment = {
