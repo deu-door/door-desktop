@@ -154,6 +154,54 @@ export interface Post extends Identifiable, Fetchable, CourseSubordinated {
 	attachments?: Attachment[]
 }
 
+/**
+ * @description 제출 가능한 형식의 게시글
+ */
+export interface Submittable {
+	/**
+	 * @description 제출 내용
+	 */
+	submission: Submission,
+	/**
+	 * @description 제출기간
+	 * 
+	 * @example { from: Date(20-09-01 10:00), to: Date(20-09-07 23:59) }
+	 */
+	period: {
+		from: Date,
+		to: Date
+	},
+	/**
+	 * @description 추가 제출기간
+	 * 
+	 * @example { from: Date(20-09-10 10:00), to: Date(20-09-11:23:59) }
+	 */
+	bonusPeriod?: {
+		from: Date,
+		to: Date
+	},
+}
+
+/**
+ * @description 제출 정보를 나타내는 인터페이스
+ */
+export interface Submission {
+	/**
+	 * @description 제출 내용
+	 * 
+	 * @example 금일 진행한 조별과제 회의록
+	 */
+	contents: string,
+	/**
+	 * @description 첨부파일
+	 */
+	attachments: Attachment[],
+	/**
+	 * @description 제출 여부
+	 */
+	submitted: boolean
+}
+
 export const sortPostById = <T extends Post>(map: FetchableMap<T>): T[] => {
 	return Object.values(map.items).sort(sortPostByIdComparator);
 }
