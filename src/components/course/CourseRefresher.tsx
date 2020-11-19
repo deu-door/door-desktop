@@ -43,10 +43,12 @@ export const CourseRefresher: React.FC<{ course: Course }> = props => {
 
 		const fetch = async () => {
 			for(const { description, action } of [
-				{ description: '공지사항을 가져오는 중입니다 ...', action: actions.notices(course.id) },
-				{ description: '강의목록을 가져오는 중입니다 ...', action: actions.lectures(course.id) },
-				{ description: '과제목록을 가져오는 중입니다 ...', action: actions.assignments(course.id) },
-				{ description: '강의자료를 가져오는 중입니다 ...', action: actions.references(course.id) }
+				{ description: '공지사항 목록을 가져오는 중입니다 ...', action: actions.notices(course.id) },
+				{ description: '강의 목록을 가져오는 중입니다 ...', action: actions.lectures(course.id) },
+				{ description: '과제 목록을 가져오는 중입니다 ...', action: actions.assignments(course.id) },
+				{ description: '강의자료 목록을 가져오는 중입니다 ...', action: actions.references(course.id) },
+				{ description: '수업활동일지 목록을 가져오는 중입니다 ...', action: actions.activities(course.id) },
+				{ description: '팀 프로젝트 목록을 가져오는 중입니다 ...', action: actions.teamProjects(course.id) }
 			]) {
 				setDescription(description);
 				await dispatch(action.fetchIfExpired());
