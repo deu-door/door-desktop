@@ -1,8 +1,8 @@
 import cheerio from 'cheerio';
 import { secure } from 'service/secure';
-import { doorAxios } from ".";
 import { fulfilledFetchable } from './interfaces';
 import { Profile, User } from './interfaces/user';
+import { doorAxios } from './util';
 
 export type LoginOptions = { saveCredential: boolean };
 

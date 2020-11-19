@@ -1,8 +1,7 @@
 import cheerio from 'cheerio';
-import { doorAxios } from '.';
 import { FetchableMap, fulfilledFetchable, ID, notFulfilledFetchable } from './interfaces';
 import { Course } from './interfaces/course';
-import { parseInformaticTableElement, parseTableElement } from './util';
+import { doorAxios, parseInformaticTableElement, parseTableElement } from './util';
 
 export async function getCourses(): Promise<FetchableMap<Course>>{
 	const document = cheerio.load((await doorAxios.get('/MyPage')).data);

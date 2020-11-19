@@ -1,10 +1,9 @@
 import cheerio from 'cheerio';
-import { doorAxios } from '.';
 import { FetchableMap, fulfilledFetchable, ID, Link, notFulfilledFetchable } from './interfaces';
 import { Lecture, LecturesByWeek } from './interfaces/lecture';
 import { YouTubeURLParser } from '@iktakahiro/youtube-url-parser';
 import moment from 'moment';
-import { parseTableElement } from './util';
+import { doorAxios, parseTableElement } from './util';
 
 // Example data
 // viewDoor(cn, dn, dt, dst, dd, df, dw, dh, fid, inningno, astatus)

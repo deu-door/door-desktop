@@ -1,6 +1,6 @@
 import cheerio from 'cheerio';
 import moment from 'moment';
-import { doorAxios } from '.';
+import { doorAxios } from './util';
 import { Attachment, FetchableMap, fulfilledFetchable, ID, notFulfilledFetchable } from './interfaces';
 import { Activity } from './interfaces/activity';
 import { parseInformaticTableElement, parseSubmission, parseTableElement } from './util';

@@ -1,8 +1,7 @@
 import cheerio from 'cheerio';
-import { doorAxios } from '.';
 import { Attachment, FetchableMap, fulfilledFetchable, ID, notFulfilledFetchable } from './interfaces';
 import { Notice } from './interfaces/notice';
-import { parseInformaticTableElement, parseTableElement } from './util';
+import { doorAxios, parseInformaticTableElement, parseTableElement } from './util';
 
 export async function getNotice(courseId: ID, id: ID): Promise<Notice> {
 	// /BBS/Board/Read 로 요청을 보내면 서버 자체적으로 "읽음" 처리된 후 /BBS/Board/Detail로 리다이렉트됨

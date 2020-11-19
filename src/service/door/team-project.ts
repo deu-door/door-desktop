@@ -1,9 +1,8 @@
 import cheerio from 'cheerio';
 import moment from 'moment';
-import { doorAxios } from '.';
 import { Attachment, FetchableMap, fulfilledFetchable, ID, notFulfilledFetchable } from './interfaces';
 import { TeamProject } from './interfaces/team-project';
-import { parseInformaticTableElement, parseSubmission, parseTableElement } from './util';
+import { doorAxios, parseInformaticTableElement, parseSubmission, parseTableElement } from './util';
 
 export async function getTeamProject(courseId: ID, id: ID): Promise<TeamProject> {
 	const document = cheerio.load((await doorAxios.get(`/LMS/LectureRoom/CourseTeamProjectStudentDetail?CourseNo=${courseId}&ProjectNo=${id}`)).data);
