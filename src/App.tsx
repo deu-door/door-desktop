@@ -18,7 +18,7 @@ const App: React.FC = () => {
     palette: {
       // TODO: For dark mode support, edit this line as:
       // prefersDarkMode ? 'dark' : 'light'
-      type: prefersDarkMode ? 'light' : 'light',
+      type: prefersDarkMode ? 'dark' : 'light',
       primary: {
         main: '#2F71E9'
       }
