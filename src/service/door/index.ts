@@ -90,7 +90,8 @@ export const doorAxios = axios.create({
 	transformRequest: [
 		(data, headers) => qs.stringify(data, { arrayFormat: 'brackets' })
 	],
-	withCredentials: true
+	withCredentials: true,
+	validateStatus: status => status >= 200 && status <= 302
 });
 
 // Logging request
