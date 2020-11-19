@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { downloader } from 'service/downloader';
-import { useSnackbar } from 'notistack';
-import { Box, createStyles, Grid, IconButton, LinearProgress, makeStyles, Snackbar, SnackbarContent, Typography } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import { createStyles, Grid, IconButton, LinearProgress, makeStyles, Snackbar, SnackbarContent, Typography } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => createStyles({
