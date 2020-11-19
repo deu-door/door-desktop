@@ -4,9 +4,9 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Fetchable } from 'service/door/interfaces';
 import { FetchableAction } from 'store/modules';
-import { DateTime } from './DateTime';
 import clsx from 'clsx';
 import VisibilitySensor from 'react-visibility-sensor';
+import { DateTime } from 'components/core/DateTime';
 
 const useStyles = makeStyles(theme => createStyles({
 	fetchableButton: {

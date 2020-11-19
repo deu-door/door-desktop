@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Course } from "service/door/interfaces/course";
 import { actions } from "store/modules";
-import { DateTime } from "../DateTime";
 import React from 'react';
+import { DateTime } from "components/core/DateTime";
 
 export const CourseRefresher: React.FC<{ course: Course }> = props => {
 	const { course } = props;

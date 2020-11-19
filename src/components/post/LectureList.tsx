@@ -1,10 +1,10 @@
 import { createStyles, makeStyles, Step, StepButton, StepContent, Stepper } from '@material-ui/core';
+import { FetchableList } from 'components/fetchable/FetchableList';
+import { FetchButton } from 'components/fetchable/FetchButton';
 import React, { useState } from 'react';
 import { Course } from 'service/door/interfaces/course';
 import { actions } from 'store/modules';
-import { FetchableList } from './FetchableList';
-import { FetchButton } from './FetchButton';
-import { LectureComponent } from './post/LectureComponent';
+import { LectureComponent } from './LectureComponent';
 
 const useStyles = makeStyles(theme => createStyles({
 	lecturesByWeek: {

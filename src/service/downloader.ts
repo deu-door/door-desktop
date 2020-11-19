@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events';
 import Electron from 'electron';
-import { doorAxios } from './door';
-import { useEffect, useRef } from 'react';
+import { doorAxios } from './door/util';
 
 const { session } = window.require('electron').remote;
 

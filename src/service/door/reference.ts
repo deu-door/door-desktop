@@ -1,7 +1,7 @@
 import cheerio from 'cheerio';
-import { doorAxios, parseInfomaticTableElement, parseTableElement } from '.';
 import { Attachment, FetchableMap, fulfilledFetchable, ID, notFulfilledFetchable } from './interfaces';
 import { Reference } from './interfaces/reference';
+import { doorAxios, parseInformaticTableElement, parseTableElement } from './util';
 
 export async function getReference(courseId: ID, id: ID): Promise<Reference> {
 	// /BBS/Board/Read 로 요청을 보내면 서버 자체적으로 "읽음" 처리된 후 /BBS/Board/Detail로 리다이렉트됨
@@ -11,7 +11,7 @@ export async function getReference(courseId: ID, id: ID): Promise<Reference> {
 
 	if(!detailTable) throw new Error('강의자료를 불러올 수 없습니다. 로그인 상태를 확인해주세요.');
 
-	const detail = parseInfomaticTableElement(detailTable);
+	const detail = parseInformaticTableElement(detailTable);
 
 	const attachments: Attachment[] = [];
 

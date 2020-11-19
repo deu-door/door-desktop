@@ -8,8 +8,8 @@ import { Message } from 'service/chat/interfaces/message';
 import { AppBar, Box, createStyles, Grid, InputBase, List, ListItem, makeStyles, Paper, Toolbar, Typography } from '@material-ui/core';
 import { Profile } from 'service/door/interfaces/user';
 import { Alert } from '@material-ui/lab';
-import { DateTime } from './core/DateTime';
 import { getChatHistory } from 'service/chat/history';
+import { DateTime } from 'components/core/DateTime';
 
 const useStyles = makeStyles(theme => createStyles({
 	main: {

@@ -1,7 +1,6 @@
 import { createStyles, CssBaseline, Grid, makeStyles, Typography } from '@material-ui/core';
 import { BackgroundService } from 'BackgroundService';
-import { Downloads } from 'components/Downloads';
-import { KeepAlive } from 'components/KeepAlive';
+import { KeepAlive } from 'components/core/KeepAlive';
 import { Navigator } from 'components/Navigator';
 import { CoursePage } from 'page/CoursePage';
 import { InitializePage } from 'page/InitializePage';
@@ -12,6 +11,7 @@ import { HashRouter as Router, Redirect, Route, Switch, useLocation } from 'reac
 import { RootState } from 'store/modules';
 import { CourseState } from 'store/modules/courses';
 import { ReactComponent as Logo } from 'resources/logo-original-white.svg';
+import { Downloads } from 'components/core/Downloads';
 
 const useStyles = makeStyles(theme => createStyles({
   main: {

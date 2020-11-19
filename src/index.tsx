@@ -4,10 +4,11 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import axios from 'axios';
-import door, { doorAxios } from 'service/door';
+import door from 'service/door';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from 'store';
 import { downloader } from 'service/downloader';
+import { doorAxios } from 'service/door/util';
 
 axios.interceptors.request.use(request => {
   console.log('[Axios] Starting Request', request);

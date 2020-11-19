@@ -4,7 +4,7 @@ import React from 'react';
 import { Post, sortPostByCreatedAtComparator } from 'service/door/interfaces';
 import { Assignment } from 'service/door/interfaces/assignment';
 import moment from 'moment';
-import { DateTime } from 'components/DateTime';
+import { DateTime } from 'components/core/DateTime';
 import { Notice } from 'service/door/interfaces/notice';
 import { Reference } from 'service/door/interfaces/reference';
 import { Lecture } from 'service/door/interfaces/lecture';
