@@ -80,8 +80,8 @@ export const PostTag: React.FC<PaperProps & { name?: string, color: string, icon
 
 	return (
 		<Paper
+			style={{ background: color }}
 			className={clsx(classes.postTag, className)}
-			color={color}
 			elevation={4} {...paperProps}
 		>
 			{children ? children :
