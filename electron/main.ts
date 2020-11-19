@@ -41,16 +41,17 @@ function configureSession(){
 			'*://*/*'
 		]
 	}, (details, callback) => {
-		const cookies = (details.responseHeaders['set-cookie'] || []).map(cookie => cookie.replace('SameSite=Lax', 'SameSite=None'));
-		if(cookies.length > 0){
-			details.responseHeaders['set-cookie'] = cookies;
-		}
-
-		// X-Frame-Options 비활성화. Door 컨텐츠를 iframe으로 띄우기 위함임
 		const headers = details.responseHeaders;
 		details.responseHeaders = {};
+
 		Object.keys(headers).forEach(header => {
+			// X-Frame-Options 비활성화. Door 컨텐츠를 iframe으로 띄우기 위함임
 			if(header.toLowerCase() === 'x-frame-options') return;
+
+			// SameSite=Lax 쿠키 정책 해제
+			if(header.toLowerCase() === 'set-cookie') {
+				return details.responseHeaders[header] = headers[header].map(cookie => cookie.replace('SameSite=Lax', 'SameSite=None'));
+			}
 
 			details.responseHeaders[header] = headers[header];
 		});
