@@ -9,7 +9,7 @@ import { Profile } from 'service/door/interfaces/user';
 import { Alert } from '@material-ui/lab';
 import { getChatHistory } from 'service/chat/history';
 import { DateTime } from 'components/core/DateTime';
-import { StompClient } from './StompClient';
+import { StompClient, StompMessage } from './StompClient';
 
 const useStyles = makeStyles(theme => createStyles({
 	main: {
@@ -128,7 +128,7 @@ export const ChatComponent: React.FC<ChatComponentProps> = props => {
 	const stompEndpoint = '/chat/message';
 	const topic = `/topic/courses/${course.id}`;
 
-	const onMessage = (message: Record<any, any>) => {
+	const onMessage = (message: StompMessage) => {
 		console.log('Chat: message receive', message);
 		setMessages([ ...messages, (message as Message) ]);
 	};
