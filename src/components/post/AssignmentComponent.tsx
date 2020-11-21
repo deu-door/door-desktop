@@ -3,7 +3,8 @@ import { AssignmentLate } from '@material-ui/icons';
 import React from 'react';
 import { Assignment } from 'service/door/interfaces/assignment';
 import { actions } from 'store/modules';
-import { PostComponent, PostComponentProps, PostTag } from './PostComponent';
+import { PostTag } from './controls/PostTag';
+import { PostComponent, PostComponentProps } from './PostComponent';
 
 export const AssignmentComponent: React.FC<Omit<PostComponentProps, 'post'> & { assignment: Assignment }> = props => {
 	const { assignment, ...postProps } = props;

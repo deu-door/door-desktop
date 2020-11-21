@@ -3,7 +3,8 @@ import { Assignment } from '@material-ui/icons';
 import React from 'react';
 import { Activity } from 'service/door/interfaces/activity';
 import { actions } from 'store/modules';
-import { PostComponent, PostComponentProps, PostTag } from './PostComponent';
+import { PostTag } from './controls/PostTag';
+import { PostComponent, PostComponentProps } from './PostComponent';
 
 export const ActivityComponent: React.FC<Omit<PostComponentProps, 'post'> & { activity: Activity }> = props => {
 	const { activity, ...postProps } = props;

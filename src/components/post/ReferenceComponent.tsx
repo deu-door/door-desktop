@@ -2,8 +2,9 @@ import { deepOrange } from "@material-ui/core/colors";
 import { Description } from "@material-ui/icons";
 import { Reference } from "service/door/interfaces/reference";
 import { actions } from "store/modules";
-import { PostComponent, PostComponentProps, PostTag } from "./PostComponent";
+import { PostComponent, PostComponentProps } from "./PostComponent";
 import React from 'react';
+import { PostTag } from "./controls/PostTag";
 
 export const ReferenceComponent: React.FC<Omit<PostComponentProps, 'post'> & { reference: Reference }> = props => {
 	const { reference, ...postProps } = props;

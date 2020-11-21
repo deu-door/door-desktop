@@ -3,10 +3,12 @@ import { purple } from '@material-ui/core/colors';
 import { OndemandVideo } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import { Lecture } from 'service/door/interfaces/lecture';
-import { PostAttachment, PostComponent, PostComponentProps, PostContent, PostTag } from './PostComponent';
+import { PostComponent, PostComponentProps, PostContent } from './PostComponent';
 import VisibilitySensor from 'react-visibility-sensor';
 import { downloader } from 'service/downloader';
 import { doorAxios } from 'service/door/util';
+import { PostTag } from './controls/PostTag';
+import { PostAttachment } from './controls/PostAttachment';
 
 const useStyles = makeStyles(theme => createStyles({
 	lectureOverlay: {
@@ -103,10 +105,10 @@ export const LectureComponent: React.FC<Omit<PostComponentProps, 'post'> & { lec
 						{lecture.contents && <PostContent contents={lecture.contents} />}
 
 						{lecture.link && linkType === 'downloadable' &&
-							<PostAttachment attachment={{
+							<PostAttachment attachments={[{
 								title: '첨부파일',
 								link: lecture.link
-							}} />}
+							}]} />}
 					</CardContent>
 				</>
 			</VisibilitySensor>
