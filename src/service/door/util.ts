@@ -1,6 +1,6 @@
 import { Attachment, Submission } from "./interfaces";
 import cheerio from 'cheerio';
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import qs from 'qs';
 
 /**
@@ -33,6 +33,18 @@ doorAxios.interceptors.request.use(request => {
 doorAxios.interceptors.response.use(response => {
 	console.log('[Axios] Receive Response', response);
 	return response;
+});
+
+/**
+ * 업로드용 Axios 객체. door 홈페이지 업로드 요청에 맞춤 설정되어 있음
+ */
+export const doorUploadAxios = axios.create({
+	baseURL: 'http://door.deu.ac.kr',
+	headers: {
+		'Accept': '*/*',
+		// Content-Type이 반드시 빠져있어야 함.
+		// Content-Type이 multipart/form-data인 경우 반드시 브라우저에서 채워넣어야 함
+	}
 });
 
 // delayed all request (0.8s)
@@ -107,11 +119,33 @@ export function parseInformaticTableElement(table: cheerio.Element): Cell {
 	return data;
 }
 
+/**
+ * HTML 폼 Element를 Cheerio를 사용하여 name-value 형태의 Object로 파싱합니다.
+ * 
+ * @param form 파싱할 Form cheerio.Element 입니다.
+ */
+export const parseForm = (form: cheerio.Element): Submission['form'] => {
+	const $ = cheerio.load(form);
+
+	return {
+		url: $('form').first().attr('action') || '',
+		method: $('form').first().attr('method') as 'GET' | 'POST',
+		enctype: $('form').first().attr('enctype'),
+		data: Object.fromEntries($('*[name]').toArray()
+			.map(element => [ $(element).attr('name'), $(element).attr('value') ])
+			.filter(entry => entry[0]))
+	}
+}
+
+const DEFAULT_FILE_KEY_NAME = 'TFFile';
+
 export const parseSubmission = (table: cheerio.Element): Submission => {
 	const $ = cheerio.load(table);
 	const tableParsed = parseInformaticTableElement(table);
 
-	const contents = (tableParsed['제출 내용'] || tableParsed['제출내용']).text;
+	const contents = (tableParsed['제출 내용'] || tableParsed['제출내용']);
+	const file = tableParsed['첨부파일'];
+
 	const attachments: Attachment[] = [];
 	
 	$('.filelist .fileitembox a[title=다운로드]', tableParsed['첨부파일'].element).toArray().forEach(file => {
@@ -126,8 +160,31 @@ export const parseSubmission = (table: cheerio.Element): Submission => {
 	});
 
 	return {
-		contents,
+		contents: contents.text,
 		attachments,
-		submitted: contents.length > 0 || attachments.length > 0
+		submitted: contents.text.length > 0 || attachments.length > 0,
+		form: {
+			contentsKeyName: $('*[name]', contents.element).first().attr('name'),
+			fileKeyName: $('*[type=file]', file.element).first().attr('name') || DEFAULT_FILE_KEY_NAME
+		} as Submission['form']
 	};
+}
+
+export const submitForm = async (form: Submission['form']): Promise<void> => {
+	const request: AxiosRequestConfig = {
+		url: form.url,
+		method: form.method || 'POST'
+	};
+
+	const formData = new FormData();
+	// Add default fields
+	Object.entries(form.data || {}).forEach(([key, value]) => formData.append(key, value));
+	// Add contents
+	if(form.contentsKeyName && form.contents) formData.append(form.contentsKeyName, form.contents);
+	// Add file
+	if(form.fileKeyName && form.file) formData.append(form.fileKeyName, form.file);
+
+	request.data = formData;
+
+	await doorUploadAxios(request);
 }

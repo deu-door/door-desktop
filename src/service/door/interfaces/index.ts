@@ -199,7 +199,54 @@ export interface Submission {
 	/**
 	 * @description 제출 여부
 	 */
-	submitted: boolean
+	submitted: boolean,
+	/**
+	 * @description 제출 시 필요한 Form Data
+	 */
+	form: {
+		/**
+		 * @description 제출 URL
+		 */
+		url: string,
+		/**
+		 * @description 제출 Method
+		 */
+		method?: 'GET' | 'POST',
+		/**
+		 * @description encription type
+		 * 
+		 * @example multipart/form-data
+		 */
+		enctype?: string,
+		/**
+		 * @description 제출 내용 input name
+		 * 
+		 * @example coursehomeworksubmits.SubmitContents
+		 */
+		contentsKeyName?: string,
+		/**
+		 * @description 첨부파일 input name
+		 * 
+		 * @example TFFile
+		 */
+		fileKeyName?: string,
+		/**
+		 * @description 제출할 내용
+		 * 
+		 * @example 금학기 과제입니다.
+		 */
+		contents?: string,
+		/**
+		 * @description 제출할 파일
+		 * 
+		 * @example 과제.zip
+		 */
+		file?: File,
+		/**
+		 * @description 기타 Form data
+		 */
+		data?: Record<string, string>
+	}
 }
 
 export const sortPostById = <T extends Post>(map: FetchableMap<T>): T[] => {

@@ -2,20 +2,18 @@ import cheerio from 'cheerio';
 import moment from 'moment';
 import { Attachment, FetchableMap, fulfilledFetchable, ID, notFulfilledFetchable } from './interfaces';
 import { TeamProject } from './interfaces/team-project';
-import { doorAxios, parseInformaticTableElement, parseSubmission, parseTableElement } from './util';
+import { doorAxios, parseForm, parseInformaticTableElement, parseSubmission, parseTableElement } from './util';
 
 export async function getTeamProject(courseId: ID, id: ID): Promise<TeamProject> {
 	const document = cheerio.load((await doorAxios.get(`/LMS/LectureRoom/CourseTeamProjectStudentDetail?CourseNo=${courseId}&ProjectNo=${id}`)).data);
 
 	const descriptionTable = document(`#sub_content2 > div.form_table_b > table`).toArray().shift();
 	const submissionTable = document(`#CourseLeture > div.form_table_s > table`).toArray().shift();
+	const form = document(`#CourseLeture`).toArray().shift();
 
-	if(!descriptionTable || !submissionTable) throw new Error(`팀 프로젝트 정보를 불러올 수 없습니다. 로그인 상태를 확인해주세요.`);
+	if(!descriptionTable || !submissionTable || !form) throw new Error(`팀 프로젝트 정보를 불러올 수 없습니다. 로그인 상태를 확인해주세요.`);
 
 	const description = parseInformaticTableElement(descriptionTable);
-
-	// 시간이 많이 지나면 평가 결과 table은 없어질 수도 있음
-	const submission = parseSubmission(submissionTable);
 
 	const attachments: Attachment[] = [];
 
@@ -32,6 +30,10 @@ export async function getTeamProject(courseId: ID, id: ID): Promise<TeamProject>
 
 	const from = moment(description['제출기간'].text.split('~')[0].trim(), 'YY-MM-DD HH:mm').toDate();
 	const to = moment(description['제출기간'].text.split('~')[1].trim(), 'YY-MM-DD HH:mm').toDate();
+
+	// 제출 관련 정보 파싱
+	const submission = parseSubmission(submissionTable);
+	Object.assign(submission.form, parseForm(form));
 
 	return {
 		id: id,

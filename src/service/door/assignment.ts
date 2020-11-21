@@ -1,6 +1,6 @@
 import cheerio from 'cheerio';
 import moment from 'moment';
-import { doorAxios } from './util';
+import { doorAxios, parseForm } from './util';
 import { Attachment, FetchableMap, fulfilledFetchable, ID, notFulfilledFetchable } from './interfaces';
 import { Assignment } from './interfaces/assignment';
 import { parseInformaticTableElement, parseSubmission, parseTableElement } from './util';
@@ -11,14 +11,14 @@ export async function getAssignment(courseId: ID, id: ID): Promise<Assignment> {
 	const descriptionTable = document(`#sub_content2 > div:nth-child(1) > table`).toArray().shift();
 	const resultTable = document(`#sub_content2 > div:nth-child(3) > table:not(.tbl_type)`).toArray().shift();
 	const submissionTable = document(`#sub_content2 > div.form_table_s > table`).toArray().shift();
+	const form = document(`#CourseLeture`).toArray().shift();
 
-	if(!descriptionTable || !submissionTable) throw new Error(`과제 정보를 불러올 수 없습니다. 로그인 상태를 확인해주세요.`);
+	if(!descriptionTable || !submissionTable || !form) throw new Error(`과제 정보를 불러올 수 없습니다. 로그인 상태를 확인해주세요.`);
 
 	const description = parseInformaticTableElement(descriptionTable);
 
 	// 시간이 많이 지나면 평가 결과 table은 없어질 수도 있음
 	const result = resultTable ? parseInformaticTableElement(resultTable) : undefined;
-	const submission = parseSubmission(submissionTable);
 
 	const attachments: Attachment[] = [];
 
@@ -43,6 +43,10 @@ export async function getAssignment(courseId: ID, id: ID): Promise<Assignment> {
 		from: moment(description['추가 제출기간'].text.split('~')[0].trim(), 'YY-MM-DD HH:mm').toDate(),
 		to: moment(description['추가 제출기간'].text.split('~')[1].trim(), 'YY-MM-DD HH:mm').toDate()
 	};
+
+	// 제출 관련 정보 파싱
+	const submission = parseSubmission(submissionTable);
+	Object.assign(submission.form, parseForm(form));
 
 	return {
 		id: id,
