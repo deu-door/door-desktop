@@ -1,10 +1,11 @@
-import { Button, Grid, TextField } from '@material-ui/core';
+import { Button, Grid, Link, TextField } from '@material-ui/core';
+import { Publish } from '@material-ui/icons';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Submission } from 'service/door/interfaces';
 import { submitForm } from 'service/door/util';
 import { FetchableAction } from 'store/modules';
-import { PostAttachment } from './PostAttachment';
+import { PostAttachment, PostFile } from './PostAttachment';
 
 export type PostSubmissionProps = {
 	submission: Submission,
@@ -20,12 +21,39 @@ export const PostSubmission: React.FC<PostSubmissionProps> = props => {
 	const [pending, setPending] = useState(false);
 
 	const contentsRef = React.createRef<HTMLInputElement>();
+	const fileInputRef = React.createRef<HTMLInputElement>();
 
 	const attachments = submission.attachments;
 
+	const clearContents = () => {
+		if(contentsRef.current) contentsRef.current.value = submission.contents;
+	};
+
+	const clearFiles = () => {
+		if(fileInputRef.current) fileInputRef.current.value = '';
+		setFiles([]);
+	};
+
+	const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		console.log('file changed');
+
+		// Allows single file upload. Limitation of door system.
+		const file = event.target.files?.[0];
+		const nextFiles: File[] = file ? [file] : [];
+
+		setFiles(nextFiles);
+	};
+
+	const onDeleteFile = (file: File) => () => {
+		const nextFiles = files.filter(_file => _file !== file);
+		clearFiles();
+		setFiles(nextFiles);
+	};
+
 	const onCancel = () => {
 		setEdit(false);
-		if(contentsRef.current) contentsRef.current.value = submission.contents;
+		clearContents();
+		clearFiles();
 	};
 
 	const onSubmit = async () => {
@@ -47,7 +75,7 @@ export const PostSubmission: React.FC<PostSubmissionProps> = props => {
 		setPending(false);
 
 		// Files are uploaded. Clear user input
-		setFiles([]);
+		clearFiles();
 	};
 
 	return (
@@ -62,12 +90,30 @@ export const PostSubmission: React.FC<PostSubmissionProps> = props => {
 				inputRef={contentsRef}
 			/>
 
+			<input type="file" onChange={onChange} ref={fileInputRef} hidden />
+
 			{attachments && <PostAttachment
-				upload={edit}
 				attachments={files.length > 0 ? [] : attachments}
-				onChange={files => setFiles(files)}
 				deleteButton={edit}
-			/>}
+			>
+				{files.map(file => (
+					<PostFile
+						key={file.name}
+						name={file.name}
+						deleteButton
+						onDelete={onDeleteFile(file)}
+					/>
+				))}
+
+				{edit && <Grid container spacing={1}>
+					<Grid item>
+						<Publish />
+					</Grid>
+					<Grid item>
+						<Link component="button" onClick={() => fileInputRef.current?.click()} >파일 업로드</Link>
+					</Grid>
+				</Grid>}
+			</PostAttachment>}
 
 			{editable && (
 				pending === true ?

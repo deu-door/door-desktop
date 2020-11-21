@@ -10,14 +10,14 @@ const useStyles = makeStyles(theme => createStyles({
 	}
 }));
 
-type PostFileProps = {
+export type PostFileProps = {
 	name: string,
 	link?: string,
 	deleteButton?: boolean,
 	onDelete?: () => void
 }
 
-const PostFile: React.FC<PostFileProps> = props => {
+export const PostFile: React.FC<PostFileProps> = props => {
 	const { name, link, deleteButton = false, onDelete } = props;
 
 	return (
@@ -39,34 +39,12 @@ const PostFile: React.FC<PostFileProps> = props => {
 
 export type PostAttachmentProps = {
 	attachments: Attachment[],
-	upload?: boolean,
-	deleteButton?: boolean,
-	onChange?: (files: File[]) => void
+	deleteButton?: boolean
 }
 
 export const PostAttachment: React.FC<PostAttachmentProps> = props => {
-	const { attachments, upload = false, deleteButton = false, onChange } = props;
+	const { attachments, deleteButton = false, children } = props;
 	const classes = useStyles();
-	const inputRef = React.createRef<HTMLInputElement>();
-
-	const [files, setFiles] = useState<File[]>([]);
-
-	const internalOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		// Allows single file upload. Limitation of door system.
-		const file = event.target.files?.[0];
-		const nextFiles: File[] = file ? [file] : [];
-
-		setFiles(nextFiles);
-		onChange?.(nextFiles);
-	}
-
-	const internalOnDelete = (file: File) => () => {
-		const nextFiles = files.filter(_file => _file !== file);
-		if(inputRef.current) inputRef.current.value = '';
-
-		setFiles(nextFiles);
-		onChange?.(nextFiles)
-	}
 
 	return (
 		<div className={classes.postAttachment}>
@@ -79,24 +57,7 @@ export const PostAttachment: React.FC<PostAttachmentProps> = props => {
 				/>
 			))}
 
-			{files.map(file => (
-				<PostFile
-					key={file.name}
-					name={file.name}
-					onDelete={internalOnDelete(file)}
-					deleteButton={deleteButton}
-				/>
-			))}
-
-			{upload && <Grid container spacing={1}>
-				<Grid item>
-					<Publish />
-				</Grid>
-				<Grid item>
-					<input type="file" onChange={internalOnChange} ref={inputRef} hidden />
-					<Link component="button" onClick={() => inputRef.current?.click()} >파일 업로드</Link>
-				</Grid>
-			</Grid>}
+			{children}
 		</div>
 	);
 }
