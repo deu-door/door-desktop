@@ -36,19 +36,19 @@ export const CourseTimelinePost: React.FC<CourseTimelinePostProps> = props => {
 	const makePost = ({ type, post }: { type: PostType, post: Post }) => {
 		switch(type){
 			case 'notice':
-				return (<NoticeComponent defaultCollapsed key={type + post.id} notice={post as Notice} />);
+				return (<NoticeComponent defaultCollapsed notice={post as Notice} />);
 			case 'lecture':
-				return (<LectureComponent defaultCollapsed key={type + post.id} lecture={post as Lecture} />);
+				return (<LectureComponent defaultCollapsed lecture={post as Lecture} />);
 			case 'assignment':
-				return (<AssignmentComponent defaultCollapsed key={type + post.id} assignment={post as Assignment} />);
+				return (<AssignmentComponent defaultCollapsed assignment={post as Assignment} />);
 			case 'reference':
-				return (<ReferenceComponent defaultCollapsed key={type + post.id} reference={post as Reference} />);
+				return (<ReferenceComponent defaultCollapsed reference={post as Reference} />);
 			case 'activity':
-				return (<ActivityComponent defaultCollapsed key={type + post.id} activity={post as Activity} />);
+				return (<ActivityComponent defaultCollapsed activity={post as Activity} />);
 			case 'teamProject':
-				return (<TeamProjectComponent defaultCollapsed key={type + post.id} teamProject={post as TeamProject} />);
+				return (<TeamProjectComponent defaultCollapsed teamProject={post as TeamProject} />);
 			default:
-				return (<PostComponent defaultCollapsed key={type + post.id} post={post} />);
+				return (<PostComponent defaultCollapsed post={post} />);
 		}
 	};
 
@@ -61,10 +61,17 @@ export const CourseTimeline: React.FC<CourseTimelineProps> = props => {
 	const { course } = props;
 	const classes = useStyles();
 
+	const preventDuplicate = new Set();
 	let posts: { type: PostType, post: Post }[] = [];
 
 	const pushToPost = (type: PostType, items: { [key: string]: Post }) => {
-		Object.values(items).forEach(post => posts.push({ type, post }));
+		Object.values(items).forEach(post => {
+			if(preventDuplicate.has(type + post.id)) return;
+
+			posts.push({ type, post });
+
+			preventDuplicate.add(type + post.id);
+		});
 	};
 
 	pushToPost('notice', course.notices.items);
@@ -105,7 +112,7 @@ export const CourseTimeline: React.FC<CourseTimelineProps> = props => {
 						<Typography variant="h6"><DateTime relative date={day} precision="days" /></Typography>
 
 						{posts.map(({ type, post }) => (
-							<CourseTimelinePost type={type} post={post} />
+							<CourseTimelinePost key={type + post.id} type={type} post={post} />
 						))}
 					</TimelineContent>
 				</TimelineItem>

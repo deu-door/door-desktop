@@ -67,7 +67,7 @@ const CourseDetail: React.FC<{ name: string, fields: Array<{ name: string, text?
 						<Typography variant="subtitle1">{name}</Typography>
 					</Grid>
 					{fields.map(({ name, text }) => (
-						<Grid item>
+						<Grid item key={name}>
 							<Typography variant="body2">{name}: {text}</Typography>
 						</Grid>
 					))}
