@@ -113,6 +113,6 @@
     },
     "productName": "Door Desktop",
     "appId": "enhancedapps.door-desktop",
-    "icon": "build/favicon.ico"
+    "icon": "build/icon.png"
   }
 }
