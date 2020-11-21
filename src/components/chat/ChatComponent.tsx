@@ -79,7 +79,7 @@ const ChatBox: React.FC<ChatBoxProps> = props => {
 
 	return (
 		<div className={classes.chatBox}>
-			{!connected && <Alert severity="error">서버와 연결이 끊어졌습니다</Alert>}
+			{!connected && <Alert severity="error">서버에 연결할 수 없습니다</Alert>}
 
 			<List disablePadding className={classes.chatMessages}>
 				{messages.map(message => (
