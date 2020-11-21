@@ -5,6 +5,7 @@ import { Course } from "service/door/interfaces/course";
 import { actions } from "store/modules";
 import React from 'react';
 import { DateTime } from "components/core/DateTime";
+import { sequentialCourseActions } from "store/sequential-actions";
 
 export const CourseRefresher: React.FC<{ course: Course }> = props => {
 	const { course } = props;
@@ -15,8 +16,7 @@ export const CourseRefresher: React.FC<{ course: Course }> = props => {
 
 	const PHASE_DELAY = -1;
 	const PHASE_POSTS = 0;
-	const PHASE_LECTURES = 1;
-	const PHASE_END = 2;
+	const PHASE_END = 1;
 	const [phase, setPhase] = useState(PHASE_DELAY);
 
 	const errors = [
@@ -42,37 +42,9 @@ export const CourseRefresher: React.FC<{ course: Course }> = props => {
 		if(phase !== PHASE_POSTS) return;
 
 		const fetch = async () => {
-			for(const { description, action } of [
-				{ description: '공지사항 목록을 가져오는 중입니다 ...', action: actions.notices(course.id) },
-				{ description: '강의 목록을 가져오는 중입니다 ...', action: actions.lectures(course.id) },
-				{ description: '과제 목록을 가져오는 중입니다 ...', action: actions.assignments(course.id) },
-				{ description: '강의자료 목록을 가져오는 중입니다 ...', action: actions.references(course.id) },
-				{ description: '수업활동일지 목록을 가져오는 중입니다 ...', action: actions.activities(course.id) },
-				{ description: '팀 프로젝트 목록을 가져오는 중입니다 ...', action: actions.teamProjects(course.id) }
-			]) {
-				setDescription(description);
-				await dispatch(action.fetchIfExpired());
-			}
-
-			setPhase(PHASE_LECTURES);
-		};
-
-		fetch();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [phase]);
-
-	useEffect(() => {
-		if(phase !== PHASE_LECTURES) return;
-
-		const fetch = async () => {
-			setPending(true);
-
-			for(const lectureByWeek of Object.values(course.lectures.items)) {
-				// check we should update lectures
-				if(lectureByWeek.count === Object.values(lectureByWeek.items).length) continue;
-
-				setDescription(`${lectureByWeek.id}주차 강의목록을 가져오는 중입니다 ...`);
-				await dispatch(actions.lectureByWeek(course.id, lectureByWeek.id).fetchIfExpired());
+			for(const currentAction of sequentialCourseActions(course.id)) {
+				setDescription(currentAction.description || '');
+				await dispatch(currentAction.action.fetchIfExpired());
 			}
 
 			setPending(false);
@@ -84,7 +56,7 @@ export const CourseRefresher: React.FC<{ course: Course }> = props => {
 
 		fetch();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [phase, course.lectures])
+	}, [phase]);
 
 	return (
 		pending ?

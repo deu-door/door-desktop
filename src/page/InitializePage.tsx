@@ -6,8 +6,8 @@ import { UserState } from 'store/modules/user';
 import { ReactComponent as Logo } from 'resources/logo-original-white.svg';
 import { Container, createStyles, Grid, LinearProgress, makeStyles, Typography } from '@material-ui/core';
 import { actions } from 'store/modules';
-import { CourseFetchIterator } from 'store/background';
 import { secure } from 'service/secure';
+import { sequentialAllCourseActions } from 'store/sequential-actions';
 
 const useStyles = makeStyles(theme => createStyles({
 	main: {
@@ -77,18 +77,11 @@ export const InitializePage: React.FC = () => {
 		 * Fetch necessary data to program run.
 		 */
 		const fetch = async () => {
-			const iterator = new CourseFetchIterator();
-
-			let next;
-			do {
-				next = iterator.next();
-
-				if(next.value) {
-					setTitle(next.value.title);
-					setSubtitle(next.value.subtitle || '');
-					await dispatch(next.value.action.fetchIfNotFulfilled());
-				}
-			} while(!next.done);
+			for(const currentAction of sequentialAllCourseActions()) {
+				setTitle(currentAction.name);
+				setSubtitle(currentAction.description || '');
+				await dispatch(currentAction.action.fetchIfNotFulfilled());
+			}
 
 			history.push('/main/dashboard');
 		}
