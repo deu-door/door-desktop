@@ -65,6 +65,9 @@ export function fetchableActions<State, Result extends Fetchable, Params>(props:
 		_fetch: fetch,
 
 		fetch: (params: Params) => async (dispatch: Dispatch, getState: () => State) => {
+			// prevent fetch when pending status
+			if(context.path(context.selector(getState()), params).pending) return;
+
 			dispatch(context.pending(params));
 
 			try{
