@@ -2,7 +2,6 @@ import { Alert, AlertTitle } from "@material-ui/lab";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Course } from "service/door/interfaces/course";
-import { actions } from "store/modules";
 import React from 'react';
 import { DateTime } from "components/core/DateTime";
 import { sequentialCourseActions } from "store/sequential-actions";
