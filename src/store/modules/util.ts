@@ -197,16 +197,37 @@ export function fetchableMapActions<State, Result extends Fetchable, Params>(pro
 	return context;
 }
 
+type InOrOutboundState = Record<string, unknown>
+
+const transformNestedFetchable = (fetchable: InOrOutboundState) => {
+	fetchable.pending = false;
+
+	Object.entries(fetchable).forEach(([key, value]) => {
+		if(!(value instanceof Object)) return;
+
+		if(key === 'items') {
+			Object.entries(value).forEach(([id, item]) => {
+				if(item instanceof Object && 'pending' in item) {
+					(value as InOrOutboundState)[id] = transformNestedFetchable(item);
+				}
+			})
+		}
+		else if('pending' in value) {
+			fetchable[key] = transformNestedFetchable(value);
+		}
+	});
+
+	return fetchable;
+}
+
 export const FetchableTransform = createTransform(
 	// transform state on its way to being serialized and persisted.
 	(inboundState, key) => {
-		if(key === 'pending') return false;
-
 		return inboundState;
 	},
 	// transform state being rehydrated
 	(outboundState, key) => {
-		if(key === 'pending') return false;
+		if(key === 'items') transformNestedFetchable({ [key]: outboundState });
 		
 		return outboundState;
 	}
