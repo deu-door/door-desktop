@@ -14,7 +14,9 @@ const useStyles = makeStyles(theme => createStyles({
 	lectureOverlay: {
 		width: '100%',
 		height: '100%',
-		background: '#E3E3E3'
+		backgroundColor: 'rgba(0, 0, 0, 0.7)',
+		position: 'absolute',
+		top: 0, bottom: 0, left: 0, right: 0
 	}
 }));
 
@@ -87,17 +89,15 @@ export const LectureComponent: React.FC<Omit<PostComponentProps, 'post'> & { lec
 					{lecture.link && linkType === 'html' &&
 						<CardMedia>
 							<ResponsiveDiv>
-								{show ? <iframe
-										title={lecture.title}
-										src={lecture.link}
-										width="100%"
-										height="100%"
-										allowFullScreen
-										frameBorder="0"
-									/>
-									: <LectureOverlay
-										onClick={onOpenLecture}
-									/>}
+								{!show && <LectureOverlay onClick={onOpenLecture} />}
+								{show && <iframe
+									title={lecture.title}
+									src={lecture.link}
+									width="100%"
+									height="100%"
+									allowFullScreen
+									frameBorder="0"
+								/>}
 							</ResponsiveDiv>
 						</CardMedia>}
 
