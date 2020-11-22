@@ -44,6 +44,18 @@ export const PostInformation: React.FC<{ name: string, description: string }> = 
 			<Typography variant="body2">{description}</Typography>
 		</div>
 	);
+};
+
+export const PostSubheader: React.FC<{ author?: string, views?: number, createdAt: Date|string|number }> = props => {
+	const { author, views, createdAt } = props;
+
+	return (
+		<Typography variant="subtitle2" color="textSecondary">
+			{author && <span>{author} · </span>}
+			{views !== undefined && <span>조회수 {views}회 · </span>}
+			<DateTime relative date={createdAt} />
+		</Typography>
+	);
 }
 
 export type PostComponentProps = {
@@ -61,19 +73,14 @@ export const PostComponent: React.FC<PostComponentProps> = props => {
 	const classes = useStyles();
 	const [show, setShow] = useState(!defaultCollapsed);
 
-	const subheader = [
-		post.author,
-		post.views ? '조회수 ' + post.views + '회' : null
-	].filter(d => !!d).join(' · ');
-
 	return (
 		<Card className={classes.post}>
 			<Grid container>
 				{tag && <Grid item>{tag}</Grid>}
 				<Grid item style={{ flex: 1 }}>
 					<CardHeader
-						title={post.title}
-						subheader={<span>{subheader}{post.createdAt && <span> · <DateTime relative date={post.createdAt} /></span>}</span>}
+						title={<Typography variant="h6">{post.title}</Typography>}
+						subheader={<PostSubheader author={post.author} views={post.views} createdAt={post.createdAt} />}
 					/>
 				</Grid>
 			</Grid>
