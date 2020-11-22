@@ -75,7 +75,7 @@ export const PostComponent: React.FC<PostComponentProps> = props => {
 
 	return (
 		<Card className={classes.post}>
-			<Grid container>
+			<Grid container alignItems="center">
 				{tag && <Grid item>{tag}</Grid>}
 				<Grid item style={{ flex: 1 }}>
 					<CardHeader

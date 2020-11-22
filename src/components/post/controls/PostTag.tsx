@@ -4,8 +4,8 @@ import React from 'react';
 
 const useStyles = makeStyles(theme => createStyles({
 	postTag: {
-		padding: theme.spacing(1),
-		margin: theme.spacing(2, 0, 0, -2),
+		padding: theme.spacing(0.5, 1),
+		margin: theme.spacing(0, 0, 0, -1.5),
 		background: theme.palette.primary.main,
 		color: theme.palette.primary.contrastText,
 		display: 'inline-block'
