@@ -215,6 +215,6 @@ export const FetchableTransform = createTransform(
 export const ResetOnVersionChange = (): PersistMigrate => {
 	return createMigrate({
 		// No migration yet. Data will be reseted when version change.
-		1: (state) => undefined
+		...Object.fromEntries(new Array(100).fill(0).map((d, i) => [i, state => undefined]))
 	}, { debug: true });
 }
