@@ -10,7 +10,7 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 
 <br>
 
-# 🚀 주요 기능
+# 주요 기능
 
 ### ✨ 게시물 로딩 때문에 더 이상 스트레스 받을 필요가 없습니다.
 모든 페이지들은 저장되며 굳이 긴 로딩 시간을 한번 더 기다릴 필요가 없습니다.
@@ -28,7 +28,7 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 
 <br>
 
-# 🛠 프로젝트에 사용된 기술 스택
+# 프로젝트에 사용된 기술 스택
 
 * **[Typescript](https://www.typescriptlang.org/)**
 * **[React](https://reactjs.org/)**
@@ -38,7 +38,7 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 
 <br>
 
-# ✈ 프로젝트 테스트 및 빌드
+# 프로젝트 테스트 및 빌드
 이 프로젝트는 `yarn` 패키지 관리자를 사용하고 있습니다.
 
 ### 테스트
