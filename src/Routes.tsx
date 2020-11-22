@@ -46,7 +46,7 @@ const TemporalDashboard: React.FC = props => {
         <Logo />
       </Grid>
       <Grid item>
-        <Typography variant="h4" color="textSecondary">왼쪽 목록에서 강의를 선택할 수 있습니다</Typography>
+        <Typography variant="h5" color="textSecondary">왼쪽 목록에서 강의를 선택할 수 있습니다</Typography>
       </Grid>
     </Grid>
   );
