@@ -37,7 +37,7 @@ export const LectureList: React.FC<{ course: Course }> = props => {
 							onClick={() => setActiveWeek(index)}
 							completed={new Date(week.period.to) < now}
 						>
-							{`${week.id}주차 · ${week.description}`}
+							{`${week.id}주차 · 강의 ${week.count}개 · ${week.description}`}
 						</StepButton>
 						<StepContent>
 							{Object.values(week.items).map(lecture => (
