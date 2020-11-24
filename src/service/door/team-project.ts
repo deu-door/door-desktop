@@ -47,6 +47,8 @@ export async function getTeamProject(courseId: ID, id: ID): Promise<TeamProject>
 		period: { from, to },
 
 		attachments,
+
+		submitted: submission.submitted,
 		submission,
 
 		...fulfilledFetchable()

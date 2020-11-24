@@ -163,6 +163,10 @@ export interface Submittable {
 	 */
 	submission: Submission,
 	/**
+	 * @description 제출 여부
+	 */
+	submitted: boolean,
+	/**
 	 * @description 제출기간
 	 * 
 	 * @example { from: Date(20-09-01 10:00), to: Date(20-09-07 23:59) }

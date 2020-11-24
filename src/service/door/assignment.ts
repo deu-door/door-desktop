@@ -61,6 +61,8 @@ export async function getAssignment(courseId: ID, id: ID): Promise<Assignment> {
 		bonusPeriod,
 
 		attachments,
+
+		submitted: submission.submitted,
 		submission,
 
 		result: resultComment || resultScore ? {
@@ -93,7 +95,7 @@ export async function getAssignments(courseId: ID): Promise<FetchableMap<Assignm
 			createdAt: from,
 			period: { from, to },
 
-			achieved: assignment['제출여부'].text === '제출',
+			submitted: assignment['제출여부'].text === '제출',
 
 			...notFulfilledFetchable()
 		};

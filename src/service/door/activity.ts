@@ -59,6 +59,8 @@ export async function getActivity(courseId: ID, id: ID): Promise<Activity> {
 		bonusPeriod,
 
 		attachments,
+
+		submitted: submission.submitted,
 		submission,
 
 		result: comment ? { comment } : undefined,
