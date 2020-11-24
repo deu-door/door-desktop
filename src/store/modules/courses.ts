@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import { FetchableMap, ID } from 'service/door/interfaces';
 import { Course, initializeCourse } from 'service/door/interfaces/course';
-import { Lecture } from 'service/door/interfaces/lecture';
+import { Lecture, LecturesByWeek } from 'service/door/interfaces/lecture';
 import { Notice } from 'service/door/interfaces/notice';
 import { AsyncState, fetchableActions, fetchableMapActions, FetchableTransform, ResetOnVersionChange } from './util';
 import door from 'service/door';
@@ -82,6 +82,7 @@ const noticeMapActions = fetchableMapActions<CourseState, Notice, ID>({
 	path: (draft, courseId) => draft.items[courseId].notices,
 	fetch: courseId => door.getNotices(courseId),
 	options: {
+		overrideItemProperties: ['title', 'author', 'views'],
 		validDuration: moment.duration(1, 'hour')
 	}
 });
@@ -96,12 +97,13 @@ const noticeActions = fetchableActions<CourseState, Notice, { courseId: ID, id: 
 	}
 });
 
-const lectureMapActions = fetchableMapActions<CourseState, FetchableMap<Lecture>, ID>({
+const lectureMapActions = fetchableMapActions<CourseState, LecturesByWeek, ID>({
 	name: 'LECTURE',
 	selector: state => state.courses,
 	path: (draft, courseId) => draft.items[courseId].lectures,
 	fetch: courseId => door.getLectures(courseId),
 	options: {
+		overrideItemProperties: ['description', 'remark', 'views', 'count', 'period'],
 		validDuration: moment.duration(1, 'hour')
 	}
 });
@@ -122,6 +124,7 @@ const assignmentMapActions = fetchableMapActions<CourseState, Assignment, ID>({
 	path: (draft, courseId) => draft.items[courseId].assignments,
 	fetch: courseId => door.getAssignments(courseId),
 	options: {
+		overrideItemProperties: ['title', 'period', 'submitted'],
 		validDuration: moment.duration(1, 'hour')
 	}
 });
@@ -142,6 +145,7 @@ const referenceMapActions = fetchableMapActions<CourseState, Reference, ID>({
 	path: (draft, courseId) => draft.items[courseId].references,
 	fetch: courseId => door.getReferences(courseId),
 	options: {
+		overrideItemProperties: ['title', 'author', 'views'],
 		validDuration: moment.duration(1, 'hour')
 	}
 });
@@ -162,6 +166,7 @@ const activityMapActions = fetchableMapActions<CourseState, Activity, ID>({
 	path: (draft, courseId) => draft.items[courseId].activities,
 	fetch: courseId => door.getActivities(courseId),
 	options: {
+		overrideItemProperties: ['title', 'period'],
 		validDuration: moment.duration(1, 'hour')
 	}
 });
@@ -182,6 +187,7 @@ const teamProjectMapActions = fetchableMapActions<CourseState, TeamProject, ID>(
 	path: (draft, courseId) => draft.items[courseId].teamProjects,
 	fetch: courseId => door.getTeamProjects(courseId),
 	options: {
+		overrideItemProperties: ['title', 'period', 'submitted'],
 		validDuration: moment.duration(1, 'hour')
 	}
 });

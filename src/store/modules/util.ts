@@ -32,16 +32,21 @@ type FetchableActionsOptions = {
 	validDuration?: moment.Duration|string|number
 }
 
-type FetchableActionsProps<State, Result, Params> = {
+interface FetchableActionsProps<State, Result, Params> {
 	name: string,
 	selector: (state: RootStateOrAny) => State,
 	path: (draft: State, params: Params) => Result,
 	fetch: (params: Params) => Promise<Result>,
 	handler?: PayloadHandler<Params, Result>,
 	options?: FetchableActionsOptions
-};
+}
 
-export function fetchableActions<State, Result extends Fetchable, Params>(props: FetchableActionsProps<State, Result, Params>){
+export function fetchableActions<
+	State,
+	Result extends Fetchable,
+	Params = undefined,
+	Props extends FetchableActionsProps<State, Result, Params> = FetchableActionsProps<State, Result, Params>
+>(props: Props) {
 	const { name, selector, path, fetch, handler, options } = props;
 
 	const [ PENDING, FAILURE, CLEAR, SUCCESS ] = ['PENDING', 'FAILURE', 'CLEAR', 'SUCCESS'].map(state => name.toUpperCase() + '_' + state);
@@ -150,15 +155,33 @@ export function fetchableActions<State, Result extends Fetchable, Params>(props:
 	return context;
 }
 
-export function fetchableMapActions<State, Result extends Fetchable, Params>(props: FetchableActionsProps<State, FetchableMap<Result>, Params>) {
+interface FetchableMapActionsOptions<Result> extends FetchableActionsOptions {
+	/**
+	 * FetchableMapActions에 의해 override될 수 있는 item의 property 설정
+	 */
+	overrideItemProperties?: Array<keyof Result>
+}
+
+type FetchableMapActionsProps<State, Result, Params> = FetchableActionsProps<State, FetchableMap<Result>, Params> & {
+	options?: FetchableMapActionsOptions<Result>
+}
+
+export function fetchableMapActions<
+	State,
+	Result extends Fetchable,
+	Params = undefined,
+	Props extends FetchableMapActionsProps<State, Result, Params> = FetchableMapActionsProps<State, Result, Params>
+>(props: Props) {
 	const { name, selector, path, fetch, handler, options } = props;
 
-	const context = fetchableActions<State, FetchableMap<Result>, Params>({
+	const context = fetchableActions<State, FetchableMap<Result>, Params, FetchableMapActionsProps<State, Result, Params>>({
 		name: name + '_LIST',
 		selector,
 		path,
 		fetch,
 		handler,
+
+		// Default variables
 		options
 	});
 
@@ -167,23 +190,38 @@ export function fetchableMapActions<State, Result extends Fetchable, Params>(pro
 		const _draft = context.path(draft as State, action.payload.params);
 
 		const previousItems = _draft.items;
+		const nextItems = action.payload.result.items;
 
 		// Merge result properties
 		Object.assign(_draft, action.payload.result);
 
 		_draft.items = {};
-		Object.entries(action.payload.result.items).forEach(([id, item]) => {
-			// Only add new
-			if(previousItems[id]?.fulfilled) {
-				_draft.items[id] = previousItems[id];
+		Object.entries(nextItems).forEach(([id, nextItem]) => {
+			// 원래 item들의 properties들은 개별적으로 fetch되어 데이터를 가지지만
+			// fetchableMap에서 개별 item들의 데이터를 가지게 될 수도 있음
+			//
+			// 예를 들어 특정 게시물은 목록을 가져왔을 땐 createdAt은 시각을 표시하지 않지만
+			// 게시물 내용을 가져오면 createdAt은 시각을 표시한다
+			// 이러한 경우 children 즉 개별 데이터를 우선시해야하며
+			//
+			// 특정 경우에는 목록에서 가져온 데이터가 우선시되어야 할 때도 있다.
+			// 이를 overrideItemProperties를 통해 설정 가능하다.
 
-			// New item found
-			}else {
-				_draft.items[id] = Object.assign(previousItems[id] || {}, item);
+			// 새로운 아이템을 발견한 경우 추가
+			if(!previousItems[id]?.fulfilled) {
+				_draft.items[id] = Object.assign(previousItems[id] || {}, nextItem);
 			}
 
-			// // fulfilled is once true, it never fall back to false
-			// _draft.items[id].fulfilled = previousItems[id]?.fulfilled || item.fulfilled;
+			// 이미 개별 데이터가 채워진 경우 건들지 않는다.
+			else {
+				// 비어 있는 property가 있다면 채우기
+				_draft.items[id] = Object.assign({}, nextItem, previousItems[id]);
+			}
+
+			// overrideItemProperties에 정의된 프로퍼티들에 대해 override 하기
+			options?.overrideItemProperties?.forEach(property => {
+				_draft.items[id][property] = nextItem[property] || previousItems[id][property];
+			});
 		});
 
 		_draft.pending = false;
