@@ -2,13 +2,17 @@ import { Button, ButtonProps, CardContent, CardMedia, createStyles, Grid, makeSt
 import { purple } from '@material-ui/core/colors';
 import { OndemandVideo } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
-import { Lecture } from 'service/door/interfaces/lecture';
+import { Lecture, LecturesByWeek } from 'service/door/interfaces/lecture';
 import { PostComponent, PostComponentProps, PostContent } from './PostComponent';
 import VisibilitySensor from 'react-visibility-sensor';
 import { downloader } from 'service/downloader';
 import { doorAxios } from 'service/door/util';
 import { PostTag } from './controls/PostTag';
 import { PostAttachment } from './controls/PostAttachment';
+import { actions, RootState } from 'store/modules';
+import { FetchControl } from 'components/fetchable/FetchControl';
+import { useSelector } from 'react-redux';
+import { CourseState } from 'store/modules/courses';
 
 const useStyles = makeStyles(theme => createStyles({
 	lectureOverlay: {
@@ -78,10 +82,14 @@ export const LectureComponent: React.FC<Omit<PostComponentProps, 'post'> & { lec
 		}
 	};
 
+	const lecturesByWeek = useSelector<RootState, LecturesByWeek>(state => state.courses.items[lecture.courseId].lectures.items[lecture.week]);
+
 	return (
 		<PostComponent
 			post={lecture}
 			tag={<PostTag color={purple[500]} icon={<OndemandVideo />} name="강의" />}
+			fetchControl={<FetchControl fetchable={lecturesByWeek} action={actions.lectureByWeek(lecturesByWeek.courseId, lecturesByWeek.id)} />}
+
 			{...postProps}
 		>
 			<VisibilitySensor onChange={isVisible => isVisible && setLazyLoad(true)}>
