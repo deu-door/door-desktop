@@ -1,9 +1,9 @@
 import { Button, Card, CardActions, CardContent, CardHeader, createStyles, Divider, Grid, makeStyles, Typography } from '@material-ui/core';
+import { FetchControl } from 'components/fetchable/FetchControl';
 import React, { useState } from 'react';
 import { Attachment, Post, Submission } from 'service/door/interfaces';
 import { FetchableAction } from 'store/modules';
 import { DateTime } from '../core/DateTime';
-import { FetchButton } from '../fetchable/FetchButton';
 import { PostAttachment } from './controls/PostAttachment';
 import { PostEvaluationResult } from './controls/PostEvaluationResult';
 import { PostSubmission } from './controls/PostSubmission';
@@ -11,10 +11,10 @@ import { PostSubmission } from './controls/PostSubmission';
 const useStyles = makeStyles(theme => createStyles({
 	post: {
 		margin: theme.spacing(2, 0, 2, 3),
-		overflow: 'unset'
-	},
-	'& .MuiDivider-root': {
-		margin: theme.spacing(2, 0)
+		overflow: 'unset',
+		'& .MuiDivider-root': {
+			margin: theme.spacing(2, 0)
+		}
 	},
 	postSubheader: {
 		margin: theme.spacing(2, 0)
@@ -46,14 +46,31 @@ export const PostInformation: React.FC<{ name: string, description: string }> = 
 	);
 };
 
-export const PostSubheader: React.FC<{ author?: string, views?: number, createdAt: Date|string|number }> = props => {
-	const { author, views, createdAt } = props;
+export const PostSubheader: React.FC<{ author?: string, views?: number, createdAt: Date|string|number, fetchControl?: React.ReactNode }> = props => {
+	const { author, views, createdAt, fetchControl } = props;
 
 	return (
 		<Typography variant="subtitle2" color="textSecondary">
-			{author && <span>{author} · </span>}
-			{views !== undefined && <span>조회수 {views}회 · </span>}
-			<DateTime relative date={createdAt} />
+			<Grid container spacing={1}>
+				{author &&
+					<Grid item>
+						<span>{author} · </span>
+					</Grid>}
+
+				{views !== undefined &&
+					<Grid item>
+						<span>조회수 {views}회 · </span>
+					</Grid>}
+
+				<Grid item>
+					<DateTime relative date={createdAt} />
+				</Grid>
+
+				{fetchControl &&
+					<Grid item>
+						{fetchControl}
+					</Grid>}
+			</Grid>
 		</Typography>
 	);
 }
@@ -61,7 +78,9 @@ export const PostSubheader: React.FC<{ author?: string, views?: number, createdA
 export type PostComponentProps = {
 	post: Post,
 	tag?: React.ReactElement,
+
 	action?: FetchableAction,
+	fetchControl?: React.ReactNode,
 	defaultCollapsed?: boolean,
 
 	submission?: Submission,
@@ -69,7 +88,7 @@ export type PostComponentProps = {
 };
 
 export const PostComponent: React.FC<PostComponentProps> = props => {
-	const { post, tag, action, defaultCollapsed = false, submission, evaluationResult, children } = props;
+	const { post, tag, action, fetchControl, defaultCollapsed = false, submission, evaluationResult, children } = props;
 	const classes = useStyles();
 	const [show, setShow] = useState(!defaultCollapsed);
 
@@ -80,7 +99,14 @@ export const PostComponent: React.FC<PostComponentProps> = props => {
 				<Grid item style={{ flex: 1 }}>
 					<CardHeader
 						title={<Typography variant="h6">{post.title}</Typography>}
-						subheader={<PostSubheader author={post.author} views={post.views} createdAt={post.createdAt} />}
+						subheader={
+							<PostSubheader
+								author={post.author}
+								views={post.views}
+								createdAt={post.createdAt}
+								fetchControl={show && (fetchControl || <FetchControl fetchable={post} action={action} />)}
+							/>
+						}
 					/>
 				</Grid>
 			</Grid>
@@ -105,10 +131,10 @@ export const PostComponent: React.FC<PostComponentProps> = props => {
 						</CardContent>
 					}
 
-					{action &&
+					{/* {action &&
 						<CardActions>
 							<FetchButton fetchable={post} action={action} />
-						</CardActions>}
+						</CardActions>} */}
 				</div>
 				:
 				<CardActions>

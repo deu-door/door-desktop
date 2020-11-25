@@ -1,12 +1,12 @@
 import { createStyles, Grid, IconButton, Link, makeStyles } from '@material-ui/core';
-import { Attachment as AttachmentIcon, Clear, Publish } from '@material-ui/icons';
-import React, { useState } from 'react';
+import { Attachment as AttachmentIcon, Clear } from '@material-ui/icons';
+import React from 'react';
 import { Attachment } from 'service/door/interfaces';
 import { downloader } from 'service/downloader';
 
 const useStyles = makeStyles(theme => createStyles({
 	postAttachment: {
-		margin: theme.spacing(2, 0)
+		margin: theme.spacing(2, 0, 0, 0)
 	}
 }));
 

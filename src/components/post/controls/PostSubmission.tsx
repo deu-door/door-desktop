@@ -1,4 +1,4 @@
-import { Button, Grid, Link, TextField } from '@material-ui/core';
+import { Button, createStyles, Grid, Link, makeStyles, TextField } from '@material-ui/core';
 import { Publish } from '@material-ui/icons';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -6,6 +6,12 @@ import { Submission } from 'service/door/interfaces';
 import { submitForm } from 'service/door/util';
 import { FetchableAction } from 'store/modules';
 import { PostAttachment, PostFile } from './PostAttachment';
+
+const useStyles = makeStyles(theme => createStyles({
+	button: {
+		margin: theme.spacing(2, 0, 0, 0)
+	}
+}));
 
 export type PostSubmissionProps = {
 	submission: Submission,
@@ -15,6 +21,8 @@ export type PostSubmissionProps = {
 
 export const PostSubmission: React.FC<PostSubmissionProps> = props => {
 	const { submission, editable = true, actionAfterSubmit } = props;
+	const classes = useStyles();
+
 	const dispatch = useDispatch();
 	const [files, setFiles] = useState<File[]>([]);
 	const [edit, setEdit] = useState(false);
@@ -115,8 +123,8 @@ export const PostSubmission: React.FC<PostSubmissionProps> = props => {
 				</Grid>}
 			</PostAttachment>}
 
-			{editable && (
-				pending === true ?
+			{editable && <div className={classes.button}>
+				{pending === true ?
 					<span>제출 중...</span>
 				: edit === false ?
 					<Button
@@ -144,8 +152,8 @@ export const PostSubmission: React.FC<PostSubmissionProps> = props => {
 								onClick={onCancel}
 							>취소</Button>
 						</Grid>
-					</Grid>
-			)}
+					</Grid>}
+			</div>}
 		</>
 	);
 }
