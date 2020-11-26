@@ -207,20 +207,26 @@ export function fetchableMapActions<
 			// 특정 경우에는 목록에서 가져온 데이터가 우선시되어야 할 때도 있다.
 			// 이를 overrideItemProperties를 통해 설정 가능하다.
 
+			const previousItem = previousItems[id];
+
 			// 새로운 아이템을 발견한 경우 추가
 			if(!previousItems[id]?.fulfilled) {
-				_draft.items[id] = Object.assign(previousItems[id] || {}, nextItem);
+				_draft.items[id] = Object.assign(previousItem || {}, nextItem);
 			}
 
 			// 이미 개별 데이터가 채워진 경우 건들지 않는다.
 			else {
 				// 비어 있는 property가 있다면 채우기
-				_draft.items[id] = Object.assign({}, nextItem, previousItems[id]);
+				_draft.items[id] = Object.assign({}, nextItem, previousItem);
 			}
 
 			// overrideItemProperties에 정의된 프로퍼티들에 대해 override 하기
 			options?.overrideItemProperties?.forEach(property => {
-				_draft.items[id][property] = nextItem[property] || previousItems[id][property];
+				if(nextItem[property]) {
+					_draft.items[id][property] = nextItem[property];
+				}else if(previousItem) {
+					_draft.items[id][property] = previousItem[property];
+				}
 			});
 		});
 
