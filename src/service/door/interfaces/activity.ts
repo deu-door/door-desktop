@@ -29,14 +29,5 @@ export interface Activity extends Post, Submittable {
 	/**
 	 * @description 게시물 날짜 별 정렬을 위해 createdAt은 period.from 으로 설정
 	 */
-	createdAt: Date,
-	/**
-	 * @description 평가결과
-	 */
-	result?: {
-		/**
-		 * @description 코멘트
-		 */
-		comment?: string
-	}
+	createdAt: Date
 }

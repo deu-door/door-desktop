@@ -63,7 +63,7 @@ export async function getActivity(courseId: ID, id: ID): Promise<Activity> {
 		submitted: submission.submitted,
 		submission,
 
-		result: comment ? { comment } : undefined,
+		evaluationResult: comment ? { comment } : undefined,
 
 		...fulfilledFetchable()
 	};

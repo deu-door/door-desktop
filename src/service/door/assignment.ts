@@ -65,7 +65,7 @@ export async function getAssignment(courseId: ID, id: ID): Promise<Assignment> {
 		submitted: submission.submitted,
 		submission,
 
-		result: resultComment || resultScore ? {
+		evaluationResult: resultComment || resultScore ? {
 			score: resultScore,
 			comment: resultComment
 		} : undefined,
