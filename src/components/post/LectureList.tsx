@@ -4,7 +4,7 @@ import { FetchButton } from 'components/fetchable/FetchButton';
 import React, { useState } from 'react';
 import { Course } from 'service/door/interfaces/course';
 import { actions } from 'store/modules';
-import { LectureComponent } from './LectureComponent';
+import { LecturePost } from './LecturePost';
 
 const useStyles = makeStyles(theme => createStyles({
 	lecturesByWeek: {
@@ -41,7 +41,7 @@ export const LectureList: React.FC<{ course: Course }> = props => {
 						</StepButton>
 						<StepContent>
 							{Object.values(week.items).map(lecture => (
-								<LectureComponent key={lecture.id} lecture={lecture} />
+								<LecturePost key={lecture.id} post={lecture} />
 							))}
 							<FetchButton fetchable={week} action={actions.lectureByWeek(course.id, week.id)} />
 						</StepContent>

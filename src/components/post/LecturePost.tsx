@@ -3,7 +3,6 @@ import { purple } from '@material-ui/core/colors';
 import { OndemandVideo } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import { Lecture, LecturesByWeek } from 'service/door/interfaces/lecture';
-import { PostComponent, PostComponentProps, PostContent } from './PostComponent';
 import VisibilitySensor from 'react-visibility-sensor';
 import { downloader } from 'service/downloader';
 import { doorAxios } from 'service/door/util';
@@ -12,7 +11,7 @@ import { PostAttachment } from './controls/PostAttachment';
 import { actions, RootState } from 'store/modules';
 import { FetchControl } from 'components/fetchable/FetchControl';
 import { useSelector } from 'react-redux';
-import { CourseState } from 'store/modules/courses';
+import { PostBase, PostBaseProps, PostContent } from './PostBase';
 
 const useStyles = makeStyles(theme => createStyles({
 	lectureOverlay: {
@@ -49,8 +48,12 @@ const LectureOverlay: React.FC<ButtonProps> = props => {
 	);
 }
 
-export const LectureComponent: React.FC<Omit<PostComponentProps, 'post'> & { lecture: Lecture }> = props => {
-	const { lecture, ...postProps } = props;
+export type LecturePostProps = {
+	post: Lecture
+} & PostBaseProps
+
+export const LecturePost: React.FC<LecturePostProps> = props => {
+	const { post: lecture, ...postProps } = props;
 
 	type LinkType = 'downloadable' | 'html' | 'not-clear';
 	const [linkType, setLinkType] = useState<LinkType>('not-clear');
@@ -85,7 +88,7 @@ export const LectureComponent: React.FC<Omit<PostComponentProps, 'post'> & { lec
 	const lecturesByWeek = useSelector<RootState, LecturesByWeek>(state => state.courses.items[lecture.courseId].lectures.items[lecture.week]);
 
 	return (
-		<PostComponent
+		<PostBase
 			post={lecture}
 			tag={<PostTag color={purple[500]} icon={<OndemandVideo />} name="강의" />}
 			fetchControl={<FetchControl fetchable={lecturesByWeek} action={actions.lectureByWeek(lecturesByWeek.courseId, lecturesByWeek.id)} />}
@@ -120,6 +123,6 @@ export const LectureComponent: React.FC<Omit<PostComponentProps, 'post'> & { lec
 					</CardContent>
 				</>
 			</VisibilitySensor>
-		</PostComponent>
+		</PostBase>
 	);
 }

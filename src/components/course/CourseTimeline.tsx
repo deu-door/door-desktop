@@ -2,22 +2,15 @@ import { createStyles, makeStyles, Typography } from '@material-ui/core';
 import { Timeline, TimelineConnector, TimelineContent, TimelineDot, TimelineItem, TimelineOppositeContent, TimelineSeparator } from '@material-ui/lab';
 import React from 'react';
 import { Post, sortPostByCreatedAtComparator } from 'service/door/interfaces';
-import { Assignment } from 'service/door/interfaces/assignment';
 import moment from 'moment';
 import { DateTime } from 'components/core/DateTime';
-import { Notice } from 'service/door/interfaces/notice';
-import { Reference } from 'service/door/interfaces/reference';
-import { Lecture } from 'service/door/interfaces/lecture';
 import { Course } from 'service/door/interfaces/course';
-import { NoticeComponent } from '../post/NoticeComponent';
-import { LectureComponent } from '../post/LectureComponent';
-import { AssignmentComponent } from '../post/AssignmentComponent';
-import { ReferenceComponent } from '../post/ReferenceComponent';
-import { PostComponent } from '../post/PostComponent';
-import { ActivityComponent } from 'components/post/ActivityComponent';
-import { Activity } from 'service/door/interfaces/activity';
-import { TeamProject } from 'service/door/interfaces/team-project';
-import { TeamProjectComponent } from 'components/post/TeamProjectComponent';
+import { NoticePost } from 'components/post/NoticePost';
+import { AssignmentPost } from 'components/post/AssignmentPost';
+import { ReferencePost } from 'components/post/ReferencePost';
+import { ActivityPost } from 'components/post/ActivityPost';
+import { TeamProjectPost } from 'components/post/TeamProjectPost';
+import { LecturePost } from 'components/post/LecturePost';
 
 const useStyles = makeStyles(theme => createStyles({
 	timelineOpposite: {
@@ -28,73 +21,68 @@ const useStyles = makeStyles(theme => createStyles({
 	}
 }));
 
-type PostType = 'notice' | 'lecture' | 'assignment' | 'reference' | 'activity' | 'teamProject';
-
-export type CourseTimelinePostProps = { type: PostType, post: Post };
-
-export const CourseTimelinePost: React.FC<CourseTimelinePostProps> = props => {
-	const makePost = ({ type, post }: { type: PostType, post: Post }) => {
-		switch(type){
-			case 'notice':
-				return (<NoticeComponent defaultCollapsed notice={post as Notice} />);
-			case 'lecture':
-				return (<LectureComponent defaultCollapsed lecture={post as Lecture} />);
-			case 'assignment':
-				return (<AssignmentComponent defaultCollapsed assignment={post as Assignment} />);
-			case 'reference':
-				return (<ReferenceComponent defaultCollapsed reference={post as Reference} />);
-			case 'activity':
-				return (<ActivityComponent defaultCollapsed activity={post as Activity} />);
-			case 'teamProject':
-				return (<TeamProjectComponent defaultCollapsed teamProject={post as TeamProject} />);
-			default:
-				return (<PostComponent defaultCollapsed post={post} />);
-		}
-	};
-
-	return makePost(props);
-}
-
 export type CourseTimelineProps = { course: Course };
 
 export const CourseTimeline: React.FC<CourseTimelineProps> = props => {
 	const { course } = props;
 	const classes = useStyles();
 
-	const preventDuplicate = new Set();
-	let posts: { type: PostType, post: Post }[] = [];
+	const ids = new Set();
 
-	const pushToPost = (type: PostType, items: { [key: string]: Post }) => {
-		Object.values(items).forEach(post => {
-			if(preventDuplicate.has(type + post.id)) return;
+	type PostItem = { post: Post, key: string, render: () => React.ReactElement };
 
-			posts.push({ type, post });
+	const posts: Array<PostItem> = [
+		...Object.values(course.notices.items).map(notice => ({
+			post: notice,
+			key: `notice-${notice.id}`,
+			render: () => <NoticePost key={`notice-${notice.id}`} post={notice} defaultCollapsed />
+		})),
+		...Object.values(course.lectures.items).map(lecturesByWeek => Object.values(lecturesByWeek.items)).flat().map(lecture => ({
+			post: lecture,
+			key: `lecture-${lecture.id}`,
+			render: () => <LecturePost key={`lecture-${lecture.id}`} post={lecture} defaultCollapsed />
+		})),
+		...Object.values(course.assignments.items).map(assignment => ({
+			post: assignment,
+			key: `assignment-${assignment.id}`,
+			render: () => <AssignmentPost key={`assignment-${assignment.id}`} post={assignment} defaultCollapsed />
+		})),
+		...Object.values(course.references.items).map(reference => ({
+			post: reference,
+			key: `reference-${reference.id}`,
+			render: () => <ReferencePost key={`reference-${reference.id}`} post={reference} defaultCollapsed />
+		})),
+		...Object.values(course.activities.items).map(activity => ({
+			post: activity,
+			key: `activity-${activity.id}`,
+			render: () => <ActivityPost key={`activity-${activity.id}`} post={activity} defaultCollapsed />
+		})),
+		...Object.values(course.teamProjects.items).map(teamProject => ({
+			post: teamProject,
+			key: `teamProject-${teamProject.id}`,
+			render: () => <TeamProjectPost key={`teamProject-${teamProject.id}`} post={teamProject} defaultCollapsed />
+		}))
+	].filter(({ key }) => {
+		if(ids.has(key)) return false;
 
-			preventDuplicate.add(type + post.id);
-		});
-	};
+		ids.add(key);
+		return true;
+	}).sort(({ post: postA }, { post: postB }) => {
+		// Sort descend order
+		return sortPostByCreatedAtComparator(postB, postA);
+	});
 
-	pushToPost('notice', course.notices.items);
-	Object.values(course.lectures.items).forEach(lecturesByWeek => pushToPost('lecture', lecturesByWeek.items));
-	pushToPost('assignment', course.assignments.items);
-	pushToPost('reference', course.references.items);
-	pushToPost('activity', course.activities.items);
-	pushToPost('teamProject', course.teamProjects.items);
-
-	// Sort descend order
-	posts = posts.sort((a, b) => sortPostByCreatedAtComparator(b.post, a.post));
-
-	const postsByDay: { [key: string]: { type: PostType, post: Post }[] } = {
+	const postsByDay: Record<string, PostItem[]> = {
 		// Contains TODAY
 		[moment().format('YYYY-MM-DD')]: []
 	};
 
-	posts.forEach(postInfo => {
-		const day = moment(postInfo.post.createdAt).startOf('days').format('YYYY-MM-DD');
+	posts.forEach(postItem => {
+		const day = moment(postItem.post.createdAt).startOf('days').format('YYYY-MM-DD');
 
 		if(!postsByDay[day]) postsByDay[day] = [];
 
-		postsByDay[day].push(postInfo);
+		postsByDay[day].push(postItem);
 	});
 
 	return (
@@ -109,11 +97,11 @@ export const CourseTimeline: React.FC<CourseTimelineProps> = props => {
 					</TimelineSeparator>
 
 					<TimelineContent className={classes.timelineContent}>
-						<Typography variant="h6"><DateTime relative date={day} precision="days" /></Typography>
+						<Typography variant="h6">
+							<DateTime relative date={day} precision="days" />
+						</Typography>
 
-						{posts.map(({ type, post }) => (
-							<CourseTimelinePost key={type + post.id} type={type} post={post} />
-						))}
+						{posts.map(({ render }) => render())}
 					</TimelineContent>
 				</TimelineItem>
 			))}

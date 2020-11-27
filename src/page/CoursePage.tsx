@@ -5,16 +5,16 @@ import { CourseRefresher } from 'components/course/CourseRefresher';
 import { CourseTimeline } from 'components/course/CourseTimeline';
 import { FetchableList } from 'components/fetchable/FetchableList';
 import { FetchButton } from 'components/fetchable/FetchButton';
+import { ActivityPost } from 'components/post/ActivityPost';
+import { AssignmentPost } from 'components/post/AssignmentPost';
 import { LectureList } from 'components/post/LectureList';
-import { AssignmentComponent } from 'components/post/AssignmentComponent';
-import { NoticeComponent } from 'components/post/NoticeComponent';
-import { ReferenceComponent } from 'components/post/ReferenceComponent';
+import { NoticePost } from 'components/post/NoticePost';
+import { ReferencePost } from 'components/post/ReferencePost';
+import { TeamProjectPost } from 'components/post/TeamProjectPost';
 import React, { useState } from 'react';
 import { sortPostByCreatedAt } from 'service/door/interfaces';
 import { Course } from 'service/door/interfaces/course';
 import { actions } from 'store/modules';
-import { ActivityComponent } from 'components/post/ActivityComponent';
-import { TeamProjectComponent } from 'components/post/TeamProjectComponent';
 
 const useStyles = makeStyles(theme => createStyles({
 	paper: {
@@ -200,7 +200,7 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 				<TabPanel value={tab} index="notices">
 					<FetchableList fetchableMap={course.notices} action={actions.notices(course.id)}>
 						{sortPostByCreatedAt(course.notices).reverse().map(notice => (
-							<NoticeComponent key={notice.id} notice={notice} />
+							<NoticePost key={notice.id} post={notice} />
 						))}
 					</FetchableList>
 				</TabPanel>
@@ -212,7 +212,7 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 				<TabPanel value={tab} index="assignments">
 					<FetchableList fetchableMap={course.assignments} action={actions.assignments(course.id)}>
 						{sortPostByCreatedAt(course.assignments).reverse().map(assignment => (
-							<AssignmentComponent key={assignment.id} assignment={assignment} />
+							<AssignmentPost key={assignment.id} post={assignment} />
 						))}
 					</FetchableList>
 				</TabPanel>
@@ -220,7 +220,7 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 				<TabPanel value={tab} index="references">
 					<FetchableList fetchableMap={course.references} action={actions.references(course.id)}>
 						{sortPostByCreatedAt(course.references).reverse().map(reference => (
-							<ReferenceComponent key={reference.id} reference={reference} />
+							<ReferencePost key={reference.id} post={reference} />
 						))}
 					</FetchableList>
 				</TabPanel>
@@ -228,7 +228,7 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 				<TabPanel value={tab} index="activities">
 					<FetchableList fetchableMap={course.activities} action={actions.activities(course.id)}>
 						{sortPostByCreatedAt(course.activities).reverse().map(activity => (
-							<ActivityComponent key={activity.id} activity={activity} />
+							<ActivityPost key={activity.id} post={activity} />
 						))}
 					</FetchableList>
 				</TabPanel>
@@ -236,7 +236,7 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 				<TabPanel value={tab} index="teamProjects">
 					<FetchableList fetchableMap={course.teamProjects} action={actions.teamProjects(course.id)}>
 						{sortPostByCreatedAt(course.teamProjects).reverse().map(teamProject => (
-							<TeamProjectComponent key={teamProject.id} teamProject={teamProject} />
+							<TeamProjectPost key={teamProject.id} post={teamProject} />
 						))}
 					</FetchableList>
 				</TabPanel>

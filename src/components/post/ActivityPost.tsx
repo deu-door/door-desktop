@@ -4,19 +4,20 @@ import React from 'react';
 import { Activity } from 'service/door/interfaces/activity';
 import { actions } from 'store/modules';
 import { PostTag } from './controls/PostTag';
-import { PostComponent, PostComponentProps } from './PostComponent';
+import { SubmittablePostBase, SubmittablePostBaseProps } from './PostBase';
 
-export const ActivityComponent: React.FC<Omit<PostComponentProps, 'post'> & { activity: Activity }> = props => {
-	const { activity, ...postProps } = props;
+export type ActivityPostProps = {
+	post: Activity
+} & SubmittablePostBaseProps
+
+export const ActivityPost: React.FC<ActivityPostProps> = props => {
+	const { post: activity, ...postProps } = props;
 
 	return (
-		<PostComponent
+		<SubmittablePostBase
 			post={activity}
 			action={actions.activity(activity.courseId, activity.id)}
 			tag={<PostTag color={cyan[500]} icon={<Assignment />} name="일지" />}
-
-			submission={activity.submission}
-			evaluationResult={activity.result}
 
 			{...postProps}
 		/>

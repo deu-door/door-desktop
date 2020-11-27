@@ -4,19 +4,20 @@ import React from 'react';
 import { Assignment } from 'service/door/interfaces/assignment';
 import { actions } from 'store/modules';
 import { PostTag } from './controls/PostTag';
-import { PostComponent, PostComponentProps } from './PostComponent';
+import { SubmittablePostBase, SubmittablePostBaseProps } from './PostBase';
 
-export const AssignmentComponent: React.FC<Omit<PostComponentProps, 'post'> & { assignment: Assignment }> = props => {
-	const { assignment, ...postProps } = props;
+export type AssignmentPostProps = {
+	post: Assignment
+} & SubmittablePostBaseProps
+
+export const AssignmentPost: React.FC<AssignmentPostProps> = props => {
+	const { post: assignment, ...postProps } = props;
 
 	return (
-		<PostComponent
+		<SubmittablePostBase
 			post={assignment}
 			action={actions.assignment(assignment.courseId, assignment.id)}
 			tag={<PostTag color={teal[500]} icon={<AssignmentLate />} name="과제" />}
-
-			submission={assignment.submission}
-			evaluationResult={assignment.result}
 
 			{...postProps}
 		/>

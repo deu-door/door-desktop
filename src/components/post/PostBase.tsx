@@ -1,7 +1,7 @@
 import { Button, Card, CardActions, CardContent, CardHeader, createStyles, Divider, Grid, makeStyles, Typography } from '@material-ui/core';
 import { FetchControl } from 'components/fetchable/FetchControl';
 import React, { useState } from 'react';
-import { Attachment, Post, Submission } from 'service/door/interfaces';
+import { Attachment, Post, Submittable } from 'service/door/interfaces';
 import { FetchableAction } from 'store/modules';
 import { DateTime } from '../core/DateTime';
 import { PostAttachment } from './controls/PostAttachment';
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => createStyles({
 	}
 }));
 
-export const PostContent: React.FC<{ contents: string, attachments?: Attachment[] }> = props => {
+export const PostContent: React.FC<{ contents?: string, attachments?: Attachment[] }> = props => {
 	const { contents, attachments } = props;
 
 	return (
@@ -34,17 +34,6 @@ export const PostContent: React.FC<{ contents: string, attachments?: Attachment[
 		</>
 	);
 }
-
-export const PostInformation: React.FC<{ name: string, description: string }> = props => {
-	const { name, description } = props;
-
-	return (
-		<div>
-			<Typography variant="subtitle2">{name}</Typography>
-			<Typography variant="body2">{description}</Typography>
-		</div>
-	);
-};
 
 export const PostSubheader: React.FC<{ author?: string, views?: number, createdAt: Date|string|number, fetchControl?: React.ReactNode }> = props => {
 	const { author, views, createdAt, fetchControl } = props;
@@ -75,20 +64,19 @@ export const PostSubheader: React.FC<{ author?: string, views?: number, createdA
 	);
 }
 
-export type PostComponentProps = {
+export type PostBaseProps = {
 	post: Post,
-	tag?: React.ReactElement,
+
+	tag?: React.ReactNode,
+	summary?: React.ReactNode,
 
 	action?: FetchableAction,
 	fetchControl?: React.ReactNode,
-	defaultCollapsed?: boolean,
-
-	submission?: Submission,
-	evaluationResult?: { score?: number, comment?: string }
+	defaultCollapsed?: boolean
 };
 
-export const PostComponent: React.FC<PostComponentProps> = props => {
-	const { post, tag, action, fetchControl, defaultCollapsed = false, submission, evaluationResult, children } = props;
+export const PostBase: React.FC<PostBaseProps> = props => {
+	const { post, tag, summary, action, fetchControl, defaultCollapsed = false, children } = props;
 	const classes = useStyles();
 	const [show, setShow] = useState(!defaultCollapsed);
 
@@ -111,37 +99,53 @@ export const PostComponent: React.FC<PostComponentProps> = props => {
 				</Grid>
 			</Grid>
 
-			{show ?
-				<div>
-					{post.fulfilled && children ? children : post.contents &&
-						<CardContent>
-							<PostContent contents={post.contents} attachments={post.attachments} />
+			{summary}
 
-							{submission && <>
-								<Divider />
-								<Typography variant="h6" className={classes.postSubheader}>제출</Typography>
-								<PostSubmission submission={submission} actionAfterSubmit={action} />
-							</>}
+			{show && post.fulfilled && children ? children :
+				<CardContent>
+					<PostContent contents={post.contents} attachments={post.attachments} />
+				</CardContent>}
 
-							{evaluationResult && <>
-								<Divider />
-								<Typography variant="h6" className={classes.postSubheader}>평가결과</Typography>
-								<PostEvaluationResult result={evaluationResult} />
-							</>}
-						</CardContent>
-					}
-
-					{/* {action &&
-						<CardActions>
-							<FetchButton fetchable={post} action={action} />
-						</CardActions>} */}
-				</div>
-				:
+			{!show &&
 				<CardActions>
 					<Button size="small" color="primary" onClick={() => setShow(true)}>자세히 보기</Button>
-				</CardActions>
-			}
+				</CardActions>}
 		</Card>
 	);
 }
 
+export type SubmittablePostBaseProps = {
+	post: Post & Submittable
+} & PostBaseProps
+
+export const SubmittablePostBase: React.FC<SubmittablePostBaseProps> = props => {
+	const { post, action, children, ...postProps } = props;
+	const classes = useStyles();
+
+	return (
+		<PostBase
+			post={post}
+			action={action}
+
+			{...postProps}
+		>
+			<CardContent>
+				<PostContent contents={post.contents} attachments={post.attachments} />
+
+				{post.submission &&
+					<>
+						<Divider />
+						<Typography variant="h6" className={classes.postSubheader}>제출</Typography>
+						<PostSubmission submission={post.submission} actionAfterSubmit={action} />
+					</>}
+
+				{post.evaluationResult &&
+					<>
+						<Divider />
+						<Typography variant="h6" className={classes.postSubheader}>평가결과</Typography>
+						<PostEvaluationResult result={post.evaluationResult} />
+					</>}
+			</CardContent>
+		</PostBase>
+	);
+}
