@@ -5,6 +5,7 @@ import * as assignment from './assignment';
 import * as reference from './reference';
 import * as activity from './activity';
 import * as teamProject from './team-project';
+import * as learningStatus from './learning-status';
 import * as user from './user';
 
 export default {
@@ -15,5 +16,6 @@ export default {
 	...reference,
 	...activity,
 	...teamProject,
+	...learningStatus,
 	...user
 };

@@ -13,6 +13,7 @@ import { Reference } from 'service/door/interfaces/reference';
 import { Activity } from 'service/door/interfaces/activity';
 import { TeamProject } from 'service/door/interfaces/team-project';
 import { Assignment } from 'service/door/interfaces/assignment';
+import { LearningStatus } from 'service/door/interfaces/learning-status';
 
 export interface CourseState extends FetchableMap<Course>, AsyncState {
 	categories: string[],
@@ -202,12 +203,22 @@ const teamProjectActions = fetchableActions<CourseState, TeamProject, { courseId
 	}
 });
 
+const learningStatusActions = fetchableActions<CourseState, LearningStatus, ID>({
+	name: 'LEARNING_STATUS',
+	selector: state => state.courses,
+	path: (draft, courseId) => draft.items[courseId].learningStatus,
+	fetch: courseId => door.getLearningStatus(courseId),
+	options: {
+		validDuration: moment.duration(1, 'hour')
+	}
+});
+
 export default persistReducer(
 	{
 		key: 'courses',
 		storage: storage,
 		transforms: [FetchableTransform],
-		version: 2,
+		version: 3,
 		migrate: ResetOnVersionChange()
 	},
 	handleActions<CourseState, any>({
@@ -224,7 +235,8 @@ export default persistReducer(
 		...activityMapActions.reduxActions,
 		...activityActions.reduxActions,
 		...teamProjectMapActions.reduxActions,
-		...teamProjectActions.reduxActions
+		...teamProjectActions.reduxActions,
+		...learningStatusActions.reduxActions
 	}, initialState)
 );
 
@@ -255,5 +267,7 @@ export const actions = {
 
 	teamProjects: (courseId: ID): FetchableAction => teamProjectMapActions.actions(courseId),
 
-	teamProject: (courseId: ID, id: ID): FetchableAction => teamProjectActions.actions({ courseId, id })
+	teamProject: (courseId: ID, id: ID): FetchableAction => teamProjectActions.actions({ courseId, id }),
+
+	learningStatus: (courseId: ID): FetchableAction => learningStatusActions.actions(courseId)
 };

@@ -1,6 +1,7 @@
 import { Fetchable, FetchableMap, Identifiable } from ".";
 import { Activity } from "./activity";
 import { Assignment } from "./assignment";
+import { LearningStatus } from "./learning-status";
 import { LecturesByWeek } from "./lecture";
 import { Notice } from "./notice";
 import { Reference } from "./reference";
@@ -183,11 +184,15 @@ export interface Course extends Identifiable, Fetchable {
 		 * 
 		 * @example 3 (3주차)
 		 */
-		[key: string]: CourseSchedule
-	}
+		[key: string]: CourseWeek
+	},
+	/**
+	 * @description 학습 현황
+	 */
+	learningStatus: LearningStatus
 }
 
-export interface CourseSchedule {
+export interface CourseWeek {
 	/**
 	 * @description 주차
 	 * 
@@ -224,5 +229,6 @@ export const initializeCourse = () => ({
 	assignments: { items: {}, fulfilled: false },
 	references: { items: {}, fulfilled: false },
 	activities: { items: {}, fulfilled: false },
-	teamProjects: { items: {}, fulfilled: false }
+	teamProjects: { items: {}, fulfilled: false },
+	learningStatus: { list: [], fulfilled: false }
 });

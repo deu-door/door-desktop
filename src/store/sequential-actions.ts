@@ -42,6 +42,11 @@ export const sequentialCourseActions = function *(courseId: ID): IterableIterato
 			name: `${course.name}`,
 			description: '팀 프로젝트 목록을 가져오는 중입니다',
 			action: actions.teamProjects(course.id)
+		},
+		{
+			name: `${course.name}`,
+			description: '수업 진행 정보를 가져오는 중입니다',
+			action: actions.learningStatus(course.id)
 		}
 	];
 
