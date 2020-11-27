@@ -101,10 +101,10 @@ export const PostBase: React.FC<PostBaseProps> = props => {
 
 			{summary}
 
-			{show && post.fulfilled && children ? children :
+			{show && post.fulfilled && (children ? children :
 				<CardContent>
 					<PostContent contents={post.contents} attachments={post.attachments} />
-				</CardContent>}
+				</CardContent>)}
 
 			{!show &&
 				<CardActions>
