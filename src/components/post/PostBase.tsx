@@ -11,7 +11,7 @@ import { PostSubmissionSummary } from './controls/PostSubmissionSummary';
 
 const useStyles = makeStyles(theme => createStyles({
 	post: {
-		margin: theme.spacing(2, 0, 2, 3),
+		margin: theme.spacing(2, 0, 2, 1.5),
 		overflow: 'unset',
 		'& .MuiDivider-root': {
 			margin: theme.spacing(2, 0)
