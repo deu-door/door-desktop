@@ -18,19 +18,29 @@ const useStyles = makeStyles(theme => createStyles({
 	},
 	postSubheader: {
 		margin: theme.spacing(2, 0)
+	},
+	postContent: {
+		'& p:first-child': {
+			marginTop: theme.spacing(0)
+		},
+
+		'& p:last-child': {
+			marginBottom: theme.spacing(0)
+		}
 	}
 }));
 
 export const PostContent: React.FC<{ contents?: string, attachments?: Attachment[] }> = props => {
 	const { contents, attachments } = props;
+	const classes = useStyles();
 
 	return (
 		<>
 			{contents && <Typography variant="body2" color="textSecondary" component="span" paragraph>
-				<div dangerouslySetInnerHTML={{ __html: contents }} />
+				<div className={classes.postContent} dangerouslySetInnerHTML={{ __html: contents }} />
 			</Typography>}
 
-			{attachments && <PostAttachment attachments={attachments} />}
+			{attachments && attachments.length > 0 && <PostAttachment attachments={attachments} />}
 		</>
 	);
 }
