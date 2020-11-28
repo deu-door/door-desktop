@@ -7,7 +7,7 @@ import { DateTime } from '../core/DateTime';
 import { PostAttachment } from './controls/PostAttachment';
 import { PostEvaluationResult } from './controls/PostEvaluationResult';
 import { PostSubmission } from './controls/PostSubmission';
-import { PostTimeProgress } from './controls/PostTimeProgress';
+import { PostSubmissionSummary } from './controls/PostSubmissionSummary';
 
 const useStyles = makeStyles(theme => createStyles({
 	post: {
@@ -139,7 +139,7 @@ export const SubmittablePostBase: React.FC<SubmittablePostBaseProps> = props => 
 		<PostBase
 			post={post}
 			action={action}
-			summary={<PostTimeProgress period={post.period} />}
+			summary={<PostSubmissionSummary period={post.period} />}
 
 			{...postProps}
 		>
