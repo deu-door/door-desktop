@@ -22,7 +22,10 @@ export const CourseRefresher: React.FC<{ course: Course }> = props => {
 		course.notices.error,
 		course.lectures.error,
 		course.assignments.error,
-		course.references.error
+		course.references.error,
+		course.activities.error,
+		course.teamProjects.error,
+		course.learningStatus.error
 	].filter(error => !!error);
 
 	useEffect(() => {
