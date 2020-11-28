@@ -1,8 +1,12 @@
-<p align="center"><img src="https://github.com/deu-door/door-desktop/blob/master/public/logo192.png"></p>
+<p align="center"><img src="public/logo192.png"></p>
 <h1 align="center">Door Desktop</h1>
 <p align="center">
 Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Dong-eui University</a></strong>
 </p>
+
+<br>
+
+![](screenshots/dashboard.png)
 
 <br><br>
 
@@ -25,6 +29,22 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 
 ### 🧲 게시물을 하나하나 확인할 필요가 있을까요?
 스크롤만 쓱 한번 내리면 게시물의 내용이 자동으로 로딩됩니다.
+
+<br>
+
+# 갤러리
+
+|![](screenshots/dashboard.png)|![](screenshots/lectures.png)|
+|:-:|:-:|
+|**대시보드**|**강의 시청**|
+
+|![](screenshots/assignments.png)|![](screenshots/references.png)|
+|:-:|:-:|
+|**과제**|**강의 자료**|
+
+|![](screenshots/references_loading.png)|![](screenshots/references.png)|
+|:-:|:-:|
+|**게시물 자동 로딩**|**로딩 후**|
 
 <br>
 
