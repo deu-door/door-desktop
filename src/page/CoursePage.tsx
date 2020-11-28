@@ -7,7 +7,7 @@ import { FetchableList } from 'components/fetchable/FetchableList';
 import { FetchButton } from 'components/fetchable/FetchButton';
 import { ActivityPost } from 'components/post/ActivityPost';
 import { AssignmentPost } from 'components/post/AssignmentPost';
-import { LectureList } from 'components/post/LectureList';
+import { LecturePostList } from 'components/post/LecturePostList';
 import { NoticePost } from 'components/post/NoticePost';
 import { ReferencePost } from 'components/post/ReferencePost';
 import { TeamProjectPost } from 'components/post/TeamProjectPost';
@@ -206,7 +206,7 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 				</TabPanel>
 
 				<TabPanel value={tab} index="lectures">
-					<LectureList course={course} />
+					<LecturePostList course={course} />
 				</TabPanel>
 
 				<TabPanel value={tab} index="assignments">
