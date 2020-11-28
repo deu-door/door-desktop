@@ -99,7 +99,9 @@ export const PostBase: React.FC<PostBaseProps> = props => {
 				</Grid>
 			</Grid>
 
-			{summary}
+			{summary && <CardContent>
+					{summary}
+				</CardContent>}
 
 			{show && post.fulfilled && (children ? children :
 				<CardContent>
