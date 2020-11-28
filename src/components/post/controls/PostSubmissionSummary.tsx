@@ -1,16 +1,15 @@
-import { Grid, LinearProgress, Paper, Typography } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { DateTime } from 'components/core/DateTime';
 import React from 'react';
 
-export type PostTimeProgressProps = {
+export type PostSubmissionSummaryProps = {
 	period: {
 		from: Date|number|string,
 		to: Date|number|string,
 	}
 }
 
-export const PostTimeProgress: React.FC<PostTimeProgressProps> = props => {
+export const PostSubmissionSummary: React.FC<PostSubmissionSummaryProps> = props => {
 	const { period: { from, to } } = props;
 
 	const duration = (new Date(to).valueOf() - new Date(from).valueOf());
