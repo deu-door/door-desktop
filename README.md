@@ -4,10 +4,6 @@
 Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Dong-eui University</a></strong>
 </p>
 
-<br>
-
-![](screenshots/dashboard.png)
-
 <br><br>
 
 # 📢 현재 지속적으로 개발중인 프로젝트입니다.
