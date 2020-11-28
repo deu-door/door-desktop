@@ -34,9 +34,9 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 |:-:|:-:|
 |**대시보드**|**강의 시청**|
 
-|![](screenshots/assignments.png)|![](screenshots/references.png)|
+|![](screenshots/assignments.png)|![](screenshots/chat.png)|
 |:-:|:-:|
-|**과제**|**강의 자료**|
+|**과제**|**채팅**|
 
 |![](screenshots/references_loading.png)|![](screenshots/references.png)|
 |:-:|:-:|
