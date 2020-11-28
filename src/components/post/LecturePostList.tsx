@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => createStyles({
 	}
 }));
 
-export const LectureList: React.FC<{ course: Course }> = props => {
+export const LecturePostList: React.FC<{ course: Course }> = props => {
 	const { course } = props;
 	const classes = useStyles();
 	const now = new Date();
