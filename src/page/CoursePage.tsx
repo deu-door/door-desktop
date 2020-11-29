@@ -174,7 +174,7 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 		<div className={classes.paper}>
 			<CssBaseline />
 			<AppBar position="sticky" color="default">
-				<Container className={classes.appBarContainer}>
+				<Container maxWidth="md" className={classes.appBarContainer}>
 					<CourseHeader course={course} />
 
 					<Tabs value={tab} onChange={(event, newTab) => setTab(newTab)}>
@@ -189,8 +189,7 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 					</Tabs>
 				</Container>
 			</AppBar>
-			<Container className={classes.contentsContainer}>
-
+			<Container maxWidth="md" className={classes.contentsContainer}>
 				<TabPanel value={tab} index="dashboard">
 					<CourseRefresher course={course} />
 
