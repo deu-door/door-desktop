@@ -31,36 +31,42 @@ const useStyles = makeStyles(theme => createStyles({
 	}
 }));
 
-export type ChatComponentProps = { course: Course }
-
-const ChatMessage: React.FC<{ isMe: boolean, message: Message }> = props => {
-	const { isMe, message } = props;
+const ChatMessage: React.FC<{ isMe: boolean, user: string, messages: Message[] }> = props => {
+	const { isMe, user, messages } = props;
 	const classes = useStyles();
 
 	const justify = isMe ? 'flex-end' : 'flex-start';
 
 	return (
-		<>
-			<ListItem>
-				<Grid container justify={justify}>
+		<ListItem>
+			<Grid container direction="column" spacing={1}>
+				<Grid container item justify={justify}>
 					<Box display="flex" flexDirection="column" alignItems={justify}>
-						<Typography variant="subtitle2">{message.user}</Typography>
-						<Typography variant="body2" color="textSecondary">
-							<DateTime date={message.timestamp} />
-						</Typography>
+						<Typography variant="subtitle2">{user}</Typography>
 					</Box>
 				</Grid>
-			</ListItem>
-			<ListItem>
-				<Grid container justify={justify}>
-					<Grid item>
-						<Paper className={classes.chatMessagePaper}>
-							{message.message}
-						</Paper>
+				{messages.map(message => (
+					<Grid
+						container
+						item
+						alignItems="flex-end"
+						spacing={1}
+						direction={isMe ? 'row-reverse' : 'row'}
+					>
+						<Grid item>
+							<Paper className={classes.chatMessagePaper}>
+								{message.message}
+							</Paper>
+						</Grid>
+						<Grid item>
+							<Typography variant="body2" color="textSecondary">
+								<DateTime date={message.timestamp} />
+							</Typography>
+						</Grid>
 					</Grid>
-				</Grid>
-			</ListItem>
-		</>
+				))}
+			</Grid>
+		</ListItem>
 	);
 }
 
@@ -77,13 +83,42 @@ const ChatBox: React.FC<ChatBoxProps> = props => {
 	const classes = useStyles();
 	const [message, setMessage] = useState('');
 
+	type MessageChunk = { userId: string, messages: Message[] };
+	const messageChunks: MessageChunk[] = [];
+
+	let previousUserId = '';
+	let currentMessageChunk: MessageChunk = {
+		userId: '',
+		messages: []
+	};
+
+	messages.forEach(message => {
+		if(message.userId !== previousUserId) {
+			if(previousUserId) messageChunks.push(currentMessageChunk);
+
+			currentMessageChunk = {
+				userId: message.userId,
+				messages: []
+			};
+			previousUserId = message.userId;
+		}
+
+		currentMessageChunk.messages.push(message);
+	});
+	if(previousUserId) messageChunks.push(currentMessageChunk);
+
 	return (
 		<div className={classes.chatBox}>
 			{!connected && <Alert severity="error">서버에 연결할 수 없습니다</Alert>}
 
 			<List disablePadding className={classes.chatMessages}>
-				{messages.map(message => (
-					<ChatMessage key={message.timestamp} isMe={message.userId === profile.id} message={message} />
+				{messageChunks.map(messageChunk => (
+					<ChatMessage
+						key={messageChunk.messages[0].id}
+						isMe={messageChunk.userId === profile.id}
+						user={messageChunk.messages[0].user}
+						messages={messageChunk.messages}
+					/>
 				))}
 			</List>
 
@@ -113,6 +148,8 @@ const ChatBox: React.FC<ChatBoxProps> = props => {
 		</div>
 	);
 }
+
+export type ChatComponentProps = { course: Course }
 
 export const ChatComponent: React.FC<ChatComponentProps> = props => {
 	const { course } = props;
