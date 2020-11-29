@@ -75,6 +75,7 @@ async function createWindow() {
 	console.log('main.ts is running on ' + __dirname);
 
 	mainWindow = new BrowserWindow({
+		title: 'Door Desktop',
 		center: true,
 		// kiosk: !isDev,
 		resizable: true,
