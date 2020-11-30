@@ -11,6 +11,9 @@ import { getChatHistory } from 'service/chat/history';
 import { DateTime } from 'components/core/DateTime';
 import { StompClient, StompMessage } from './StompClient';
 
+const WEBSOCKET_SOURCE = 'ws://door.p-e.kr/chat/connect';
+const STOMP_ENDPOINT = '/chat/message';
+
 const useStyles = makeStyles(theme => createStyles({
 	main: {
 		height: '100%'
@@ -161,8 +164,6 @@ export const ChatComponent: React.FC<ChatComponentProps> = props => {
 	const [connected, setConnected] = useState(false);
 	const [clientRef, setClientRef] = useState<StompClient|undefined>(undefined);
 
-	const webSocketSourceUrl = 'ws://localhost:8000/chat/connect';
-	const stompEndpoint = '/chat/message';
 	const topic = `/topic/courses/${course.id}`;
 
 	const onMessage = (message: StompMessage) => {
@@ -183,12 +184,12 @@ export const ChatComponent: React.FC<ChatComponentProps> = props => {
 				profile={user.profile}
 				topic={topic}
 				connected={connected}
-				onSendMessage={message => clientRef?.sendMessage(stompEndpoint, JSON.stringify(message))}
+				onSendMessage={message => clientRef?.sendMessage(STOMP_ENDPOINT, JSON.stringify(message))}
 				messages={messages}
 			/>}
 
 			<StompClient
-				endpoint={webSocketSourceUrl}
+				endpoint={WEBSOCKET_SOURCE}
 				topic={topic}
 				onConnect={onConnect}
 				onDisconnect={onDisconnect}

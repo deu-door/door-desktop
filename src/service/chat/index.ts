@@ -4,7 +4,7 @@ import axios from 'axios';
  * Axios 객체. door 홈페이지 요청에 대해 맞춤 설정되어 있음
  */
 export const chatAxios = axios.create({
-	baseURL: 'http://localhost:8000',
+	baseURL: 'http://door.p-e.kr',
 	headers: {
 		
 	}
