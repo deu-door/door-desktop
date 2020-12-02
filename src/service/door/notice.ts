@@ -15,8 +15,8 @@ export async function getNotice(courseId: ID, id: ID): Promise<Notice> {
 
 	const attachments: Attachment[] = [];
 
-	cheerio.load(detail['첨부파일'].element)('a').toArray().forEach(file => {
-		const fileElement = cheerio.load(file)('');
+	document('a', detail['첨부파일'].element).toArray().forEach(file => {
+		const fileElement = document(file);
 
 		const attachment: Attachment = {
 			title: fileElement.text().trim(),
