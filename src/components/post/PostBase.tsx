@@ -1,5 +1,5 @@
 import { Button, Card, CardActions, CardContent, CardHeader, createStyles, Divider, Grid, makeStyles, Typography } from '@material-ui/core';
-import { FetchControl } from 'components/fetchable/FetchControl';
+import { FetchButton } from 'components/fetchable/FetchButton';
 import React, { useState } from 'react';
 import { Attachment, Post, Submittable } from 'service/door/interfaces';
 import { FetchableAction } from 'store/modules';
@@ -46,8 +46,15 @@ export const PostContent: React.FC<{ contents?: string, attachments?: Attachment
 	);
 }
 
-export const PostSubheader: React.FC<{ author?: string, views?: number, createdAt: Date|string|number, fetchControl?: React.ReactNode }> = props => {
-	const { author, views, createdAt, fetchControl } = props;
+export type PostSubheaderProps = {
+	author?: string,
+	views?: number,
+	createdAt: Date|string|number,
+	fetchButton?: React.ReactNode
+}
+
+export const PostSubheader: React.FC<PostSubheaderProps> = props => {
+	const { author, views, createdAt, fetchButton } = props;
 
 	return (
 		<Typography variant="subtitle2" color="textSecondary">
@@ -66,9 +73,9 @@ export const PostSubheader: React.FC<{ author?: string, views?: number, createdA
 					<DateTime relative date={createdAt} />
 				</Grid>
 
-				{fetchControl &&
+				{fetchButton &&
 					<Grid item>
-						{fetchControl}
+						{fetchButton}
 					</Grid>}
 			</Grid>
 		</Typography>
@@ -82,12 +89,12 @@ export type PostBaseProps = {
 	summary?: React.ReactNode,
 
 	action?: FetchableAction,
-	fetchControl?: React.ReactNode,
+	fetchButton?: React.ReactNode,
 	defaultCollapsed?: boolean
 };
 
 export const PostBase: React.FC<PostBaseProps> = props => {
-	const { post, tag, summary, action, fetchControl, defaultCollapsed = false, children } = props;
+	const { post, tag, summary, action, fetchButton, defaultCollapsed = false, children } = props;
 	const classes = useStyles();
 	const [show, setShow] = useState(!defaultCollapsed);
 
@@ -103,7 +110,7 @@ export const PostBase: React.FC<PostBaseProps> = props => {
 								author={post.author}
 								views={post.views}
 								createdAt={post.createdAt}
-								fetchControl={show && (fetchControl || <FetchControl fetchable={post} action={action} />)}
+								fetchButton={show && (fetchButton || <FetchButton variant="link" fetchable={post} action={action} />)}
 							/>
 						}
 					/>

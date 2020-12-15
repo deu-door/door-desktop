@@ -9,9 +9,9 @@ import { doorAxios } from 'service/door/util';
 import { PostTag } from './controls/PostTag';
 import { PostAttachment } from './controls/PostAttachment';
 import { actions, RootState } from 'store/modules';
-import { FetchControl } from 'components/fetchable/FetchControl';
 import { useSelector } from 'react-redux';
 import { PostBase, PostBaseProps, PostContent } from './PostBase';
+import { FetchButton } from 'components/fetchable/FetchButton';
 
 const useStyles = makeStyles(theme => createStyles({
 	lectureOverlay: {
@@ -91,7 +91,7 @@ export const LecturePost: React.FC<LecturePostProps> = props => {
 		<PostBase
 			post={lecture}
 			tag={<PostTag color={purple[500]} icon={<OndemandVideo />} name="강의" />}
-			fetchControl={<FetchControl fetchable={lecturesByWeek} action={actions.lectureByWeek(lecturesByWeek.courseId, lecturesByWeek.id)} />}
+			fetchButton={<FetchButton variant="link" fetchable={lecturesByWeek} action={actions.lectureByWeek(lecturesByWeek.courseId, lecturesByWeek.id)} />}
 
 			{...postProps}
 		>

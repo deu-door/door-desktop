@@ -1,4 +1,4 @@
-import { Button, CircularProgress, createStyles, makeStyles } from '@material-ui/core';
+import { Button, CircularProgress, createStyles, Grid, Link, makeStyles } from '@material-ui/core';
 import { ErrorOutline, Refresh } from '@material-ui/icons';
 import React from 'react';
 import { useDispatch } from 'react-redux';
@@ -9,10 +9,16 @@ import VisibilitySensor from 'react-visibility-sensor';
 import { DateTime } from 'components/core/DateTime';
 
 const useStyles = makeStyles(theme => createStyles({
-	fetchableButton: {
-		color: theme.palette.primary.main
+	main: {
+		display: 'inline-block',
+		color: theme.palette.primary.main,
+		cursor: 'pointer'
 	},
-	fetchableError: {
+	pending: {
+		color: theme.palette.text.secondary,
+		cursor: 'unset'
+	},
+	error: {
 		color: theme.palette.error.main
 	},
 	fetchableProgress: {
@@ -21,13 +27,21 @@ const useStyles = makeStyles(theme => createStyles({
 		left: '50%',
 		marginTop: -10,
 		marginLeft: -10
+	},
+	icon: {
+		fontSize: '1rem',
+		marginRight: theme.spacing(0.5)
 	}
 }));
 
-export type FetchButtonProps = { fetchable: Fetchable, action?: FetchableAction };
+export type FetchButtonProps = {
+	variant?: 'button' | 'link',
+	fetchable: Fetchable,
+	action?: FetchableAction
+};
 
 export const FetchButton: React.FC<FetchButtonProps & React.HTMLAttributes<HTMLDivElement>> = props => {
-	const { className, fetchable, action } = props;
+	const { className, variant = 'button', fetchable, action } = props;
 	const classes = useStyles();
 	const dispatch = useDispatch();
 
@@ -43,26 +57,55 @@ export const FetchButton: React.FC<FetchButtonProps & React.HTMLAttributes<HTMLD
 		}
 	};
 
+	const pending = fetchable.pending;
+	const error = fetchable.error;
+
 	return (
-		<div className={clsx(fetchable.error
-						? classes.fetchableError
-						: classes.fetchableButton, className)}
-		>
+		<div className={clsx(
+			error ? classes.error : undefined,
+			pending ? classes.pending : undefined,
+			classes.main,
+			className
+		)}>
 			<VisibilitySensor onChange={onVisibilityChange}>
-				<Button
-					color="inherit"
-					size="small"
-					startIcon={fetchable.pending ? <CircularProgress size={12} color="inherit" />
-								: fetchable.error ? <ErrorOutline />
-								: <Refresh />}
-					disabled={fetchable.pending}
-					onClick={handleClick}
-				>
-					{fetchable.error
-						? '에러 : ' + fetchable.error
-						: fetchable.fulfilled ? <span>새로고침 · <DateTime date={fetchable.fetchedAt} relative /></span>
-						: '불러오기'}
-				</Button>
+				{
+					variant === 'button' ?
+						<Button
+							color="inherit"
+							size="small"
+							startIcon={fetchable.pending ? <CircularProgress size={12} color="inherit" />
+										: fetchable.error ? <ErrorOutline />
+										: <Refresh />}
+							disabled={fetchable.pending}
+							onClick={handleClick}
+						>
+							{fetchable.error
+								? '에러 : ' + fetchable.error
+								: fetchable.fulfilled ? <span>새로고침 · <DateTime date={fetchable.fetchedAt} relative /></span>
+								: '불러오기'}
+						</Button>
+
+					: variant === 'link' ? 
+						<Link
+							color="inherit"
+							underline="always"
+							onClick={handleClick}
+						>
+							<Grid container alignItems="center">
+								{pending ? <CircularProgress size={12} color="inherit" className={classes.icon} />
+										: error ? <ErrorOutline className={classes.icon} />
+										: <Refresh  className={classes.icon} />}
+		
+								<Grid item>
+									{error ? '에러 : ' + fetchable.error
+										: fetchable.fulfilled ? <span>새로고침: <DateTime date={fetchable.fetchedAt} relative /></span>
+										: '불러오기'}
+								</Grid>
+							</Grid>
+						</Link>
+					:
+						<></>
+				}
 			</VisibilitySensor>
 		</div>
 	)
