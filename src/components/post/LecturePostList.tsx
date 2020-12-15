@@ -40,10 +40,11 @@ export const LecturePostList: React.FC<{ course: Course }> = props => {
 							{`${week.id}주차 · 강의 ${week.count}개 · ${week.description}`}
 						</StepButton>
 						<StepContent>
+							<FetchButton fetchable={week} action={actions.lectureByWeek(course.id, week.id)} />
+							
 							{Object.values(week.items).map(lecture => (
 								<LecturePost key={lecture.id} post={lecture} />
 							))}
-							<FetchButton fetchable={week} action={actions.lectureByWeek(course.id, week.id)} />
 						</StepContent>
 					</Step>
 				))}
