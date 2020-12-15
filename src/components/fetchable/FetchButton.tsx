@@ -47,9 +47,11 @@ export const FetchButton: React.FC<FetchButtonProps & React.HTMLAttributes<HTMLD
 
 	const handleClick = () => action && dispatch(action.fetch());
 
+	const { fulfilled, pending, error, fetchedAt } = fetchable;
+
 	const onVisibilityChange = (isVisible: boolean) => {
-		if(action && isVisible && !fetchable.pending) {
-			if(!fetchable.fulfilled) {
+		if(action && isVisible && !pending) {
+			if(!fulfilled) {
 				dispatch(action.fetchIfNotFulfilled());
 			}else {
 				dispatch(action.fetchIfExpired());
@@ -57,8 +59,9 @@ export const FetchButton: React.FC<FetchButtonProps & React.HTMLAttributes<HTMLD
 		}
 	};
 
-	const pending = fetchable.pending;
-	const error = fetchable.error;
+	const innerComponent = error ? '에러 : ' + error
+						: fulfilled ? <span>새로고침: <DateTime date={fetchedAt} relative /></span>
+						: '불러오기';
 
 	return (
 		<div className={clsx(
@@ -73,17 +76,12 @@ export const FetchButton: React.FC<FetchButtonProps & React.HTMLAttributes<HTMLD
 						<Button
 							color="inherit"
 							size="small"
-							startIcon={fetchable.pending ? <CircularProgress size={12} color="inherit" />
-										: fetchable.error ? <ErrorOutline />
+							startIcon={pending ? <CircularProgress size={12} color="inherit" />
+										: error ? <ErrorOutline />
 										: <Refresh />}
-							disabled={fetchable.pending}
+							disabled={pending}
 							onClick={handleClick}
-						>
-							{fetchable.error
-								? '에러 : ' + fetchable.error
-								: fetchable.fulfilled ? <span>새로고침 · <DateTime date={fetchable.fetchedAt} relative /></span>
-								: '불러오기'}
-						</Button>
+						>{innerComponent}</Button>
 
 					: variant === 'link' ? 
 						<Link
@@ -96,11 +94,7 @@ export const FetchButton: React.FC<FetchButtonProps & React.HTMLAttributes<HTMLD
 										: error ? <ErrorOutline className={classes.icon} />
 										: <Refresh  className={classes.icon} />}
 		
-								<Grid item>
-									{error ? '에러 : ' + fetchable.error
-										: fetchable.fulfilled ? <span>새로고침: <DateTime date={fetchable.fetchedAt} relative /></span>
-										: '불러오기'}
-								</Grid>
+								<Grid item>{innerComponent}</Grid>
 							</Grid>
 						</Link>
 					:
