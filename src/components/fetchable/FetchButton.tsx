@@ -51,11 +51,7 @@ export const FetchButton: React.FC<FetchButtonProps & React.HTMLAttributes<HTMLD
 
 	const onVisibilityChange = (isVisible: boolean) => {
 		if(action && isVisible && !pending) {
-			if(!fulfilled) {
-				dispatch(action.fetchIfNotFulfilled());
-			}else {
-				dispatch(action.fetchIfExpired());
-			}
+			dispatch(fulfilled ? action.fetchIfExpired() : action.fetchIfNotFulfilled());
 		}
 	};
 
