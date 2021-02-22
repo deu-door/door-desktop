@@ -1,21 +1,29 @@
-import { createStyles, Grid, IconButton, Link, makeStyles } from '@material-ui/core';
+import {
+	createStyles,
+	Grid,
+	IconButton,
+	Link,
+	makeStyles,
+} from '@material-ui/core';
 import { Attachment as AttachmentIcon, Clear } from '@material-ui/icons';
 import React from 'react';
 import { Attachment } from 'service/door/interfaces';
 import { downloader } from 'service/downloader';
 
-const useStyles = makeStyles(theme => createStyles({
-	postAttachment: {
-		margin: theme.spacing(2, 0, 0, 0)
-	}
-}));
+const useStyles = makeStyles(theme =>
+	createStyles({
+		postAttachment: {
+			margin: theme.spacing(2, 0, 0, 0),
+		},
+	}),
+);
 
 export type PostFileProps = {
-	name: string,
-	link?: string,
-	deleteButton?: boolean,
-	onDelete?: () => void
-}
+	name: string;
+	link?: string;
+	deleteButton?: boolean;
+	onDelete?: () => void;
+};
 
 export const PostFile: React.FC<PostFileProps> = props => {
 	const { name, link, deleteButton = false, onDelete } = props;
@@ -26,21 +34,37 @@ export const PostFile: React.FC<PostFileProps> = props => {
 				<AttachmentIcon />
 			</Grid>
 			<Grid item>
-				{link ? <Link component="button" onClick={() => downloader.download(link)}>{name}</Link> : name}
+				{link ? (
+					<Link
+						component="button"
+						onClick={() => downloader.download(link)}
+					>
+						{name}
+					</Link>
+				) : (
+					name
+				)}
 			</Grid>
-			{deleteButton && <Grid item>
-				<IconButton color="primary" title="삭제" size="small" onClick={() => onDelete?.()}>
-					<Clear />
-				</IconButton>
-			</Grid>}
+			{deleteButton && (
+				<Grid item>
+					<IconButton
+						color="primary"
+						title="삭제"
+						size="small"
+						onClick={() => onDelete?.()}
+					>
+						<Clear />
+					</IconButton>
+				</Grid>
+			)}
 		</Grid>
 	);
-}
+};
 
 export type PostAttachmentProps = {
-	attachments: Attachment[],
-	deleteButton?: boolean
-}
+	attachments: Attachment[];
+	deleteButton?: boolean;
+};
 
 export const PostAttachment: React.FC<PostAttachmentProps> = props => {
 	const { attachments, deleteButton = false, children } = props;
@@ -60,4 +84,4 @@ export const PostAttachment: React.FC<PostAttachmentProps> = props => {
 			{children}
 		</div>
 	);
-}
+};

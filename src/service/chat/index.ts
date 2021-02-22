@@ -5,9 +5,7 @@ import axios from 'axios';
  */
 export const chatAxios = axios.create({
 	baseURL: 'http://door.p-e.kr',
-	headers: {
-		
-	}
+	headers: {},
 });
 
 // Logging request

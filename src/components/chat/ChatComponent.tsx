@@ -4,7 +4,19 @@ import { RootState } from 'store/modules';
 import { UserState } from 'store/modules/user';
 import { Course } from 'service/door/interfaces/course';
 import { Message } from 'service/chat/interfaces/message';
-import { AppBar, Box, createStyles, Grid, InputBase, List, ListItem, makeStyles, Paper, Toolbar, Typography } from '@material-ui/core';
+import {
+	AppBar,
+	Box,
+	createStyles,
+	Grid,
+	InputBase,
+	List,
+	ListItem,
+	makeStyles,
+	Paper,
+	Toolbar,
+	Typography,
+} from '@material-ui/core';
 import { Profile } from 'service/door/interfaces/user';
 import { Alert } from '@material-ui/lab';
 import { getChatHistory } from 'service/chat/history';
@@ -14,27 +26,33 @@ import { StompClient, StompMessage } from './StompClient';
 const WEBSOCKET_SOURCE = 'ws://door.p-e.kr/chat/connect';
 const STOMP_ENDPOINT = '/chat/message';
 
-const useStyles = makeStyles(theme => createStyles({
-	main: {
-		height: '100%'
-	},
-	chatBox: {
-		height: '100%',
-		display: 'flex',
-		flexDirection: 'column'
-	},
-	chatInput: {
-		bottom: 0
-	},
-	chatMessages: {
-		flex: '1 1 auto'
-	},
-	chatMessagePaper: {
-		padding: theme.spacing(2)
-	}
-}));
+const useStyles = makeStyles(theme =>
+	createStyles({
+		main: {
+			height: '100%',
+		},
+		chatBox: {
+			height: '100%',
+			display: 'flex',
+			flexDirection: 'column',
+		},
+		chatInput: {
+			bottom: 0,
+		},
+		chatMessages: {
+			flex: '1 1 auto',
+		},
+		chatMessagePaper: {
+			padding: theme.spacing(2),
+		},
+	}),
+);
 
-const ChatMessage: React.FC<{ isMe: boolean, user: string, messages: Message[] }> = props => {
+const ChatMessage: React.FC<{
+	isMe: boolean;
+	user: string;
+	messages: Message[];
+}> = props => {
 	const { isMe, user, messages } = props;
 	const classes = useStyles();
 
@@ -44,7 +62,11 @@ const ChatMessage: React.FC<{ isMe: boolean, user: string, messages: Message[] }
 		<ListItem>
 			<Grid container direction="column" spacing={1}>
 				<Grid container item justify={justify}>
-					<Box display="flex" flexDirection="column" alignItems={justify}>
+					<Box
+						display="flex"
+						flexDirection="column"
+						alignItems={justify}
+					>
 						<Typography variant="subtitle2">{user}</Typography>
 					</Box>
 				</Grid>
@@ -71,48 +93,50 @@ const ChatMessage: React.FC<{ isMe: boolean, user: string, messages: Message[] }
 			</Grid>
 		</ListItem>
 	);
-}
+};
 
 type ChatBoxProps = {
-	profile: Profile,
-	topic: string,
-	connected: boolean,
-	messages: Message[],
-	onSendMessage: (message: Message) => void
-}
+	profile: Profile;
+	topic: string;
+	connected: boolean;
+	messages: Message[];
+	onSendMessage: (message: Message) => void;
+};
 
 const ChatBox: React.FC<ChatBoxProps> = props => {
 	const { messages, onSendMessage, profile, topic, connected } = props;
 	const classes = useStyles();
 	const [message, setMessage] = useState('');
 
-	type MessageChunk = { userId: string, messages: Message[] };
+	type MessageChunk = { userId: string; messages: Message[] };
 	const messageChunks: MessageChunk[] = [];
 
 	let previousUserId = '';
 	let currentMessageChunk: MessageChunk = {
 		userId: '',
-		messages: []
+		messages: [],
 	};
 
 	messages.forEach(message => {
-		if(message.userId !== previousUserId) {
-			if(previousUserId) messageChunks.push(currentMessageChunk);
+		if (message.userId !== previousUserId) {
+			if (previousUserId) messageChunks.push(currentMessageChunk);
 
 			currentMessageChunk = {
 				userId: message.userId,
-				messages: []
+				messages: [],
 			};
 			previousUserId = message.userId;
 		}
 
 		currentMessageChunk.messages.push(message);
 	});
-	if(previousUserId) messageChunks.push(currentMessageChunk);
+	if (previousUserId) messageChunks.push(currentMessageChunk);
 
 	return (
 		<div className={classes.chatBox}>
-			{!connected && <Alert severity="error">서버에 연결할 수 없습니다</Alert>}
+			{!connected && (
+				<Alert severity="error">서버에 연결할 수 없습니다</Alert>
+			)}
 
 			<List disablePadding className={classes.chatMessages}>
 				{messageChunks.map(messageChunk => (
@@ -125,7 +149,11 @@ const ChatBox: React.FC<ChatBoxProps> = props => {
 				))}
 			</List>
 
-			<AppBar color="default" position="sticky" className={classes.chatInput}>
+			<AppBar
+				color="default"
+				position="sticky"
+				className={classes.chatInput}
+			>
 				<Toolbar>
 					<InputBase
 						fullWidth
@@ -133,14 +161,14 @@ const ChatBox: React.FC<ChatBoxProps> = props => {
 						value={message}
 						onChange={event => setMessage(event.target.value)}
 						onKeyPress={event => {
-							if(event.key === 'Enter') {
+							if (event.key === 'Enter') {
 								onSendMessage({
 									id: '',
 									user: profile.name,
 									userId: profile.id,
 									message: message,
 									timestamp: Date.now(),
-									topic: topic
+									topic: topic,
 								});
 								setMessage('');
 							}
@@ -150,9 +178,9 @@ const ChatBox: React.FC<ChatBoxProps> = props => {
 			</AppBar>
 		</div>
 	);
-}
+};
 
-export type ChatComponentProps = { course: Course }
+export type ChatComponentProps = { course: Course };
 
 export const ChatComponent: React.FC<ChatComponentProps> = props => {
 	const { course } = props;
@@ -162,13 +190,15 @@ export const ChatComponent: React.FC<ChatComponentProps> = props => {
 
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [connected, setConnected] = useState(false);
-	const [clientRef, setClientRef] = useState<StompClient|undefined>(undefined);
+	const [clientRef, setClientRef] = useState<StompClient | undefined>(
+		undefined,
+	);
 
 	const topic = `/topic/courses/${course.id}`;
 
 	const onMessage = (message: StompMessage) => {
 		console.log('Chat: message receive', message);
-		setMessages([ ...messages, (message as Message) ]);
+		setMessages([...messages, message as Message]);
 	};
 
 	const onConnect = async () => {
@@ -180,13 +210,20 @@ export const ChatComponent: React.FC<ChatComponentProps> = props => {
 
 	return (
 		<div className={classes.main}>
-			{user.profile && <ChatBox
-				profile={user.profile}
-				topic={topic}
-				connected={connected}
-				onSendMessage={message => clientRef?.sendMessage(STOMP_ENDPOINT, JSON.stringify(message))}
-				messages={messages}
-			/>}
+			{user.profile && (
+				<ChatBox
+					profile={user.profile}
+					topic={topic}
+					connected={connected}
+					onSendMessage={message =>
+						clientRef?.sendMessage(
+							STOMP_ENDPOINT,
+							JSON.stringify(message),
+						)
+					}
+					messages={messages}
+				/>
+			)}
 
 			<StompClient
 				endpoint={WEBSOCKET_SOURCE}
@@ -198,4 +235,4 @@ export const ChatComponent: React.FC<ChatComponentProps> = props => {
 			/>
 		</div>
 	);
-}
+};

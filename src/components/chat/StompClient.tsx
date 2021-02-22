@@ -9,14 +9,14 @@ const RECONNECT_DELAY = 3000;
 export type StompMessage = Record<any, any>;
 
 export type StompClientProps = {
-	clientRef: (instance: StompClient) => void,
-	endpoint: string,
-	topic?: string,
-	onConnect?: () => void,
-	onDisconnect?: () => void,
-	onMessage?: (message: StompMessage) => void,
-	debug?: boolean
-}
+	clientRef: (instance: StompClient) => void;
+	endpoint: string;
+	topic?: string;
+	onConnect?: () => void;
+	onDisconnect?: () => void;
+	onMessage?: (message: StompMessage) => void;
+	debug?: boolean;
+};
 
 export class StompClient extends React.Component<StompClientProps> {
 	state: Readonly<{ client?: Client }> = {};
@@ -31,7 +31,7 @@ export class StompClient extends React.Component<StompClientProps> {
 		const client = new Client({
 			brokerURL: this.props.endpoint,
 			debug: this.props.debug ? console.debug : NoOp,
-			reconnectDelay: RECONNECT_DELAY
+			reconnectDelay: RECONNECT_DELAY,
 		});
 		client.onConnect = () => this.onConnect();
 		client.onDisconnect = () => this.onDisconnect();
@@ -45,18 +45,21 @@ export class StompClient extends React.Component<StompClientProps> {
 	}
 
 	private subscribe(): void {
-		if(this.props.topic) this.state.client?.subscribe(this.props.topic, message => this.onMessage(message));
+		if (this.props.topic)
+			this.state.client?.subscribe(this.props.topic, message =>
+				this.onMessage(message),
+			);
 	}
 
 	public sendMessage(destination: string, message: string): void {
 		this.state.client?.publish({
 			destination: destination,
-			body: message
+			body: message,
 		});
 	}
 
 	private onConnect(): void {
-		if(!this._isMounted) return;
+		if (!this._isMounted) return;
 
 		console.log('StompClient: Connected');
 		this.subscribe();
@@ -65,18 +68,20 @@ export class StompClient extends React.Component<StompClientProps> {
 	}
 
 	private onDisconnect(): void {
-		if(!this._isMounted) return;
+		if (!this._isMounted) return;
 
 		this.props.onDisconnect?.();
 	}
 
 	private onMessage(message: IMessage): void {
-		if(!this._isMounted) return;
+		if (!this._isMounted) return;
 
-		try{
+		try {
 			this.props.onMessage?.(JSON.parse(message.body) as StompMessage);
-		} catch(e) {
-			console.error('StompClient: Cannot parse message as JSON. See below :');
+		} catch (e) {
+			console.error(
+				'StompClient: Cannot parse message as JSON. See below :',
+			);
 			console.error('  Error: ', e);
 			console.error('  Message: ', message);
 		}
@@ -99,15 +104,15 @@ export class StompClient extends React.Component<StompClientProps> {
 	}
 
 	public componentDidUpdate(props: StompClientProps): void {
-		if(props.endpoint !== this.props.endpoint) {
+		if (props.endpoint !== this.props.endpoint) {
 			this.createNewClient();
-		}else if(props.topic !== this.props.topic) {
-			if(props.topic) this.unsubscribe(props.topic);
+		} else if (props.topic !== this.props.topic) {
+			if (props.topic) this.unsubscribe(props.topic);
 			this.subscribe();
 		}
 	}
 
 	public render(): React.ReactNode {
-		return (<>{this.props.children}</>);
+		return <>{this.props.children}</>;
 	}
 }

@@ -1,30 +1,49 @@
 import cheerio from 'cheerio';
-import { Attachment, FetchableMap, fulfilledFetchable, ID, notFulfilledFetchable } from './interfaces';
+import {
+	Attachment,
+	FetchableMap,
+	fulfilledFetchable,
+	ID,
+	notFulfilledFetchable,
+} from './interfaces';
 import { Notice } from './interfaces/notice';
-import { doorAxios, parseInformaticTableElement, parseTableElement } from './util';
+import {
+	doorAxios,
+	parseInformaticTableElement,
+	parseTableElement,
+} from './util';
 
 export async function getNotice(courseId: ID, id: ID): Promise<Notice> {
 	// /BBS/Board/Read 로 요청을 보내면 서버 자체적으로 "읽음" 처리된 후 /BBS/Board/Detail로 리다이렉트됨
-	const document = cheerio.load((await doorAxios.get(`/BBS/Board/Read/CourseNotice/${id}`)).data);
+	const document = cheerio.load(
+		(await doorAxios.get(`/BBS/Board/Read/CourseNotice/${id}`)).data,
+	);
 
-	const detailTable = document(`#boardForm > div.form_table > table`).toArray().shift();
+	const detailTable = document(`#boardForm > div.form_table > table`)
+		.toArray()
+		.shift();
 
-	if(!detailTable) throw new Error('공지사항을 불러올 수 없습니다. 로그인 상태를 확인해주세요.');
+	if (!detailTable)
+		throw new Error(
+			'공지사항을 불러올 수 없습니다. 로그인 상태를 확인해주세요.',
+		);
 
 	const detail = parseInformaticTableElement(detailTable);
 
 	const attachments: Attachment[] = [];
 
-	document('a', detail['첨부파일'].element).toArray().forEach(file => {
-		const fileElement = document(file);
+	document('a', detail['첨부파일'].element)
+		.toArray()
+		.forEach(file => {
+			const fileElement = document(file);
 
-		const attachment: Attachment = {
-			title: fileElement.text().trim(),
-			link: fileElement.attr('href') || ''
-		};
+			const attachment: Attachment = {
+				title: fileElement.text().trim(),
+				link: fileElement.attr('href') || '',
+			};
 
-		if(attachment.link) attachments.push(attachment);
-	});
+			if (attachment.link) attachments.push(attachment);
+		});
 
 	return {
 		id: id,
@@ -38,16 +57,27 @@ export async function getNotice(courseId: ID, id: ID): Promise<Notice> {
 
 		attachments: attachments,
 
-		...fulfilledFetchable()
+		...fulfilledFetchable(),
 	};
 }
 
 export async function getNotices(courseId: ID): Promise<FetchableMap<Notice>> {
-	const document = cheerio.load((await doorAxios.get(`/BBS/Board/List/CourseNotice?cNo=${courseId}&pageRowSize=200`)).data);
+	const document = cheerio.load(
+		(
+			await doorAxios.get(
+				`/BBS/Board/List/CourseNotice?cNo=${courseId}&pageRowSize=200`,
+			)
+		).data,
+	);
 
-	const table = document(`#sub_content2 > div.form_table > table`).toArray().shift();
+	const table = document(`#sub_content2 > div.form_table > table`)
+		.toArray()
+		.shift();
 
-	if(!table) throw new Error('공지사항 목록을 불러올 수 없습니다. 로그인 상태를 확인해주세요.');
+	if (!table)
+		throw new Error(
+			'공지사항 목록을 불러올 수 없습니다. 로그인 상태를 확인해주세요.',
+		);
 
 	const notices: Notice[] = parseTableElement(table).map(row => ({
 		id: row['제목'].url?.match(/CourseNotice\/(\w+)?/)?.[1] || '',
@@ -58,12 +88,12 @@ export async function getNotices(courseId: ID): Promise<FetchableMap<Notice>> {
 		title: row['제목'].text,
 		views: Number(row['조회'].text),
 
-		...notFulfilledFetchable()
+		...notFulfilledFetchable(),
 	}));
 
 	return {
 		items: Object.fromEntries(notices.map(notice => [notice.id, notice])),
 
-		...fulfilledFetchable()
+		...fulfilledFetchable(),
 	};
 }

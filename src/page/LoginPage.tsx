@@ -1,4 +1,16 @@
-import { Backdrop, Button, Checkbox, CircularProgress, Container, createStyles, CssBaseline, FormControlLabel, makeStyles, TextField, Typography } from '@material-ui/core';
+import {
+	Backdrop,
+	Button,
+	Checkbox,
+	CircularProgress,
+	Container,
+	createStyles,
+	CssBaseline,
+	FormControlLabel,
+	makeStyles,
+	TextField,
+	Typography,
+} from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,21 +19,23 @@ import { RootState } from 'store/modules';
 import { actions } from 'store/modules';
 import { UserState } from 'store/modules/user';
 
-const useStyles = makeStyles(theme => createStyles({
-	paper: {
-		marginTop: theme.spacing(8),
-		display: 'flex',
-		flexDirection: 'column',
-		placeItems: 'center'
-	},
-	form: {
-		width: '100%',
-		marginTop: theme.spacing(3)
-	},
-	submit: {
-		margin: theme.spacing(3, 0, 2)
-	}
-}));
+const useStyles = makeStyles(theme =>
+	createStyles({
+		paper: {
+			marginTop: theme.spacing(8),
+			display: 'flex',
+			flexDirection: 'column',
+			placeItems: 'center',
+		},
+		form: {
+			width: '100%',
+			marginTop: theme.spacing(3),
+		},
+		submit: {
+			margin: theme.spacing(3, 0, 2),
+		},
+	}),
+);
 
 export const LoginPage: React.FC = props => {
 	const classes = useStyles();
@@ -37,11 +51,13 @@ export const LoginPage: React.FC = props => {
 	const handleSubmit = async (e: React.FormEvent<EventTarget>) => {
 		e.preventDefault();
 
-		await dispatch(actions.login(username, password, { saveCredential }).fetch());
+		await dispatch(
+			actions.login(username, password, { saveCredential }).fetch(),
+		);
 	};
 
 	useEffect(() => {
-		if(user.authenticated) history.push('/init');
+		if (user.authenticated) history.push('/init');
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user.authenticated]);
 
@@ -53,11 +69,12 @@ export const LoginPage: React.FC = props => {
 					Sign in
 				</Typography>
 
-				<form
-					className={classes.form}
-					onSubmit={handleSubmit}
-				>
-					{user.error && <Alert variant="filled" severity="error">{user.error}</Alert>}
+				<form className={classes.form} onSubmit={handleSubmit}>
+					{user.error && (
+						<Alert variant="filled" severity="error">
+							{user.error}
+						</Alert>
+					)}
 
 					<TextField
 						variant="outlined"
@@ -89,7 +106,9 @@ export const LoginPage: React.FC = props => {
 							<Checkbox
 								color="primary"
 								checked={saveCredential}
-								onChange={e => setSaveCredential(e.target.checked)}
+								onChange={e =>
+									setSaveCredential(e.target.checked)
+								}
 								disabled={user.pending}
 							/>
 						}

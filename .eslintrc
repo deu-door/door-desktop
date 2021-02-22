@@ -1,8 +1,12 @@
 {
+	"root": true,
 	"parser": "@typescript-eslint/parser",
+	"plugins": ["@typescript-eslint", "prettier"],
 	"extends": [
 		"react-app",
-		"plugin:@typescript-eslint/recommended"
+		"plugin:react/recommended",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:prettier/recommended"
 	],
 	"parserOptions": {
 		// Allows for the parsing of modern ECMAScript features
@@ -20,6 +24,6 @@
 		}
 	},
 	"rules": {
-
+		"prettier/prettier": 1
 	}
 }

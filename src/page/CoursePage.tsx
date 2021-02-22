@@ -1,5 +1,27 @@
-import { AppBar, Collapse, Container, createStyles, CssBaseline, Grid, IconButton, List, ListItem, ListItemText, makeStyles, Tab, Tabs, Typography } from '@material-ui/core';
-import { BookmarksOutlined, ExpandLess, ExpandMore, FlagOutlined, PersonOutlined, ScheduleOutlined } from '@material-ui/icons';
+import {
+	AppBar,
+	Collapse,
+	Container,
+	createStyles,
+	CssBaseline,
+	Grid,
+	IconButton,
+	List,
+	ListItem,
+	ListItemText,
+	makeStyles,
+	Tab,
+	Tabs,
+	Typography,
+} from '@material-ui/core';
+import {
+	BookmarksOutlined,
+	ExpandLess,
+	ExpandMore,
+	FlagOutlined,
+	PersonOutlined,
+	ScheduleOutlined,
+} from '@material-ui/icons';
 import { ChatComponent } from 'components/chat/ChatComponent';
 import { CourseRefresher } from 'components/course/CourseRefresher';
 import { CourseTimeline } from 'components/course/CourseTimeline';
@@ -16,47 +38,52 @@ import { sortPostByCreatedAt } from 'service/door/interfaces';
 import { Course } from 'service/door/interfaces/course';
 import { actions } from 'store/modules';
 
-const useStyles = makeStyles(theme => createStyles({
-	paper: {
-		flex: 1,
-		display: 'flex',
-		flexDirection: 'column'
-	},
-	courseSubtitle: {
-		paddingTop: theme.spacing(1)
-	},
-	appBarContainer: {
-		marginLeft: 'unset'
-	},
-	contentsContainer: {
-		marginLeft: 'unset',
-		marginTop: theme.spacing(2),
-		flex: 1,
-		display: 'flex',
-		'& > *': {
-			flex: 1
-		}
-	},
-	courseHeaderFetchButton: {
-		color: 'inherit'
-	},
-	tab: {
-		minWidth: 110,
-		width: 110
-	}
-}));
+const useStyles = makeStyles(theme =>
+	createStyles({
+		paper: {
+			flex: 1,
+			display: 'flex',
+			flexDirection: 'column',
+		},
+		courseSubtitle: {
+			paddingTop: theme.spacing(1),
+		},
+		appBarContainer: {
+			marginLeft: 'unset',
+		},
+		contentsContainer: {
+			marginLeft: 'unset',
+			marginTop: theme.spacing(2),
+			flex: 1,
+			display: 'flex',
+			'& > *': {
+				flex: 1,
+			},
+		},
+		courseHeaderFetchButton: {
+			color: 'inherit',
+		},
+		tab: {
+			minWidth: 110,
+			width: 110,
+		},
+	}),
+);
 
-const TabPanel: React.FC<{ value: string|number, index: string|number, children?: React.ReactNode }> = props => {
+const TabPanel: React.FC<{
+	value: string | number;
+	index: string | number;
+	children?: React.ReactNode;
+}> = props => {
 	const { value, index, children } = props;
 
-	return (
-		<div hidden={value !== index}>
-			{children}
-		</div>
-	)
-}
+	return <div hidden={value !== index}>{children}</div>;
+};
 
-const CourseDetail: React.FC<{ name: string, fields: Array<{ name: string, text?: string|number }> }> = props => {
+const CourseDetail: React.FC<{
+	name: string;
+	fields: Array<{ name: string; text?: string | number }>;
+}> = props => {
 	const { name, fields } = props;
 
 	return (
@@ -68,7 +95,9 @@ const CourseDetail: React.FC<{ name: string, fields: Array<{ name: string, text?
 					</Grid>
 					{fields.map(({ name, text }) => (
 						<Grid item key={name}>
-							<Typography variant="body2">{name}: {text}</Typography>
+							<Typography variant="body2">
+								{name}: {text}
+							</Typography>
 						</Grid>
 					))}
 				</Grid>
@@ -77,7 +106,10 @@ const CourseDetail: React.FC<{ name: string, fields: Array<{ name: string, text?
 	);
 };
 
-const CourseHeaderField: React.FC<{ icon: React.ReactElement, text: string }> = props => {
+const CourseHeaderField: React.FC<{
+	icon: React.ReactElement;
+	text: string;
+}> = props => {
 	const { icon, text } = props;
 
 	return (
@@ -85,7 +117,7 @@ const CourseHeaderField: React.FC<{ icon: React.ReactElement, text: string }> = 
 			{icon}
 			<Grid item>{text}</Grid>
 		</Grid>
-	)
+	);
 };
 
 const CourseHeader: React.FC<{ course: Course }> = props => {
@@ -99,20 +131,41 @@ const CourseHeader: React.FC<{ course: Course }> = props => {
 		<List>
 			<ListItem>
 				<ListItemText>
-					<Typography variant="h4" component="h1">{course.name}</Typography>
-					<Typography variant="subtitle1" className={classes.courseSubtitle}>
+					<Typography variant="h4" component="h1">
+						{course.name}
+					</Typography>
+					<Typography
+						variant="subtitle1"
+						className={classes.courseSubtitle}
+					>
 						<Grid container spacing={4}>
 							<Grid item>
-								<CourseHeaderField icon={<PersonOutlined fontSize="inherit" />} text={course.professor} />
+								<CourseHeaderField
+									icon={<PersonOutlined fontSize="inherit" />}
+									text={course.professor}
+								/>
 							</Grid>
 							<Grid item>
-								<CourseHeaderField icon={<FlagOutlined fontSize="inherit" />} text={`${course.division}분반`} />
+								<CourseHeaderField
+									icon={<FlagOutlined fontSize="inherit" />}
+									text={`${course.division}분반`}
+								/>
 							</Grid>
 							<Grid item>
-								<CourseHeaderField icon={<BookmarksOutlined fontSize="inherit" />} text={`${course.credits}학점`} />
+								<CourseHeaderField
+									icon={
+										<BookmarksOutlined fontSize="inherit" />
+									}
+									text={`${course.credits}학점`}
+								/>
 							</Grid>
 							<Grid item>
-								<CourseHeaderField icon={<ScheduleOutlined fontSize="inherit" />} text={`${course.hours}시간`} />
+								<CourseHeaderField
+									icon={
+										<ScheduleOutlined fontSize="inherit" />
+									}
+									text={`${course.hours}시간`}
+								/>
 							</Grid>
 						</Grid>
 					</Typography>
@@ -128,7 +181,7 @@ const CourseHeader: React.FC<{ course: Course }> = props => {
 						{ name: '구분', text: course.type },
 						{ name: '전공', text: course.major },
 						{ name: '대상학년', text: course.target },
-						{ name: '주교재', text: course.book }
+						{ name: '주교재', text: course.book },
 					]}
 				/>
 
@@ -137,7 +190,7 @@ const CourseHeader: React.FC<{ course: Course }> = props => {
 					fields={[
 						{ name: '교수', text: course.professor },
 						{ name: '연락처', text: course.contact },
-						{ name: '이메일', text: course.email }
+						{ name: '이메일', text: course.email },
 					]}
 				/>
 
@@ -165,10 +218,10 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 		{ key: 'references', label: '강의자료' },
 		{ key: 'activities', label: '수업활동일지' },
 		{ key: 'teamProjects', label: '팀 프로젝트' },
-		{ key: 'chat', label: '채팅' }
+		{ key: 'chat', label: '채팅' },
 	];
 
-	const [ tab, setTab ] = useState(tabs[0].key);
+	const [tab, setTab] = useState(tabs[0].key);
 
 	return (
 		<div className={classes.paper}>
@@ -177,7 +230,10 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 				<Container maxWidth="md" className={classes.appBarContainer}>
 					<CourseHeader course={course} />
 
-					<Tabs value={tab} onChange={(event, newTab) => setTab(newTab)}>
+					<Tabs
+						value={tab}
+						onChange={(event, newTab) => setTab(newTab)}
+					>
 						{tabs.map(({ key, label }) => (
 							<Tab
 								className={classes.tab}
@@ -197,10 +253,15 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 				</TabPanel>
 
 				<TabPanel value={tab} index="notices">
-					<FetchableList fetchableMap={course.notices} action={actions.notices(course.id)}>
-						{sortPostByCreatedAt(course.notices).reverse().map(notice => (
-							<NoticePost key={notice.id} post={notice} />
-						))}
+					<FetchableList
+						fetchableMap={course.notices}
+						action={actions.notices(course.id)}
+					>
+						{sortPostByCreatedAt(course.notices)
+							.reverse()
+							.map(notice => (
+								<NoticePost key={notice.id} post={notice} />
+							))}
 					</FetchableList>
 				</TabPanel>
 
@@ -209,34 +270,66 @@ export const CoursePage: React.FC<{ course: Course }> = props => {
 				</TabPanel>
 
 				<TabPanel value={tab} index="assignments">
-					<FetchableList fetchableMap={course.assignments} action={actions.assignments(course.id)}>
-						{sortPostByCreatedAt(course.assignments).reverse().map(assignment => (
-							<AssignmentPost key={assignment.id} post={assignment} />
-						))}
+					<FetchableList
+						fetchableMap={course.assignments}
+						action={actions.assignments(course.id)}
+					>
+						{sortPostByCreatedAt(course.assignments)
+							.reverse()
+							.map(assignment => (
+								<AssignmentPost
+									key={assignment.id}
+									post={assignment}
+								/>
+							))}
 					</FetchableList>
 				</TabPanel>
 
 				<TabPanel value={tab} index="references">
-					<FetchableList fetchableMap={course.references} action={actions.references(course.id)}>
-						{sortPostByCreatedAt(course.references).reverse().map(reference => (
-							<ReferencePost key={reference.id} post={reference} />
-						))}
+					<FetchableList
+						fetchableMap={course.references}
+						action={actions.references(course.id)}
+					>
+						{sortPostByCreatedAt(course.references)
+							.reverse()
+							.map(reference => (
+								<ReferencePost
+									key={reference.id}
+									post={reference}
+								/>
+							))}
 					</FetchableList>
 				</TabPanel>
 
 				<TabPanel value={tab} index="activities">
-					<FetchableList fetchableMap={course.activities} action={actions.activities(course.id)}>
-						{sortPostByCreatedAt(course.activities).reverse().map(activity => (
-							<ActivityPost key={activity.id} post={activity} />
-						))}
+					<FetchableList
+						fetchableMap={course.activities}
+						action={actions.activities(course.id)}
+					>
+						{sortPostByCreatedAt(course.activities)
+							.reverse()
+							.map(activity => (
+								<ActivityPost
+									key={activity.id}
+									post={activity}
+								/>
+							))}
 					</FetchableList>
 				</TabPanel>
 
 				<TabPanel value={tab} index="teamProjects">
-					<FetchableList fetchableMap={course.teamProjects} action={actions.teamProjects(course.id)}>
-						{sortPostByCreatedAt(course.teamProjects).reverse().map(teamProject => (
-							<TeamProjectPost key={teamProject.id} post={teamProject} />
-						))}
+					<FetchableList
+						fetchableMap={course.teamProjects}
+						action={actions.teamProjects(course.id)}
+					>
+						{sortPostByCreatedAt(course.teamProjects)
+							.reverse()
+							.map(teamProject => (
+								<TeamProjectPost
+									key={teamProject.id}
+									post={teamProject}
+								/>
+							))}
 					</FetchableList>
 				</TabPanel>
 

@@ -7,7 +7,7 @@ import { PostTag } from './controls/PostTag';
 import { PostBase, PostBaseProps } from './PostBase';
 
 export interface NoticePostProps extends PostBaseProps {
-	post: Notice
+	post: Notice;
 }
 
 export const NoticePost: React.FC<NoticePostProps> = props => {
@@ -17,9 +17,14 @@ export const NoticePost: React.FC<NoticePostProps> = props => {
 		<PostBase
 			post={notice}
 			action={actions.notice(notice.courseId, notice.id)}
-			tag={<PostTag color={indigo[500]} icon={<Announcement />} name="공지" />}
-			
+			tag={
+				<PostTag
+					color={indigo[500]}
+					icon={<Announcement />}
+					name="공지"
+				/>
+			}
 			{...postProps}
 		/>
 	);
-}
+};

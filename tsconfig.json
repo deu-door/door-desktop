@@ -1,33 +1,26 @@
 {
-  "compilerOptions": {
-    "target": "ES6",
-    "baseUrl": "src",
-    "strict": true,
-    "sourceMap": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext",
-      "es2019"
-    ],
-    "module": "esnext",
-    "moduleResolution": "node",
-    // 일반적으로 소스 파일로 무시되기 때문에
-    // TypeScript가 JS 파일을 읽도록 지시
-    "allowJs": true,
-    // d.ts 파일을 생성시킴
-    "declaration": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strictNullChecks": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react"
-  },
-  "include": [
-    "src"
-  ]
+	"compilerOptions": {
+		"target": "ES6",
+		"baseUrl": "src",
+		"strict": true,
+		"sourceMap": true,
+		"lib": ["dom", "dom.iterable", "esnext", "es2019"],
+		"module": "es2020",
+		"moduleResolution": "node",
+		// 일반적으로 소스 파일로 무시되기 때문에
+		// TypeScript가 JS 파일을 읽도록 지시
+		"allowJs": true,
+		// d.ts 파일을 생성시킴
+		"declaration": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"strictNullChecks": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noEmit": true,
+		"jsx": "react"
+	},
+	"include": ["src"]
 }

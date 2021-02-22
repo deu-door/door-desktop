@@ -15,7 +15,5 @@ export const KeepAlive: React.FC<{ heartbeatInterval?: number }> = props => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	return (
-		<></>
-	);
-}
+	return <></>;
+};

@@ -1,3 +1,3 @@
-import createElectronStorage from "redux-persist-electron-storage";
+import createElectronStorage from 'redux-persist-electron-storage';
 
 export const storage = createElectronStorage();

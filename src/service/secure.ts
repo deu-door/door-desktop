@@ -2,13 +2,20 @@ import Keytar from 'keytar';
 
 const SERVICE_NAME = 'Door Desktop';
 
-const keytar: typeof Keytar = window.require('electron').remote.require('keytar');
+const keytar: typeof Keytar = window
+	.require('electron')
+	.remote.require('keytar');
 
-export async function getSecurelyStoredPassword(id: string): Promise<string|null> {
+export async function getSecurelyStoredPassword(
+	id: string,
+): Promise<string | null> {
 	return keytar.getPassword(SERVICE_NAME, id);
 }
 
-async function savePasswordSecurely(id: string, password: string): Promise<void> {
+async function savePasswordSecurely(
+	id: string,
+	password: string,
+): Promise<void> {
 	return keytar.setPassword(SERVICE_NAME, id, password);
 }
 
@@ -28,5 +35,5 @@ export const secure = {
 	/**
 	 * @description Remove saved password
 	 */
-	remove: removeSecurelyStoredPassword
+	remove: removeSecurelyStoredPassword,
 };

@@ -6,17 +6,26 @@ import { User } from 'service/door/interfaces/user';
 import { LoginOptions } from 'service/door/user';
 import { storage } from 'store/storage';
 import { FetchableAction } from '.';
-import { AsyncState, fetchableActions, FetchableTransform, ResetOnVersionChange } from './util';
+import {
+	AsyncState,
+	fetchableActions,
+	FetchableTransform,
+	ResetOnVersionChange,
+} from './util';
 
-export interface UserState extends User, AsyncState { }
+export interface UserState extends User, AsyncState {}
 
 const initialState: UserState = {
 	fulfilled: false,
 	authenticated: false,
-	pending: false
+	pending: false,
 };
 
-const loginActions = fetchableActions<UserState, User, { id: string, password: string, options?: LoginOptions }>({
+const loginActions = fetchableActions<
+	UserState,
+	User,
+	{ id: string; password: string; options?: LoginOptions }
+>({
 	name: 'USER_LOGIN',
 	selector: state => state.user,
 	path: draft => draft,
@@ -35,8 +44,8 @@ const loginActions = fetchableActions<UserState, User, { id: string, password: s
 		},
 		clear: (action, draft) => {
 			draft.authenticated = false;
-		}
-	}
+		},
+	},
 });
 
 const logoutActions = fetchableActions<UserState, User, void>({
@@ -55,8 +64,8 @@ const logoutActions = fetchableActions<UserState, User, void>({
 		},
 		success: (action, draft) => {
 			draft.authenticated = false;
-		}
-	}
+		},
+	},
 });
 
 const pingActions = fetchableActions<UserState, User, void>({
@@ -67,9 +76,9 @@ const pingActions = fetchableActions<UserState, User, void>({
 		return {
 			profile: await door.getProfile(),
 			authenticated: true,
-			
-			...fulfilledFetchable()
-		}
+
+			...fulfilledFetchable(),
+		};
 	},
 	handler: {
 		pending: (action, draft) => {
@@ -82,24 +91,24 @@ const pingActions = fetchableActions<UserState, User, void>({
 		},
 		success: (action, draft) => {
 			draft.authenticated = false;
-		}
-	}
+		},
+	},
 });
 
 const AuthenticatedTransform = createTransform(
 	(inboundState, key) => {
-		if(key === 'authenticated') return false;
-		if(key === 'error') return undefined;
+		if (key === 'authenticated') return false;
+		if (key === 'error') return undefined;
 
 		return inboundState;
 	},
 	(outboundState, key) => {
-		if(key === 'authenticated') return false;
-		if(key === 'error') return undefined;
-		
+		if (key === 'authenticated') return false;
+		if (key === 'error') return undefined;
+
 		return outboundState;
-	}
-)
+	},
+);
 
 export default persistReducer(
 	{
@@ -107,18 +116,25 @@ export default persistReducer(
 		storage: storage,
 		transforms: [FetchableTransform, AuthenticatedTransform],
 		version: 1,
-		migrate: ResetOnVersionChange()
+		migrate: ResetOnVersionChange(),
 	},
-	handleActions<UserState, any>({
-		...loginActions.reduxActions,
-		...logoutActions.reduxActions
-	}, initialState)
+	handleActions<UserState, any>(
+		{
+			...loginActions.reduxActions,
+			...logoutActions.reduxActions,
+		},
+		initialState,
+	),
 );
 
 export const actions = {
-	login: (id: string, password: string, options?: LoginOptions): FetchableAction => loginActions.actions({ id, password, options }),
+	login: (
+		id: string,
+		password: string,
+		options?: LoginOptions,
+	): FetchableAction => loginActions.actions({ id, password, options }),
 
 	logout: (): FetchableAction => logoutActions.actions(),
 
-	ping: (): FetchableAction => pingActions.actions()
+	ping: (): FetchableAction => pingActions.actions(),
 };

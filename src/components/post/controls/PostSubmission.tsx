@@ -1,4 +1,11 @@
-import { Button, createStyles, Grid, Link, makeStyles, TextField } from '@material-ui/core';
+import {
+	Button,
+	createStyles,
+	Grid,
+	Link,
+	makeStyles,
+	TextField,
+} from '@material-ui/core';
 import { Publish } from '@material-ui/icons';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -7,16 +14,18 @@ import { submitForm } from 'service/door/util';
 import { FetchableAction } from 'store/modules';
 import { PostAttachment, PostFile } from './PostAttachment';
 
-const useStyles = makeStyles(theme => createStyles({
-	button: {
-		margin: theme.spacing(2, 0, 0, 0)
-	}
-}));
+const useStyles = makeStyles(theme =>
+	createStyles({
+		button: {
+			margin: theme.spacing(2, 0, 0, 0),
+		},
+	}),
+);
 
 export type PostSubmissionProps = {
-	submission: Submission,
-	editable?: boolean,
-	actionAfterSubmit?: FetchableAction
+	submission: Submission;
+	editable?: boolean;
+	actionAfterSubmit?: FetchableAction;
 };
 
 export const PostSubmission: React.FC<PostSubmissionProps> = props => {
@@ -34,11 +43,12 @@ export const PostSubmission: React.FC<PostSubmissionProps> = props => {
 	const attachments = submission.attachments;
 
 	const clearContents = () => {
-		if(contentsRef.current) contentsRef.current.value = submission.contents;
+		if (contentsRef.current)
+			contentsRef.current.value = submission.contents;
 	};
 
 	const clearFiles = () => {
-		if(fileInputRef.current) fileInputRef.current.value = '';
+		if (fileInputRef.current) fileInputRef.current.value = '';
 		setFiles([]);
 	};
 
@@ -72,13 +82,13 @@ export const PostSubmission: React.FC<PostSubmissionProps> = props => {
 		form.contents = contentsRef.current?.value || '';
 
 		// Multiple file does not support.
-		if(files.length > 0) form.file = files[0];
+		if (files.length > 0) form.file = files[0];
 
 		setPending(true);
 		await submitForm(form);
 
 		// Test upload was successful
-		if(actionAfterSubmit) await dispatch(actionAfterSubmit.fetch());
+		if (actionAfterSubmit) await dispatch(actionAfterSubmit.fetch());
 
 		setPending(false);
 
@@ -100,60 +110,80 @@ export const PostSubmission: React.FC<PostSubmissionProps> = props => {
 
 			<input type="file" onChange={onChange} ref={fileInputRef} hidden />
 
-			{attachments && <PostAttachment
-				attachments={files.length > 0 ? [] : attachments}
-				deleteButton={edit}
-			>
-				{files.map(file => (
-					<PostFile
-						key={file.name}
-						name={file.name}
-						deleteButton
-						onDelete={onDeleteFile(file)}
-					/>
-				))}
+			{attachments && (
+				<PostAttachment
+					attachments={files.length > 0 ? [] : attachments}
+					deleteButton={edit}
+				>
+					{files.map(file => (
+						<PostFile
+							key={file.name}
+							name={file.name}
+							deleteButton
+							onDelete={onDeleteFile(file)}
+						/>
+					))}
 
-				{edit && <Grid container spacing={1}>
-					<Grid item>
-						<Publish />
-					</Grid>
-					<Grid item>
-						<Link component="button" onClick={() => fileInputRef.current?.click()} >파일 업로드</Link>
-					</Grid>
-				</Grid>}
-			</PostAttachment>}
-
-			{editable && <div className={classes.button}>
-				{pending === true ?
-					<span>제출 중...</span>
-				: edit === false ?
-					<Button
-						size="small"
-						variant="contained"
-						color="primary"
-						onClick={() => setEdit(true)}
-					>편집</Button>
-				:
-					<Grid container spacing={1}>
-						<Grid item>
-							<Button
-								size="small"
-								variant="contained"
-								color="primary"
-								onClick={onSubmit}
-							>제출</Button>
+					{edit && (
+						<Grid container spacing={1}>
+							<Grid item>
+								<Publish />
+							</Grid>
+							<Grid item>
+								<Link
+									component="button"
+									onClick={() =>
+										fileInputRef.current?.click()
+									}
+								>
+									파일 업로드
+								</Link>
+							</Grid>
 						</Grid>
+					)}
+				</PostAttachment>
+			)}
 
-						<Grid item>
-							<Button
-								size="small"
-								variant="contained"
-								color="default"
-								onClick={onCancel}
-							>취소</Button>
+			{editable && (
+				<div className={classes.button}>
+					{pending === true ? (
+						<span>제출 중...</span>
+					) : edit === false ? (
+						<Button
+							size="small"
+							variant="contained"
+							color="primary"
+							onClick={() => setEdit(true)}
+						>
+							편집
+						</Button>
+					) : (
+						<Grid container spacing={1}>
+							<Grid item>
+								<Button
+									size="small"
+									variant="contained"
+									color="primary"
+									onClick={onSubmit}
+								>
+									제출
+								</Button>
+							</Grid>
+
+							<Grid item>
+								<Button
+									size="small"
+									variant="contained"
+									color="default"
+									onClick={onCancel}
+								>
+									취소
+								</Button>
+							</Grid>
 						</Grid>
-					</Grid>}
-			</div>}
+					)}
+				</div>
+			)}
 		</>
 	);
-}
+};

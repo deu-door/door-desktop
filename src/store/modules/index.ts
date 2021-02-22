@@ -5,10 +5,10 @@ import chat, { actions as chatActions } from './chat';
 import { combineReducers } from 'redux';
 
 export interface FetchableAction {
-	fetch: () => any,
-	fetchIfExpired: () => any,
-	fetchIfNotFulfilled: () => any,
-	clear: () => any
+	fetch: () => any;
+	fetchIfExpired: () => any;
+	fetchIfNotFulfilled: () => any;
+	clear: () => any;
 }
 
 const modules = { user, courses, chat };
@@ -22,5 +22,5 @@ export const rootReducer = combineReducers(modules);
 export const actions = {
 	...userActions,
 	...courseActions,
-	...chatActions
-}
+	...chatActions,
+};

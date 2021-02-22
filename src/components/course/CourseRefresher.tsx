@@ -1,10 +1,10 @@
-import { Alert, AlertTitle } from "@material-ui/lab";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { Course } from "service/door/interfaces/course";
+import { Alert, AlertTitle } from '@material-ui/lab';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Course } from 'service/door/interfaces/course';
 import React from 'react';
-import { DateTime } from "components/core/DateTime";
-import { sequentialCourseActions } from "store/sequential-actions";
+import { DateTime } from 'components/core/DateTime';
+import { sequentialCourseActions } from 'store/sequential-actions';
 
 export const CourseRefresher: React.FC<{ course: Course }> = props => {
 	const { course } = props;
@@ -25,11 +25,11 @@ export const CourseRefresher: React.FC<{ course: Course }> = props => {
 		course.references.error,
 		course.activities.error,
 		course.teamProjects.error,
-		course.learningStatus.error
+		course.learningStatus.error,
 	].filter(error => !!error);
 
 	useEffect(() => {
-		if(phase !== PHASE_DELAY) return;
+		if (phase !== PHASE_DELAY) return;
 
 		setPending(true);
 		setDescription('잠시만 기다려주세요 ...');
@@ -41,10 +41,10 @@ export const CourseRefresher: React.FC<{ course: Course }> = props => {
 	}, [phase]);
 
 	useEffect(() => {
-		if(phase !== PHASE_POSTS) return;
+		if (phase !== PHASE_POSTS) return;
 
 		const fetch = async () => {
-			for(const currentAction of sequentialCourseActions(course.id)) {
+			for (const currentAction of sequentialCourseActions(course.id)) {
 				setDescription(currentAction.description || '');
 				await dispatch(currentAction.action.fetchIfExpired());
 			}
@@ -52,7 +52,7 @@ export const CourseRefresher: React.FC<{ course: Course }> = props => {
 			setPending(false);
 			setDescription('');
 			setLastCheckedDate(Date.now);
-			
+
 			setPhase(PHASE_END);
 		};
 
@@ -60,21 +60,24 @@ export const CourseRefresher: React.FC<{ course: Course }> = props => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [phase]);
 
-	return (
-		pending ?
-			<Alert severity="info" variant="filled">
-				<AlertTitle>데이터 동기화 중 ...</AlertTitle>
-				{description}
-			</Alert>
-		: errors.length > 0 ?
-			<Alert severity="error" variant="filled">
-				<AlertTitle>오류가 발생했습니다.</AlertTitle>
-				{errors.map(error => (<div>{error}</div>))}
-			</Alert>
-		:
-			<Alert severity="success" variant="filled">
-				<AlertTitle>데이터가 최신 상태입니다.</AlertTitle>
-				<span>최근 동기화 : <DateTime date={lastCheckedDate} relative /></span>
-			</Alert>
+	return pending ? (
+		<Alert severity="info" variant="filled">
+			<AlertTitle>데이터 동기화 중 ...</AlertTitle>
+			{description}
+		</Alert>
+	) : errors.length > 0 ? (
+		<Alert severity="error" variant="filled">
+			<AlertTitle>오류가 발생했습니다.</AlertTitle>
+			{errors.map(error => (
+				<div>{error}</div>
+			))}
+		</Alert>
+	) : (
+		<Alert severity="success" variant="filled">
+			<AlertTitle>데이터가 최신 상태입니다.</AlertTitle>
+			<span>
+				최근 동기화 : <DateTime date={lastCheckedDate} relative />
+			</span>
+		</Alert>
 	);
-}
+};

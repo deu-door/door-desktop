@@ -3,7 +3,13 @@ import { FetchableMap, ID } from 'service/door/interfaces';
 import { Course, initializeCourse } from 'service/door/interfaces/course';
 import { Lecture, LecturesByWeek } from 'service/door/interfaces/lecture';
 import { Notice } from 'service/door/interfaces/notice';
-import { AsyncState, fetchableActions, fetchableMapActions, FetchableTransform, ResetOnVersionChange } from './util';
+import {
+	AsyncState,
+	fetchableActions,
+	fetchableMapActions,
+	FetchableTransform,
+	ResetOnVersionChange,
+} from './util';
 import door from 'service/door';
 import { storage } from 'store/storage';
 import moment from 'moment';
@@ -16,8 +22,8 @@ import { Assignment } from 'service/door/interfaces/assignment';
 import { LearningStatus } from 'service/door/interfaces/learning-status';
 
 export interface CourseState extends FetchableMap<Course>, AsyncState {
-	categories: string[],
-	itemsByCategory: { [key: string]: Course[] }
+	categories: string[];
+	itemsByCategory: { [key: string]: Course[] };
 }
 
 const initialState: CourseState = {
@@ -26,13 +32,13 @@ const initialState: CourseState = {
 
 	categories: [],
 	itemsByCategory: {},
-	items: {}
-}
+	items: {},
+};
 
 const courseMapActions = fetchableMapActions<CourseState, Course, void>({
 	name: 'COURSE',
 	selector: state => state.courses,
-	path: (draft) => draft,
+	path: draft => draft,
 	fetch: door.getCourses,
 	handler: {
 		success: (action, draft) => {
@@ -42,29 +48,39 @@ const courseMapActions = fetchableMapActions<CourseState, Course, void>({
 			});
 
 			// Make category by course.type
-			const categories = Array.from(new Set(Object.values(action.payload.result.items).map(course => course.type))).sort((a, b) => {
-				const [ a_, b_ ] = [a,b].map(word =>
-					// calculate cost (sort priority) of type
-					(word.includes('전공') ? 2 : -2)
-					+ (word.includes('필수') ? 1 : 0)
-					+ (word.includes('선택') ? -1 : 0)
-					+ (word.includes('교양') ? 1 : -1)
-					+ (word.includes('공통') ? -1 : 0));
-	
+			const categories = Array.from(
+				new Set(
+					Object.values(action.payload.result.items).map(
+						course => course.type,
+					),
+				),
+			).sort((a, b) => {
+				const [a_, b_] = [a, b].map(
+					word =>
+						// calculate cost (sort priority) of type
+						(word.includes('전공') ? 2 : -2) +
+						(word.includes('필수') ? 1 : 0) +
+						(word.includes('선택') ? -1 : 0) +
+						(word.includes('교양') ? 1 : -1) +
+						(word.includes('공통') ? -1 : 0),
+				);
+
 				return b_ - a_;
 			});
-	
+
 			const itemsByCategory: { [key: string]: Course[] } = {};
-			categories.forEach(category => itemsByCategory[category] = []);
-			Object.values(action.payload.result.items).forEach(course => itemsByCategory[course.type].push(course));
-	
+			categories.forEach(category => (itemsByCategory[category] = []));
+			Object.values(action.payload.result.items).forEach(course =>
+				itemsByCategory[course.type].push(course),
+			);
+
 			(draft as CourseState).categories = categories;
 			(draft as CourseState).itemsByCategory = itemsByCategory;
-		}
+		},
 	},
 	options: {
-		validDuration: moment.duration(1, 'hour')
-	}
+		validDuration: moment.duration(1, 'hour'),
+	},
 });
 
 const courseActions = fetchableActions<CourseState, Course, ID>({
@@ -73,8 +89,8 @@ const courseActions = fetchableActions<CourseState, Course, ID>({
 	path: (draft, id) => draft.items[id],
 	fetch: id => door.getCourseDetail(id),
 	options: {
-		validDuration: moment.duration(1, 'days')
-	}
+		validDuration: moment.duration(1, 'days'),
+	},
 });
 
 const noticeMapActions = fetchableMapActions<CourseState, Notice, ID>({
@@ -84,18 +100,22 @@ const noticeMapActions = fetchableMapActions<CourseState, Notice, ID>({
 	fetch: courseId => door.getNotices(courseId),
 	options: {
 		overrideItemProperties: ['title', 'author', 'views'],
-		validDuration: moment.duration(1, 'hour')
-	}
+		validDuration: moment.duration(1, 'hour'),
+	},
 });
 
-const noticeActions = fetchableActions<CourseState, Notice, { courseId: ID, id: ID }>({
+const noticeActions = fetchableActions<
+	CourseState,
+	Notice,
+	{ courseId: ID; id: ID }
+>({
 	name: 'NOTICE',
 	selector: state => state.courses,
 	path: (draft, { courseId, id }) => draft.items[courseId].notices.items[id],
 	fetch: ({ courseId, id }) => door.getNotice(courseId, id),
 	options: {
-		validDuration: moment.duration(1, 'hour')
-	}
+		validDuration: moment.duration(1, 'hour'),
+	},
 });
 
 const lectureMapActions = fetchableMapActions<CourseState, LecturesByWeek, ID>({
@@ -104,19 +124,29 @@ const lectureMapActions = fetchableMapActions<CourseState, LecturesByWeek, ID>({
 	path: (draft, courseId) => draft.items[courseId].lectures,
 	fetch: courseId => door.getLectures(courseId),
 	options: {
-		overrideItemProperties: ['description', 'remark', 'views', 'count', 'period'],
-		validDuration: moment.duration(1, 'hour')
-	}
+		overrideItemProperties: [
+			'description',
+			'remark',
+			'views',
+			'count',
+			'period',
+		],
+		validDuration: moment.duration(1, 'hour'),
+	},
 });
 
-const lectureActions = fetchableActions<CourseState, FetchableMap<Lecture>, { courseId: ID, id: ID }>({
+const lectureActions = fetchableActions<
+	CourseState,
+	FetchableMap<Lecture>,
+	{ courseId: ID; id: ID }
+>({
 	name: 'LECTURE',
 	selector: state => state.courses,
 	path: (draft, { courseId, id }) => draft.items[courseId].lectures.items[id],
-	fetch: ({ courseId, id}) => door.getLecturesByWeek(courseId, id),
+	fetch: ({ courseId, id }) => door.getLecturesByWeek(courseId, id),
 	options: {
-		validDuration: moment.duration(1, 'hour')
-	}
+		validDuration: moment.duration(1, 'hour'),
+	},
 });
 
 const assignmentMapActions = fetchableMapActions<CourseState, Assignment, ID>({
@@ -126,18 +156,23 @@ const assignmentMapActions = fetchableMapActions<CourseState, Assignment, ID>({
 	fetch: courseId => door.getAssignments(courseId),
 	options: {
 		overrideItemProperties: ['title', 'period', 'submitted'],
-		validDuration: moment.duration(1, 'hour')
-	}
+		validDuration: moment.duration(1, 'hour'),
+	},
 });
 
-const assignmentActions = fetchableActions<CourseState, Assignment, { courseId: ID, id: ID }>({
+const assignmentActions = fetchableActions<
+	CourseState,
+	Assignment,
+	{ courseId: ID; id: ID }
+>({
 	name: 'ASSIGNMENT',
 	selector: state => state.courses,
-	path: (draft, { courseId, id }) => draft.items[courseId].assignments.items[id],
+	path: (draft, { courseId, id }) =>
+		draft.items[courseId].assignments.items[id],
 	fetch: ({ courseId, id }) => door.getAssignment(courseId, id),
 	options: {
-		validDuration: moment.duration(1, 'hour')
-	}
+		validDuration: moment.duration(1, 'hour'),
+	},
 });
 
 const referenceMapActions = fetchableMapActions<CourseState, Reference, ID>({
@@ -147,18 +182,23 @@ const referenceMapActions = fetchableMapActions<CourseState, Reference, ID>({
 	fetch: courseId => door.getReferences(courseId),
 	options: {
 		overrideItemProperties: ['title', 'author', 'views'],
-		validDuration: moment.duration(1, 'hour')
-	}
+		validDuration: moment.duration(1, 'hour'),
+	},
 });
 
-const referenceActions = fetchableActions<CourseState, Reference, { courseId: ID, id: ID }>({
+const referenceActions = fetchableActions<
+	CourseState,
+	Reference,
+	{ courseId: ID; id: ID }
+>({
 	name: 'REFERENCE',
 	selector: state => state.courses,
-	path: (draft, { courseId, id }) => draft.items[courseId].references.items[id],
+	path: (draft, { courseId, id }) =>
+		draft.items[courseId].references.items[id],
 	fetch: ({ courseId, id }) => door.getReference(courseId, id),
 	options: {
-		validDuration: moment.duration(1, 'hour')
-	}
+		validDuration: moment.duration(1, 'hour'),
+	},
 });
 
 const activityMapActions = fetchableMapActions<CourseState, Activity, ID>({
@@ -168,50 +208,64 @@ const activityMapActions = fetchableMapActions<CourseState, Activity, ID>({
 	fetch: courseId => door.getActivities(courseId),
 	options: {
 		overrideItemProperties: ['title', 'period'],
-		validDuration: moment.duration(1, 'hour')
-	}
+		validDuration: moment.duration(1, 'hour'),
+	},
 });
 
-const activityActions = fetchableActions<CourseState, Activity, { courseId: ID, id: ID }>({
+const activityActions = fetchableActions<
+	CourseState,
+	Activity,
+	{ courseId: ID; id: ID }
+>({
 	name: 'ACTIVITY',
 	selector: state => state.courses,
-	path: (draft, { courseId, id }) => draft.items[courseId].activities.items[id],
+	path: (draft, { courseId, id }) =>
+		draft.items[courseId].activities.items[id],
 	fetch: ({ courseId, id }) => door.getActivity(courseId, id),
 	options: {
-		validDuration: moment.duration(1, 'hour')
-	}
+		validDuration: moment.duration(1, 'hour'),
+	},
 });
 
-const teamProjectMapActions = fetchableMapActions<CourseState, TeamProject, ID>({
-	name: 'TEAM_PROJECT',
-	selector: state => state.courses,
-	path: (draft, courseId) => draft.items[courseId].teamProjects,
-	fetch: courseId => door.getTeamProjects(courseId),
-	options: {
-		overrideItemProperties: ['title', 'period', 'submitted'],
-		validDuration: moment.duration(1, 'hour')
-	}
-});
+const teamProjectMapActions = fetchableMapActions<CourseState, TeamProject, ID>(
+	{
+		name: 'TEAM_PROJECT',
+		selector: state => state.courses,
+		path: (draft, courseId) => draft.items[courseId].teamProjects,
+		fetch: courseId => door.getTeamProjects(courseId),
+		options: {
+			overrideItemProperties: ['title', 'period', 'submitted'],
+			validDuration: moment.duration(1, 'hour'),
+		},
+	},
+);
 
-const teamProjectActions = fetchableActions<CourseState, TeamProject, { courseId: ID, id: ID }>({
+const teamProjectActions = fetchableActions<
+	CourseState,
+	TeamProject,
+	{ courseId: ID; id: ID }
+>({
 	name: 'TEAM_PROJECT',
 	selector: state => state.courses,
-	path: (draft, { courseId, id }) => draft.items[courseId].teamProjects.items[id],
+	path: (draft, { courseId, id }) =>
+		draft.items[courseId].teamProjects.items[id],
 	fetch: ({ courseId, id }) => door.getTeamProject(courseId, id),
 	options: {
-		validDuration: moment.duration(1, 'hour')
-	}
+		validDuration: moment.duration(1, 'hour'),
+	},
 });
 
-const learningStatusActions = fetchableActions<CourseState, LearningStatus, ID>({
-	name: 'LEARNING_STATUS',
-	selector: state => state.courses,
-	path: (draft, courseId) => draft.items[courseId].learningStatus,
-	fetch: courseId => door.getLearningStatus(courseId),
-	options: {
-		validDuration: moment.duration(1, 'hour')
-	}
-});
+const learningStatusActions = fetchableActions<CourseState, LearningStatus, ID>(
+	{
+		name: 'LEARNING_STATUS',
+		selector: state => state.courses,
+		path: (draft, courseId) => draft.items[courseId].learningStatus,
+		fetch: courseId => door.getLearningStatus(courseId),
+		options: {
+			validDuration: moment.duration(1, 'hour'),
+		},
+	},
+);
 
 export default persistReducer(
 	{
@@ -219,25 +273,28 @@ export default persistReducer(
 		storage: storage,
 		transforms: [FetchableTransform],
 		version: 3,
-		migrate: ResetOnVersionChange()
+		migrate: ResetOnVersionChange(),
 	},
-	handleActions<CourseState, any>({
-		...courseMapActions.reduxActions,
-		...courseActions.reduxActions,
-		...noticeMapActions.reduxActions,
-		...noticeActions.reduxActions,
-		...lectureMapActions.reduxActions,
-		...lectureActions.reduxActions,
-		...assignmentMapActions.reduxActions,
-		...assignmentActions.reduxActions,
-		...referenceMapActions.reduxActions,
-		...referenceActions.reduxActions,
-		...activityMapActions.reduxActions,
-		...activityActions.reduxActions,
-		...teamProjectMapActions.reduxActions,
-		...teamProjectActions.reduxActions,
-		...learningStatusActions.reduxActions
-	}, initialState)
+	handleActions<CourseState, any>(
+		{
+			...courseMapActions.reduxActions,
+			...courseActions.reduxActions,
+			...noticeMapActions.reduxActions,
+			...noticeActions.reduxActions,
+			...lectureMapActions.reduxActions,
+			...lectureActions.reduxActions,
+			...assignmentMapActions.reduxActions,
+			...assignmentActions.reduxActions,
+			...referenceMapActions.reduxActions,
+			...referenceActions.reduxActions,
+			...activityMapActions.reduxActions,
+			...activityActions.reduxActions,
+			...teamProjectMapActions.reduxActions,
+			...teamProjectActions.reduxActions,
+			...learningStatusActions.reduxActions,
+		},
+		initialState,
+	),
 );
 
 export const actions = {
@@ -245,29 +302,42 @@ export const actions = {
 
 	course: (id: ID): FetchableAction => courseActions.actions(id),
 
-	notices: (courseId: ID): FetchableAction => noticeMapActions.actions(courseId),
+	notices: (courseId: ID): FetchableAction =>
+		noticeMapActions.actions(courseId),
 
-	notice: (courseId: ID, id: ID): FetchableAction => noticeActions.actions({ courseId, id }),
+	notice: (courseId: ID, id: ID): FetchableAction =>
+		noticeActions.actions({ courseId, id }),
 
-	lectures: (courseId: ID): FetchableAction => lectureMapActions.actions(courseId),
+	lectures: (courseId: ID): FetchableAction =>
+		lectureMapActions.actions(courseId),
 
-	lectureByWeek: (courseId: ID, week: ID): FetchableAction => lectureActions.actions({ courseId, id: week }),
+	lectureByWeek: (courseId: ID, week: ID): FetchableAction =>
+		lectureActions.actions({ courseId, id: week }),
 
-	assignments: (courseId: ID): FetchableAction => assignmentMapActions.actions(courseId),
+	assignments: (courseId: ID): FetchableAction =>
+		assignmentMapActions.actions(courseId),
 
-	assignment: (courseId: ID, id: ID): FetchableAction => assignmentActions.actions({ courseId, id }),
+	assignment: (courseId: ID, id: ID): FetchableAction =>
+		assignmentActions.actions({ courseId, id }),
 
-	references: (courseId: ID): FetchableAction => referenceMapActions.actions(courseId),
+	references: (courseId: ID): FetchableAction =>
+		referenceMapActions.actions(courseId),
 
-	reference: (courseId: ID, id: ID): FetchableAction => referenceActions.actions({ courseId, id }),
+	reference: (courseId: ID, id: ID): FetchableAction =>
+		referenceActions.actions({ courseId, id }),
 
-	activities: (courseId: ID): FetchableAction => activityMapActions.actions(courseId),
+	activities: (courseId: ID): FetchableAction =>
+		activityMapActions.actions(courseId),
 
-	activity: (courseId: ID, id: ID): FetchableAction => activityActions.actions({ courseId, id }),
+	activity: (courseId: ID, id: ID): FetchableAction =>
+		activityActions.actions({ courseId, id }),
 
-	teamProjects: (courseId: ID): FetchableAction => teamProjectMapActions.actions(courseId),
+	teamProjects: (courseId: ID): FetchableAction =>
+		teamProjectMapActions.actions(courseId),
 
-	teamProject: (courseId: ID, id: ID): FetchableAction => teamProjectActions.actions({ courseId, id }),
+	teamProject: (courseId: ID, id: ID): FetchableAction =>
+		teamProjectActions.actions({ courseId, id }),
 
-	learningStatus: (courseId: ID): FetchableAction => learningStatusActions.actions(courseId)
+	learningStatus: (courseId: ID): FetchableAction =>
+		learningStatusActions.actions(courseId),
 };

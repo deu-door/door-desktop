@@ -17,5 +17,5 @@ export default {
 	...activity,
 	...teamProject,
 	...learningStatus,
-	...user
+	...user,
 };

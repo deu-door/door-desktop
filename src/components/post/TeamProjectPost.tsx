@@ -7,8 +7,8 @@ import { PostTag } from './controls/PostTag';
 import { SubmittablePostBase, SubmittablePostBaseProps } from './PostBase';
 
 export type TeamProjectPostProps = {
-	post: TeamProject
-} & SubmittablePostBaseProps
+	post: TeamProject;
+} & SubmittablePostBaseProps;
 
 export const TeamProjectPost: React.FC<TeamProjectPostProps> = props => {
 	const { post: teamProject, ...postProps } = props;
@@ -18,8 +18,7 @@ export const TeamProjectPost: React.FC<TeamProjectPostProps> = props => {
 			post={teamProject}
 			action={actions.teamProject(teamProject.courseId, teamProject.id)}
 			tag={<PostTag color={pink[500]} icon={<Group />} name="팀플" />}
-
 			{...postProps}
 		/>
 	);
-}
+};
