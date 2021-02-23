@@ -171,7 +171,7 @@ export const Downloads: React.FC = props => {
 	return (
 		<div className={classes.notifications}>
 			{Object.values(items).map(item => (
-				<Download item={item} />
+				<Download key={item.path} item={item} />
 			))}
 		</div>
 	);

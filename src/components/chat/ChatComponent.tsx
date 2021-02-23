@@ -72,6 +72,7 @@ const ChatMessage: React.FC<{
 				</Grid>
 				{messages.map(message => (
 					<Grid
+						key={message.id}
 						container
 						item
 						alignItems="flex-end"

@@ -69,7 +69,7 @@ export const CourseRefresher: React.FC<{ course: Course }> = props => {
 		<Alert severity="error" variant="filled">
 			<AlertTitle>오류가 발생했습니다.</AlertTitle>
 			{errors.map(error => (
-				<div>{error}</div>
+				<div key={error?.toString()}>{error}</div>
 			))}
 		</Alert>
 	) : (
