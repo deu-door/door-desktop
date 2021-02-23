@@ -5,7 +5,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { useDispatch, useSelector } from 'react-redux';
-import { Course } from 'service/door/interfaces/course';
+import { Course } from 'services/door/interfaces/course';
 import { CourseState } from 'store/modules/courses';
 import { useHistory, useLocation } from 'react-router';
 import {
