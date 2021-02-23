@@ -8,7 +8,7 @@ import * as teamProject from './team-project';
 import * as learningStatus from './learning-status';
 import * as user from './user';
 
-export default {
+const door = {
 	...course,
 	...notice,
 	...lecture,
@@ -19,3 +19,5 @@ export default {
 	...learningStatus,
 	...user,
 };
+
+export default door;
