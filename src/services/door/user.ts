@@ -1,5 +1,5 @@
 import cheerio from 'cheerio';
-import { secure } from 'service/secure';
+import { secure } from 'services/secure';
 import { fulfilledFetchable } from './interfaces';
 import { Profile, User } from './interfaces/user';
 import { doorAxios } from './util';

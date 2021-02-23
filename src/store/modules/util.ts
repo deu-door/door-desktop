@@ -1,7 +1,7 @@
 import produce from 'immer';
 import { Dispatch } from 'redux';
 import { Action } from 'redux-actions';
-import { Fetchable, FetchableMap } from 'service/door/interfaces';
+import { Fetchable, FetchableMap } from 'services/door/interfaces';
 import moment from 'moment';
 import { RootStateOrAny } from 'react-redux';
 import { FetchableAction } from '.';

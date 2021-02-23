@@ -2,7 +2,7 @@ import {
 	CourseSubordinated,
 	Fetchable,
 	Identifiable,
-} from 'service/door/interfaces';
+} from 'services/door/interfaces';
 
 export interface Message extends Identifiable {
 	id: string;

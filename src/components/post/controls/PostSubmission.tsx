@@ -9,8 +9,8 @@ import {
 import { Publish } from '@material-ui/icons';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Submission } from 'service/door/interfaces';
-import { submitForm } from 'service/door/util';
+import { Submission } from 'services/door/interfaces';
+import { submitForm } from 'services/door/util';
 import { FetchableAction } from 'store/modules';
 import { PostAttachment, PostFile } from './PostAttachment';
 

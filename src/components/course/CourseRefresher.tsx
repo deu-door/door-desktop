@@ -1,9 +1,9 @@
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Course } from 'service/door/interfaces/course';
+import { Course } from 'services/door/interfaces/course';
 import React from 'react';
-import { DateTime } from 'components/core/DateTime';
+import { DateTime } from 'components/common/DateTime';
 import { sequentialCourseActions } from 'store/sequential-actions';
 
 export const CourseRefresher: React.FC<{ course: Course }> = props => {

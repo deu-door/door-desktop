@@ -1,7 +1,7 @@
 import { indigo } from '@material-ui/core/colors';
 import { Announcement } from '@material-ui/icons';
 import React from 'react';
-import { Notice } from 'service/door/interfaces/notice';
+import { Notice } from 'services/door/interfaces/notice';
 import { actions } from 'store/modules';
 import { PostTag } from './controls/PostTag';
 import { PostBase, PostBaseProps } from './PostBase';

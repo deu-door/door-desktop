@@ -10,10 +10,10 @@ import {
 import { purple } from '@material-ui/core/colors';
 import { OndemandVideo } from '@material-ui/icons';
 import React, { IframeHTMLAttributes, useEffect, useState } from 'react';
-import { Lecture, LecturesByWeek } from 'service/door/interfaces/lecture';
+import { Lecture, LecturesByWeek } from 'services/door/interfaces/lecture';
 import VisibilitySensor from 'react-visibility-sensor';
-import { downloader } from 'service/downloader';
-import { doorAxios } from 'service/door/util';
+import { downloader } from 'services/downloader';
+import { doorAxios } from 'services/door/util';
 import { PostTag } from './controls/PostTag';
 import { PostAttachment } from './controls/PostAttachment';
 import { actions, RootState } from 'store/modules';

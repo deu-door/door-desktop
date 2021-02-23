@@ -34,8 +34,8 @@ import { NoticePost } from 'components/post/NoticePost';
 import { ReferencePost } from 'components/post/ReferencePost';
 import { TeamProjectPost } from 'components/post/TeamProjectPost';
 import React, { useState } from 'react';
-import { sortPostByCreatedAt } from 'service/door/interfaces';
-import { Course } from 'service/door/interfaces/course';
+import { sortPostByCreatedAt } from 'services/door/interfaces';
+import { Course } from 'services/door/interfaces/course';
 import { actions } from 'store/modules';
 
 const useStyles = makeStyles(theme =>

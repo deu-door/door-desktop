@@ -12,9 +12,9 @@ import {
 } from '@material-ui/core';
 import { FetchButton } from 'components/fetchable/FetchButton';
 import React, { useState } from 'react';
-import { Attachment, Post, Submittable } from 'service/door/interfaces';
+import { Attachment, Post, Submittable } from 'services/door/interfaces';
 import { FetchableAction } from 'store/modules';
-import { DateTime } from '../core/DateTime';
+import { DateTime } from '../common/DateTime';
 import { PostAttachment } from './controls/PostAttachment';
 import { PostEvaluationResult } from './controls/PostEvaluationResult';
 import { PostSubmission } from './controls/PostSubmission';

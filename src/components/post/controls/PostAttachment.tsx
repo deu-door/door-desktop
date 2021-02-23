@@ -7,8 +7,8 @@ import {
 } from '@material-ui/core';
 import { Attachment as AttachmentIcon, Clear } from '@material-ui/icons';
 import React from 'react';
-import { Attachment } from 'service/door/interfaces';
-import { downloader } from 'service/downloader';
+import { Attachment } from 'services/door/interfaces';
+import { downloader } from 'services/downloader';
 
 const useStyles = makeStyles(theme =>
 	createStyles({

@@ -1,7 +1,7 @@
 import { teal } from '@material-ui/core/colors';
 import { AssignmentLate } from '@material-ui/icons';
 import React from 'react';
-import { Assignment } from 'service/door/interfaces/assignment';
+import { Assignment } from 'services/door/interfaces/assignment';
 import { actions } from 'store/modules';
 import { PostTag } from './controls/PostTag';
 import { SubmittablePostBase, SubmittablePostBaseProps } from './PostBase';

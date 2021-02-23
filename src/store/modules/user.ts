@@ -1,9 +1,9 @@
 import { handleActions } from 'redux-actions';
 import { createTransform, persistReducer } from 'redux-persist';
-import door from 'service/door';
-import { fulfilledFetchable } from 'service/door/interfaces';
-import { User } from 'service/door/interfaces/user';
-import { LoginOptions } from 'service/door/user';
+import door from 'services/door';
+import { fulfilledFetchable } from 'services/door/interfaces';
+import { User } from 'services/door/interfaces/user';
+import { LoginOptions } from 'services/door/user';
 import { storage } from 'store/storage';
 import { FetchableAction } from '.';
 import {

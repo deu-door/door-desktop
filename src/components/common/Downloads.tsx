@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { downloader } from 'service/downloader';
+import { downloader } from 'services/downloader';
 import {
 	createStyles,
 	Grid,

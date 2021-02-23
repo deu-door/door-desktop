@@ -1,6 +1,6 @@
 import { createStyles, makeStyles } from '@material-ui/core';
 import React from 'react';
-import { Fetchable, FetchableMap } from 'service/door/interfaces';
+import { Fetchable, FetchableMap } from 'services/door/interfaces';
 import { FetchableAction } from 'store/modules';
 import { FetchButton } from './FetchButton';
 

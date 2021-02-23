@@ -1,4 +1,4 @@
-import { ID } from 'service/door/interfaces';
+import { ID } from 'services/door/interfaces';
 import { store } from 'store';
 import { actions, FetchableAction } from './modules';
 

@@ -1,8 +1,8 @@
 import { handleActions } from 'redux-actions';
-import { FetchableMap, ID } from 'service/door/interfaces';
-import { Course, initializeCourse } from 'service/door/interfaces/course';
-import { Lecture, LecturesByWeek } from 'service/door/interfaces/lecture';
-import { Notice } from 'service/door/interfaces/notice';
+import { FetchableMap, ID } from 'services/door/interfaces';
+import { Course, initializeCourse } from 'services/door/interfaces/course';
+import { Lecture, LecturesByWeek } from 'services/door/interfaces/lecture';
+import { Notice } from 'services/door/interfaces/notice';
 import {
 	AsyncState,
 	fetchableActions,
@@ -10,16 +10,16 @@ import {
 	FetchableTransform,
 	ResetOnVersionChange,
 } from './util';
-import door from 'service/door';
+import door from 'services/door';
 import { storage } from 'store/storage';
 import moment from 'moment';
 import { persistReducer } from 'redux-persist';
 import { FetchableAction } from '.';
-import { Reference } from 'service/door/interfaces/reference';
-import { Activity } from 'service/door/interfaces/activity';
-import { TeamProject } from 'service/door/interfaces/team-project';
-import { Assignment } from 'service/door/interfaces/assignment';
-import { LearningStatus } from 'service/door/interfaces/learning-status';
+import { Reference } from 'services/door/interfaces/reference';
+import { Activity } from 'services/door/interfaces/activity';
+import { TeamProject } from 'services/door/interfaces/team-project';
+import { Assignment } from 'services/door/interfaces/assignment';
+import { LearningStatus } from 'services/door/interfaces/learning-status';
 
 export interface CourseState extends FetchableMap<Course>, AsyncState {
 	categories: string[];

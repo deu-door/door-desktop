@@ -9,10 +9,10 @@ import {
 	TimelineSeparator,
 } from '@material-ui/lab';
 import React from 'react';
-import { Post, sortPostByCreatedAtComparator } from 'service/door/interfaces';
+import { Post, sortPostByCreatedAtComparator } from 'services/door/interfaces';
 import moment from 'moment';
-import { DateTime } from 'components/core/DateTime';
-import { Course } from 'service/door/interfaces/course';
+import { DateTime } from 'components/common/DateTime';
+import { Course } from 'services/door/interfaces/course';
 import { NoticePost } from 'components/post/NoticePost';
 import { AssignmentPost } from 'components/post/AssignmentPost';
 import { ReferencePost } from 'components/post/ReferencePost';

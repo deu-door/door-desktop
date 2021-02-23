@@ -1,6 +1,6 @@
 import { deepOrange } from '@material-ui/core/colors';
 import { Description } from '@material-ui/icons';
-import { Reference } from 'service/door/interfaces/reference';
+import { Reference } from 'services/door/interfaces/reference';
 import { actions } from 'store/modules';
 import React from 'react';
 import { PostTag } from './controls/PostTag';

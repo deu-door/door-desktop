@@ -1,7 +1,7 @@
 import { cyan } from '@material-ui/core/colors';
 import { Assignment } from '@material-ui/icons';
 import React from 'react';
-import { Activity } from 'service/door/interfaces/activity';
+import { Activity } from 'services/door/interfaces/activity';
 import { actions } from 'store/modules';
 import { PostTag } from './controls/PostTag';
 import { SubmittablePostBase, SubmittablePostBaseProps } from './PostBase';

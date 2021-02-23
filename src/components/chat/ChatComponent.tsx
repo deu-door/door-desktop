@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/modules';
 import { UserState } from 'store/modules/user';
-import { Course } from 'service/door/interfaces/course';
-import { Message } from 'service/chat/interfaces/message';
+import { Course } from 'services/door/interfaces/course';
+import { Message } from 'services/chat/interfaces/message';
 import {
 	AppBar,
 	Box,
@@ -17,10 +17,10 @@ import {
 	Toolbar,
 	Typography,
 } from '@material-ui/core';
-import { Profile } from 'service/door/interfaces/user';
+import { Profile } from 'services/door/interfaces/user';
 import { Alert } from '@material-ui/lab';
-import { getChatHistory } from 'service/chat/history';
-import { DateTime } from 'components/core/DateTime';
+import { getChatHistory } from 'services/chat/history';
+import { DateTime } from 'components/common/DateTime';
 import { StompClient, StompMessage } from './StompClient';
 
 const WEBSOCKET_SOURCE = 'ws://door.p-e.kr/chat/connect';

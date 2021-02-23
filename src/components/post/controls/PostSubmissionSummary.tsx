@@ -1,5 +1,5 @@
 import { Alert, AlertTitle } from '@material-ui/lab';
-import { DateTime } from 'components/core/DateTime';
+import { DateTime } from 'components/common/DateTime';
 import React from 'react';
 
 export type PostSubmissionSummaryProps = {

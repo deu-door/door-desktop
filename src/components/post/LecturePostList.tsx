@@ -9,7 +9,7 @@ import {
 import { FetchableList } from 'components/fetchable/FetchableList';
 import { FetchButton } from 'components/fetchable/FetchButton';
 import React, { useState } from 'react';
-import { Course } from 'service/door/interfaces/course';
+import { Course } from 'services/door/interfaces/course';
 import { actions } from 'store/modules';
 import { LecturePost } from './LecturePost';
 

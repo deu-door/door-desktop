@@ -6,8 +6,8 @@ import {
 	Typography,
 } from '@material-ui/core';
 import { BackgroundService } from 'BackgroundService';
-import { KeepAlive } from 'components/core/KeepAlive';
-import { Navigator } from 'components/Navigator';
+import { KeepAlive } from 'components/common/KeepAlive';
+import { Navigator } from 'components/layout/Navigator';
 import { CoursePage } from 'page/CoursePage';
 import { InitializePage } from 'page/InitializePage';
 import { LoginPage } from 'page/LoginPage';
@@ -23,7 +23,7 @@ import {
 import { RootState } from 'store/modules';
 import { CourseState } from 'store/modules/courses';
 import { ReactComponent as Logo } from 'resources/logo-original-white.svg';
-import { Downloads } from 'components/core/Downloads';
+import { Downloads } from 'components/common/Downloads';
 
 const useStyles = makeStyles(theme =>
 	createStyles({

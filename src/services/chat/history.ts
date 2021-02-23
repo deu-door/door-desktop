@@ -1,4 +1,4 @@
-import { fulfilledFetchable, ID } from 'service/door/interfaces';
+import { fulfilledFetchable, ID } from 'services/door/interfaces';
 import { chatAxios } from '.';
 import { Message, MessageList } from './interfaces/message';
 

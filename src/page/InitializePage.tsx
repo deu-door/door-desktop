@@ -13,7 +13,7 @@ import {
 	Typography,
 } from '@material-ui/core';
 import { actions } from 'store/modules';
-import { secure } from 'service/secure';
+import { secure } from 'services/secure';
 import { sequentialAllCourseActions } from 'store/sequential-actions';
 
 const useStyles = makeStyles(theme =>

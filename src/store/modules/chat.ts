@@ -1,12 +1,12 @@
 import { handleActions } from 'redux-actions';
 import { persistReducer } from 'redux-persist';
-import { getChatHistory } from 'service/chat/history';
-import { Message, MessageList } from 'service/chat/interfaces/message';
+import { getChatHistory } from 'services/chat/history';
+import { Message, MessageList } from 'services/chat/interfaces/message';
 import {
 	FetchableMap,
 	ID,
 	notFulfilledFetchable,
-} from 'service/door/interfaces';
+} from 'services/door/interfaces';
 import { storage } from 'store/storage';
 import { FetchableAction } from '.';
 import {

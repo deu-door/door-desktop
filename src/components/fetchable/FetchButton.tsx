@@ -9,11 +9,11 @@ import {
 import { ErrorOutline, Refresh } from '@material-ui/icons';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { Fetchable } from 'service/door/interfaces';
+import { Fetchable } from 'services/door/interfaces';
 import { FetchableAction } from 'store/modules';
 import clsx from 'clsx';
 import VisibilitySensor from 'react-visibility-sensor';
-import { DateTime } from 'components/core/DateTime';
+import { DateTime } from 'components/common/DateTime';
 
 const useStyles = makeStyles(theme =>
 	createStyles({

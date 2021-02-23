@@ -1,7 +1,7 @@
 import { pink } from '@material-ui/core/colors';
 import { Group } from '@material-ui/icons';
 import React from 'react';
-import { TeamProject } from 'service/door/interfaces/team-project';
+import { TeamProject } from 'services/door/interfaces/team-project';
 import { actions } from 'store/modules';
 import { PostTag } from './controls/PostTag';
 import { SubmittablePostBase, SubmittablePostBaseProps } from './PostBase';
