@@ -146,11 +146,11 @@ export const Navigator: React.FC<NavigatorProps> = props => {
 							</Button>
 							<Box width="1rem" />
 							<Button onClick={() => setOpen(true)} color="inherit">
-								<Avatar>{user.name.charAt(0)}</Avatar>
-								<Box display="flex" flexDirection="column" alignItems="flex-start" marginLeft="0.8rem">
+								<Box display="flex" flexDirection="column" alignItems="flex-end" marginRight="0.8rem">
 									<Typography variant="subtitle2">{user.name}</Typography>
 									<Typography variant="body2">{user.id}</Typography>
 								</Box>
+								<Avatar>{user.name.charAt(0)}</Avatar>
 							</Button>
 						</>
 					)}
