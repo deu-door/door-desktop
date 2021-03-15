@@ -1,31 +1,20 @@
-import {
-	createStore,
-	applyMiddleware,
-	compose,
-	Action,
-	AnyAction,
-	Store,
-	Reducer,
-} from 'redux';
-import thunk from 'redux-thunk';
 import { persistStore } from 'redux-persist';
-import { rootReducer, RootState } from './modules';
+import { rootReducer } from './modules';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 
-// Redux Thunk 미들웨어 사용
-const middlewares = [thunk];
-
-// Redux Devtools 사용
-const composeEnhancers =
-	(window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
-// 미들웨어 적용
-const enhancer = composeEnhancers(applyMiddleware(...middlewares));
-
-// Redux Store 생성
-export const store = createStore(
-	rootReducer as Reducer<RootState, AnyAction>,
-	enhancer,
-);
+// redux toolkit을 사용한 configure store.
+// redux-thunk 및 redux devtools가 적용됨
+export const store = configureStore({
+	reducer: rootReducer,
+	devTools: process.env.NODE_ENV !== 'production',
+	middleware: getDefaultMiddleware({
+		serializableCheck: false,
+	}),
+});
 
 // Redux Store 영구 저장 persistor 생성
 export const persistor = persistStore(store);
+
+export type RootState = ReturnType<typeof rootReducer>;
+
+export { actions } from './modules';

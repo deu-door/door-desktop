@@ -1,22 +1,32 @@
-import * as course from './course';
-import * as notice from './notice';
-import * as lecture from './lecture';
-import * as assignment from './assignment';
-import * as reference from './reference';
-import * as activity from './activity';
-import * as teamProject from './team-project';
-import * as learningStatus from './learning-status';
+import * as course from './course/course';
+import * as syllabus from './course/syllabus';
+import * as learningProgress from './lecture/lecture-progress';
+import * as lecture from './lecture/lecture';
+import * as activityPost from './post/activity-post';
+import * as assignmentPost from './post/assignment-post';
+import * as doorPost from './post/door-post';
+import * as noticePost from './post/notice-post';
+import * as referencePost from './post/reference-post';
+import * as submission from './post/submission';
+import * as teamProjectPost from './post/team-project-post';
+import * as post from './post';
+import * as term from './term';
 import * as user from './user';
 
 const door = {
 	...course,
-	...notice,
+	...syllabus,
+	...learningProgress,
 	...lecture,
-	...assignment,
-	...reference,
-	...activity,
-	...teamProject,
-	...learningStatus,
+	...activityPost,
+	...assignmentPost,
+	...doorPost,
+	...noticePost,
+	...referencePost,
+	...submission,
+	...teamProjectPost,
+	...post,
+	...term,
 	...user,
 };
 

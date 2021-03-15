@@ -1,343 +1,131 @@
-import { handleActions } from 'redux-actions';
-import { FetchableMap, ID } from 'services/door/interfaces';
-import { Course, initializeCourse } from 'services/door/interfaces/course';
-import { Lecture, LecturesByWeek } from 'services/door/interfaces/lecture';
-import { Notice } from 'services/door/interfaces/notice';
-import {
-	AsyncState,
-	fetchableActions,
-	fetchableMapActions,
-	FetchableTransform,
-	ResetOnVersionChange,
-} from './util';
 import door from 'services/door';
-import { storage } from 'store/storage';
-import moment from 'moment';
+import { persistedStorage } from 'store/modules/persisted-storage';
 import { persistReducer } from 'redux-persist';
-import { FetchableAction } from '.';
-import { Reference } from 'services/door/interfaces/reference';
-import { Activity } from 'services/door/interfaces/activity';
-import { TeamProject } from 'services/door/interfaces/team-project';
-import { Assignment } from 'services/door/interfaces/assignment';
-import { LearningStatus } from 'services/door/interfaces/learning-status';
+import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { ICourse, ICourseSyllabus } from 'models/door';
+import { IAsyncThunkState, AsyncThunkTransform, ResetOnVersionChange, toRejectedWithError, toPending, toFulfilled } from './util';
+import { HttpError } from 'services/response';
 
-export interface CourseState extends FetchableMap<Course>, AsyncState {
-	categories: string[];
-	itemsByCategory: { [key: string]: Course[] };
-}
+const coursesAdapter = createEntityAdapter<ICourse & IAsyncThunkState>({
+	selectId: course => course.id,
+});
 
-const initialState: CourseState = {
-	fulfilled: false,
+const initialState = coursesAdapter.getInitialState({
 	pending: false,
+	error: undefined,
+} as IAsyncThunkState);
 
-	categories: [],
-	itemsByCategory: {},
-	items: {},
-};
+const fetchCourses = createAsyncThunk<ICourse[], Parameters<typeof door.getCourses>, { rejectValue: HttpError }>(
+	'courses/fetchCourses',
+	async (params, { rejectWithValue }) => {
+		try {
+			const response = await door.getCourses(...params);
 
-const courseMapActions = fetchableMapActions<CourseState, Course, void>({
-	name: 'COURSE',
-	selector: state => state.courses,
-	path: draft => draft,
-	fetch: door.getCourses,
-	handler: {
-		success: (action, draft) => {
-			// Initialize Course
-			Object.values(draft.items).forEach(course => {
-				Object.assign(course, initializeCourse(), course);
-			});
+			return response.data;
+		} catch (e) {
+			const error: HttpError = e;
+			return rejectWithValue(error);
+		}
+	},
+);
 
-			// Make category by course.type
-			const categories = Array.from(
-				new Set(
-					Object.values(action.payload.result.items).map(
-						course => course.type,
-					),
-				),
-			).sort((a, b) => {
-				const [a_, b_] = [a, b].map(
-					word =>
-						// calculate cost (sort priority) of type
-						(word.includes('전공') ? 2 : -2) +
-						(word.includes('필수') ? 1 : 0) +
-						(word.includes('선택') ? -1 : 0) +
-						(word.includes('교양') ? 1 : -1) +
-						(word.includes('공통') ? -1 : 0),
+const fetchCourseSyllabus = createAsyncThunk<ICourseSyllabus, Parameters<typeof door.getCourseSyllabus>, { rejectValue: HttpError }>(
+	'courses/fetchSyllabus',
+	async (params, { rejectWithValue }) => {
+		try {
+			const response = await door.getCourseSyllabus(...params);
+
+			return response.data;
+		} catch (e) {
+			const error: HttpError = e;
+			return rejectWithValue(error);
+		}
+	},
+);
+
+const coursesSlice = createSlice({
+	name: 'courses',
+	initialState: initialState,
+	reducers: {},
+	extraReducers: builder =>
+		builder
+			.addCase(fetchCourses.pending, state => {
+				state.pending = true;
+				state.error = undefined;
+			})
+			.addCase(fetchCourses.fulfilled, (state, { meta: { arg }, payload: courses }) => {
+				const [{ id: termId }] = arg;
+				state.pending = false;
+
+				coursesAdapter.removeMany(
+					state,
+					coursesAdapter
+						.getSelectors()
+						.selectAll(state)
+						.filter(course => course.termId === termId && courses.find(it => it.id === course.id) === undefined)
+						.map(course => course.id),
 				);
 
-				return b_ - a_;
-			});
+				coursesAdapter.upsertMany(
+					state,
+					// each course gets its own async state
+					courses.map(course => ({
+						// use previous values
+						//...(coursesAdapter.getSelectors().selectById(state, course.id) ?? {}),
 
-			const itemsByCategory: { [key: string]: Course[] } = {};
-			categories.forEach(category => (itemsByCategory[category] = []));
-			Object.values(action.payload.result.items).forEach(course =>
-				itemsByCategory[course.type].push(course),
-			);
+						...course,
 
-			(draft as CourseState).categories = categories;
-			(draft as CourseState).itemsByCategory = itemsByCategory;
-		},
-	},
-	options: {
-		validDuration: moment.duration(1, 'hour'),
-	},
+						pending: false,
+						error: undefined,
+					})),
+				);
+			})
+			.addCase(fetchCourses.rejected, (state, { payload: error }) => {
+				toRejectedWithError(state, error?.message);
+			})
+			.addCase(fetchCourseSyllabus.pending, (state, { meta: { arg } }) => {
+				const [course] = arg;
+				coursesAdapter.updateOne(state, {
+					id: course.id,
+					changes: toPending({}),
+				});
+			})
+			.addCase(fetchCourseSyllabus.fulfilled, (state, { meta: { arg }, payload: syllabus }) => {
+				const [course] = arg;
+				coursesAdapter.updateOne(state, {
+					id: course.id,
+					changes: {
+						...toFulfilled({}),
+
+						syllabus: syllabus,
+					},
+				});
+			})
+			.addCase(fetchCourseSyllabus.rejected, (state, { meta: { arg }, payload: error }) => {
+				const [course] = arg;
+				coursesAdapter.updateOne(state, {
+					id: course.id,
+					changes: toRejectedWithError({}, error?.message),
+				});
+			}),
 });
 
-const courseActions = fetchableActions<CourseState, Course, ID>({
-	name: 'COURSE',
-	selector: state => state.courses,
-	path: (draft, id) => draft.items[id],
-	fetch: id => door.getCourseDetail(id),
-	options: {
-		validDuration: moment.duration(1, 'days'),
-	},
-});
-
-const noticeMapActions = fetchableMapActions<CourseState, Notice, ID>({
-	name: 'NOTICE',
-	selector: state => state.courses,
-	path: (draft, courseId) => draft.items[courseId].notices,
-	fetch: courseId => door.getNotices(courseId),
-	options: {
-		overrideItemProperties: ['title', 'author', 'views'],
-		validDuration: moment.duration(1, 'hour'),
-	},
-});
-
-const noticeActions = fetchableActions<
-	CourseState,
-	Notice,
-	{ courseId: ID; id: ID }
->({
-	name: 'NOTICE',
-	selector: state => state.courses,
-	path: (draft, { courseId, id }) => draft.items[courseId].notices.items[id],
-	fetch: ({ courseId, id }) => door.getNotice(courseId, id),
-	options: {
-		validDuration: moment.duration(1, 'hour'),
-	},
-});
-
-const lectureMapActions = fetchableMapActions<CourseState, LecturesByWeek, ID>({
-	name: 'LECTURE',
-	selector: state => state.courses,
-	path: (draft, courseId) => draft.items[courseId].lectures,
-	fetch: courseId => door.getLectures(courseId),
-	options: {
-		overrideItemProperties: [
-			'description',
-			'remark',
-			'views',
-			'count',
-			'period',
-		],
-		validDuration: moment.duration(1, 'hour'),
-	},
-});
-
-const lectureActions = fetchableActions<
-	CourseState,
-	FetchableMap<Lecture>,
-	{ courseId: ID; id: ID }
->({
-	name: 'LECTURE',
-	selector: state => state.courses,
-	path: (draft, { courseId, id }) => draft.items[courseId].lectures.items[id],
-	fetch: ({ courseId, id }) => door.getLecturesByWeek(courseId, id),
-	options: {
-		validDuration: moment.duration(1, 'hour'),
-	},
-});
-
-const assignmentMapActions = fetchableMapActions<CourseState, Assignment, ID>({
-	name: 'ASSIGNMENT',
-	selector: state => state.courses,
-	path: (draft, courseId) => draft.items[courseId].assignments,
-	fetch: courseId => door.getAssignments(courseId),
-	options: {
-		overrideItemProperties: ['title', 'period', 'submitted'],
-		validDuration: moment.duration(1, 'hour'),
-	},
-});
-
-const assignmentActions = fetchableActions<
-	CourseState,
-	Assignment,
-	{ courseId: ID; id: ID }
->({
-	name: 'ASSIGNMENT',
-	selector: state => state.courses,
-	path: (draft, { courseId, id }) =>
-		draft.items[courseId].assignments.items[id],
-	fetch: ({ courseId, id }) => door.getAssignment(courseId, id),
-	options: {
-		validDuration: moment.duration(1, 'hour'),
-	},
-});
-
-const referenceMapActions = fetchableMapActions<CourseState, Reference, ID>({
-	name: 'REFERENCE',
-	selector: state => state.courses,
-	path: (draft, courseId) => draft.items[courseId].references,
-	fetch: courseId => door.getReferences(courseId),
-	options: {
-		overrideItemProperties: ['title', 'author', 'views'],
-		validDuration: moment.duration(1, 'hour'),
-	},
-});
-
-const referenceActions = fetchableActions<
-	CourseState,
-	Reference,
-	{ courseId: ID; id: ID }
->({
-	name: 'REFERENCE',
-	selector: state => state.courses,
-	path: (draft, { courseId, id }) =>
-		draft.items[courseId].references.items[id],
-	fetch: ({ courseId, id }) => door.getReference(courseId, id),
-	options: {
-		validDuration: moment.duration(1, 'hour'),
-	},
-});
-
-const activityMapActions = fetchableMapActions<CourseState, Activity, ID>({
-	name: 'ACTIVITY',
-	selector: state => state.courses,
-	path: (draft, courseId) => draft.items[courseId].activities,
-	fetch: courseId => door.getActivities(courseId),
-	options: {
-		overrideItemProperties: ['title', 'period'],
-		validDuration: moment.duration(1, 'hour'),
-	},
-});
-
-const activityActions = fetchableActions<
-	CourseState,
-	Activity,
-	{ courseId: ID; id: ID }
->({
-	name: 'ACTIVITY',
-	selector: state => state.courses,
-	path: (draft, { courseId, id }) =>
-		draft.items[courseId].activities.items[id],
-	fetch: ({ courseId, id }) => door.getActivity(courseId, id),
-	options: {
-		validDuration: moment.duration(1, 'hour'),
-	},
-});
-
-const teamProjectMapActions = fetchableMapActions<CourseState, TeamProject, ID>(
-	{
-		name: 'TEAM_PROJECT',
-		selector: state => state.courses,
-		path: (draft, courseId) => draft.items[courseId].teamProjects,
-		fetch: courseId => door.getTeamProjects(courseId),
-		options: {
-			overrideItemProperties: ['title', 'period', 'submitted'],
-			validDuration: moment.duration(1, 'hour'),
-		},
-	},
-);
-
-const teamProjectActions = fetchableActions<
-	CourseState,
-	TeamProject,
-	{ courseId: ID; id: ID }
->({
-	name: 'TEAM_PROJECT',
-	selector: state => state.courses,
-	path: (draft, { courseId, id }) =>
-		draft.items[courseId].teamProjects.items[id],
-	fetch: ({ courseId, id }) => door.getTeamProject(courseId, id),
-	options: {
-		validDuration: moment.duration(1, 'hour'),
-	},
-});
-
-const learningStatusActions = fetchableActions<CourseState, LearningStatus, ID>(
-	{
-		name: 'LEARNING_STATUS',
-		selector: state => state.courses,
-		path: (draft, courseId) => draft.items[courseId].learningStatus,
-		fetch: courseId => door.getLearningStatus(courseId),
-		options: {
-			validDuration: moment.duration(1, 'hour'),
-		},
-	},
-);
-
-export default persistReducer(
+export const reducer = persistReducer(
 	{
 		key: 'courses',
-		storage: storage,
-		transforms: [FetchableTransform],
-		version: 3,
-		migrate: ResetOnVersionChange(),
+		storage: persistedStorage,
+		transforms: [AsyncThunkTransform],
+		version: 4,
+		migrate: ResetOnVersionChange,
 	},
-	handleActions<CourseState, any>(
-		{
-			...courseMapActions.reduxActions,
-			...courseActions.reduxActions,
-			...noticeMapActions.reduxActions,
-			...noticeActions.reduxActions,
-			...lectureMapActions.reduxActions,
-			...lectureActions.reduxActions,
-			...assignmentMapActions.reduxActions,
-			...assignmentActions.reduxActions,
-			...referenceMapActions.reduxActions,
-			...referenceActions.reduxActions,
-			...activityMapActions.reduxActions,
-			...activityActions.reduxActions,
-			...teamProjectMapActions.reduxActions,
-			...teamProjectActions.reduxActions,
-			...learningStatusActions.reduxActions,
-		},
-		initialState,
-	),
-);
+	coursesSlice.reducer,
+) as typeof coursesSlice.reducer;
 
 export const actions = {
-	courses: (): FetchableAction => courseMapActions.actions(),
+	fetchCourses,
+	fetchCourseSyllabus,
+};
 
-	course: (id: ID): FetchableAction => courseActions.actions(id),
-
-	notices: (courseId: ID): FetchableAction =>
-		noticeMapActions.actions(courseId),
-
-	notice: (courseId: ID, id: ID): FetchableAction =>
-		noticeActions.actions({ courseId, id }),
-
-	lectures: (courseId: ID): FetchableAction =>
-		lectureMapActions.actions(courseId),
-
-	lectureByWeek: (courseId: ID, week: ID): FetchableAction =>
-		lectureActions.actions({ courseId, id: week }),
-
-	assignments: (courseId: ID): FetchableAction =>
-		assignmentMapActions.actions(courseId),
-
-	assignment: (courseId: ID, id: ID): FetchableAction =>
-		assignmentActions.actions({ courseId, id }),
-
-	references: (courseId: ID): FetchableAction =>
-		referenceMapActions.actions(courseId),
-
-	reference: (courseId: ID, id: ID): FetchableAction =>
-		referenceActions.actions({ courseId, id }),
-
-	activities: (courseId: ID): FetchableAction =>
-		activityMapActions.actions(courseId),
-
-	activity: (courseId: ID, id: ID): FetchableAction =>
-		activityActions.actions({ courseId, id }),
-
-	teamProjects: (courseId: ID): FetchableAction =>
-		teamProjectMapActions.actions(courseId),
-
-	teamProject: (courseId: ID, id: ID): FetchableAction =>
-		teamProjectActions.actions({ courseId, id }),
-
-	learningStatus: (courseId: ID): FetchableAction =>
-		learningStatusActions.actions(courseId),
+export const selectors = {
+	coursesSelectors: coursesAdapter.getSelectors(),
 };

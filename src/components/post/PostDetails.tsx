@@ -1,0 +1,342 @@
+import {
+	Box,
+	Button,
+	CircularProgress,
+	Divider,
+	IconButton,
+	Link,
+	LinkProps,
+	Paper,
+	styled,
+	TextField,
+	Typography,
+	TypographyProps,
+	useTheme,
+	withTheme,
+} from '@material-ui/core';
+import { Add, ArrowBack, Attachment, CheckCircleOutline, Delete, ErrorOutline } from '@material-ui/icons';
+import { AsyncThunkState } from 'components/common/AsyncThunkState';
+import { KeepLatestState } from 'components/common/KeepLatestState';
+import { usePosts } from 'hooks/door/usePosts';
+import { IAttachment, IPost, IPostHead, ISubmittablePost, PostVariant } from 'models/door';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
+import { RouteComponentProps } from 'react-router-dom';
+import { driver } from 'services/door/util';
+import { downloader } from 'services/downloader';
+import { IAsyncThunkState } from 'store/modules/util';
+import { PostSubtitle } from './PostSubtitle';
+import { SubmitDuration } from './SubmitDuration';
+
+export const PostContents = styled(
+	withTheme((props: TypographyProps) => (
+		<Typography variant="body2" color="textSecondary" component="span" paragraph {...props}>
+			{props.children}
+		</Typography>
+	)),
+)(props => ({
+	'& p:first-child': {
+		marginTop: props.theme.spacing(0),
+	},
+	'& p:last-child': {
+		marginBottom: props.theme.spacing(0),
+	},
+}));
+
+const FetchLink = styled((props: LinkProps) => <Link component="a" {...props} />)({
+	'&:hover': {
+		textDecoration: 'none',
+	},
+	cursor: 'pointer',
+});
+
+const isFulfilledPost = (post: IPostHead): post is IPost => {
+	return 'contents' in post;
+};
+
+const isSubmittablePost = (post: IPost): post is ISubmittablePost => {
+	return 'submission' in post;
+};
+
+export type PostAttachmentProps = {
+	attachment: Partial<IAttachment>;
+};
+
+export const PostAttachment: React.FC<PostAttachmentProps> = props => {
+	const { attachment } = props;
+
+	return (
+		<Button
+			variant="contained"
+			color="default"
+			size="small"
+			startIcon={<Attachment />}
+			disableElevation
+			onClick={() => attachment.link !== undefined && downloader.download(attachment.link)}
+		>
+			{attachment.title ?? '첨부파일'}
+		</Button>
+	);
+};
+
+export type PostDetailsProps = RouteComponentProps<{
+	postVariant: PostVariant;
+	postId: IPost['id'];
+}>;
+
+export const PostDetails: React.FC<PostDetailsProps> = props => {
+	const {
+		match: {
+			params: { postId: id, postVariant: variant },
+		},
+	} = props;
+
+	const { postById } = usePosts();
+	const post = postById(variant, id);
+
+	if (post === undefined)
+		return (
+			<Box>
+				404 NOT FOUND for post id {variant}#{id}
+			</Box>
+		);
+
+	if (isFulfilledPost(post) && isSubmittablePost(post)) return <SubmittablePostDetails post={post} />;
+
+	return <SimplePostDetails post={post} />;
+};
+
+export type SimplePostDetailsProps = {
+	post: IPostHead & IAsyncThunkState;
+	header?: React.ReactNode;
+	footer?: React.ReactNode;
+};
+
+export const SimplePostDetails: React.FC<SimplePostDetailsProps> = props => {
+	const { post, children, header, footer } = props;
+	const history = useHistory();
+	const { fetchPost } = usePosts();
+
+	const triggerFetch = () => post && fetchPost(post);
+
+	return (
+		<Box component="article">
+			<Button
+				disableElevation
+				variant="contained"
+				color="primary"
+				size="small"
+				startIcon={<ArrowBack />}
+				onClick={() => history.goBack()}
+			>
+				이전으로
+			</Button>
+
+			<Box height="1rem" />
+
+			<KeepLatestState state={post} onTriggerFetch={triggerFetch}>
+				<Typography variant="h5">{post.title}</Typography>
+			</KeepLatestState>
+
+			<Typography variant="subtitle1">
+				<PostSubtitle post={post} />
+			</Typography>
+
+			<Box height="0.3rem" />
+
+			<FetchLink onClick={triggerFetch}>
+				<AsyncThunkState state={post} />
+			</FetchLink>
+
+			<Box paddingY="1rem">
+				<Divider />
+			</Box>
+
+			{header && (
+				<>
+					{header}
+					<Box height="2rem" />
+				</>
+			)}
+
+			{isFulfilledPost(post) && (
+				<Box>
+					{post.attachments.map(attachment => (
+						<Box key={attachment.link} marginRight="0.5rem" marginBottom="1rem" display="inline-block">
+							<PostAttachment attachment={attachment} />
+						</Box>
+					))}
+				</Box>
+			)}
+
+			{children ?? (isFulfilledPost(post) && <PostContents dangerouslySetInnerHTML={{ __html: post.contents }} />)}
+
+			{footer && (
+				<>
+					<Box height="2rem" />
+					{footer}
+				</>
+			)}
+		</Box>
+	);
+};
+
+export type SubmittablePostDetailsProps = SimplePostDetailsProps & {
+	post: ISubmittablePost;
+};
+
+export const SubmittablePostDetails: React.FC<SubmittablePostDetailsProps> = props => {
+	const { post } = props;
+	const theme = useTheme();
+	const { fetchPost, putSubmission } = usePosts();
+
+	const [now, setNow] = useState(Date.now());
+	const [edit, setEdit] = useState(false);
+	const [contents, setContents] = useState<string | undefined>(undefined);
+	const [file, setFile] = useState<File | undefined>(undefined);
+	const [pending, setPending] = useState(false);
+
+	const fileInputRef = React.createRef<HTMLInputElement>();
+
+	useEffect(() => {
+		const timer = setInterval(() => setNow(Date.now()), 30000);
+
+		return () => clearInterval(timer);
+	}, []);
+
+	const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setFile(event.target.files?.[0]);
+	};
+
+	const deleteFile = async (link: string) => {
+		setPending(true);
+
+		await driver.post('/Common/FileDeleteNew', { fno: link.match(/\d+$/)?.[0] });
+		await fetchPost(post);
+
+		setPending(false);
+	};
+
+	const clear = () => {
+		setContents(undefined);
+		setFile(undefined);
+		setEdit(false);
+	};
+
+	const submit = async () => {
+		setEdit(false);
+		setPending(true);
+
+		await putSubmission({
+			...post,
+
+			form: {
+				contents: contents ?? post.submission.contents,
+				file: file,
+			},
+		});
+		await fetchPost(post);
+
+		clear();
+		setPending(false);
+	};
+
+	const canEdit = new Date(post.duration.from).valueOf() < now && now < new Date(post.duration.to).valueOf();
+	const editing = edit && !pending;
+
+	return (
+		<SimplePostDetails
+			header={
+				<Paper elevation={0} style={{ backgroundColor: post.submitted ? theme.palette.success.main : theme.palette.warning.main }}>
+					<Box padding="1rem" display="flex" justifyContent="space-between" alignItems="center" color="white">
+						<Box display="inline-flex" alignItems="center">
+							{post.submitted ? <CheckCircleOutline fontSize="large" /> : <ErrorOutline fontSize="large" />}
+							<Box width="0.5rem" />
+							<Typography>{post.submitted ? '제출 완료' : '미제출'}</Typography>
+						</Box>
+						<SubmitDuration from={post.duration.from} to={post.duration.to} />
+					</Box>
+				</Paper>
+			}
+			footer={
+				<>
+					<Box height="3rem" />
+					<Typography variant="h5">제출</Typography>
+					<Box height="1rem" />
+					<TextField
+						multiline
+						variant="outlined"
+						rows={3}
+						placeholder="내용을 입력해주세요 ..."
+						value={contents ?? post.submission.contents}
+						onChange={event => setContents(event.target.value)}
+						disabled={!editing}
+						fullWidth
+					/>
+					<Box height="1rem" />
+					<Box>
+						{post.submission.attachments.map(attachment => (
+							<Box key={attachment.link} marginRight="0.5rem" marginBottom="1rem" display="inline-block">
+								<PostAttachment attachment={attachment} />
+								{canEdit && (
+									<>
+										<Box width="0.5rem" display="inline-block" />
+										{/* TODO: IMPORTANT: add delete modal */}
+										<IconButton size="small" onClick={() => deleteFile(attachment.link)}>
+											<Delete />
+										</IconButton>
+									</>
+								)}
+							</Box>
+						))}
+						{edit && post.submission.attachments.length === 0 && (
+							<>
+								{file !== undefined && (
+									<Box marginRight="0.5rem" display="inline-block">
+										<PostAttachment attachment={{ title: file.name }} />
+									</Box>
+								)}
+
+								<Box marginBottom="1rem" display="inline-block">
+									<input type="file" onChange={onFileChange} ref={fileInputRef} hidden />
+
+									<Button
+										variant="contained"
+										color="secondary"
+										size="small"
+										startIcon={<Add />}
+										disabled={!editing}
+										onClick={() => fileInputRef.current?.click()}
+									>
+										파일 업로드
+									</Button>
+								</Box>
+							</>
+						)}
+					</Box>
+
+					{pending ? (
+						<CircularProgress />
+					) : edit ? (
+						<>
+							<Button variant="contained" color="primary" onClick={submit}>
+								제출
+							</Button>
+							<Box display="inline-block" width="1rem" />
+							<Button variant="contained" color="default" onClick={clear}>
+								취소
+							</Button>
+						</>
+					) : (
+						<>
+							<Button variant="contained" color="primary" disabled={!canEdit} onClick={() => setEdit(true)}>
+								편집
+							</Button>
+						</>
+					)}
+				</>
+			}
+			{...props}
+		/>
+	);
+};

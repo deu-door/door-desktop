@@ -1,26 +1,39 @@
-import { storage } from 'store/storage';
-import user, { actions as userActions } from './user';
-import courses, { actions as courseActions } from './courses';
-import chat, { actions as chatActions } from './chat';
 import { combineReducers } from 'redux';
 
-export interface FetchableAction {
-	fetch: () => any;
-	fetchIfExpired: () => any;
-	fetchIfNotFulfilled: () => any;
-	clear: () => any;
-}
+import { reducer as userReducer } from './user';
+import { reducer as termsReducer } from './terms';
+import { reducer as coursesReducer } from './courses';
+import { reducer as postsReducer } from './posts';
+import { reducer as lecturesReducer } from './lectures';
 
-const modules = { user, courses, chat };
+import { actions as userActions } from './user';
+import { actions as termsActions } from './terms';
+import { actions as coursesActions } from './courses';
+import { actions as postsActions } from './posts';
+import { actions as lecturesActions } from './lectures';
 
-export type RootState = ReturnType<typeof rootReducer>;
+import { selectors as coursesSelectors } from './courses';
+import { selectors as postsSelectors } from './posts';
+import { selectors as lecturesSelectors } from './lectures';
 
-// export const rootReducer = persistReducer(persistConfig, combineReducers(modules));
-
-export const rootReducer = combineReducers(modules);
+export const rootReducer = combineReducers({
+	user: userReducer,
+	terms: termsReducer,
+	courses: coursesReducer,
+	posts: postsReducer,
+	lectures: lecturesReducer,
+});
 
 export const actions = {
 	...userActions,
-	...courseActions,
-	...chatActions,
+	...termsActions,
+	...coursesActions,
+	...postsActions,
+	...lecturesActions,
+};
+
+export const selectors = {
+	...coursesSelectors,
+	...postsSelectors,
+	...lecturesSelectors,
 };

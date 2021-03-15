@@ -1,260 +1,161 @@
-import React, { useState } from 'react';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
-import Divider from '@material-ui/core/Divider';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import { useDispatch, useSelector } from 'react-redux';
-import { Course } from 'services/door/interfaces/course';
-import { CourseState } from 'store/modules/courses';
-import { useHistory, useLocation } from 'react-router';
 import {
+	AppBar,
+	AppBarProps,
 	Avatar,
 	Backdrop,
+	Box,
 	Button,
 	CircularProgress,
+	Container,
 	Dialog,
 	DialogActions,
 	DialogContent,
-	DialogContentText,
+	DialogProps,
 	DialogTitle,
-	Drawer,
-	Grid,
-	ListItemAvatar,
-	ListSubheader,
-	SvgIcon,
+	Hidden,
+	IconButton,
+	Toolbar,
 	Typography,
+	useTheme,
 } from '@material-ui/core';
-import { actions, RootState } from 'store/modules';
-import { ReactComponent as DoorIcon } from 'resources/logo-original-white.svg';
-import clsx from 'clsx';
-import { UserState } from 'store/modules/user';
+import { Menu } from '@material-ui/icons';
+import { default as LogoOriginalWhite } from 'resources/logo-original-white.svg';
+import React, { useState } from 'react';
+import { useUser } from 'hooks/door/useUser';
+import { lightGreen, red } from '@material-ui/core/colors';
+import { useHistory } from 'react-router';
 
-const drawerWidth = 240;
+export type UserDialogProps = DialogProps;
 
-const useStyles = makeStyles(theme =>
-	createStyles({
-		drawer: {
-			width: drawerWidth,
-			background: '#18202c',
-			color: 'rgba(255, 255, 255, 0.7)',
-		},
-		divider: {
-			background: '#404854',
-		},
-		category: {
-			color: theme.palette.common.white,
-			fontWeight: 'bold',
-		},
-		header: {
-			backgroundColor: '#232f3e',
-			color: theme.palette.common.white,
-			'&:hover,&:focus': {
-				backgroundColor: 'rgba(255, 255, 255, 0.08)',
-			},
-		},
-		headerIcon: {
-			width: '3rem',
-			height: '3rem',
-		},
-		headerText: {
-			fontWeight: 'bold',
-		},
-		item: {
-			color: 'rgba(255, 255, 255, 0.8)',
-			'&:hover,&:focus': {
-				backgroundColor: 'rgba(255, 255, 255, 0.08)',
-			},
-			paddingTop: theme.spacing(1),
-			paddingBottom: theme.spacing(1),
-		},
-		itemActive: {
-			color: '#4fc3f7',
-		},
-		itemTitle: {
-			fontWeight: 'bolder',
-		},
-		itemSubtitle: {
-			color: 'rgba(255, 255, 255, 0.7)',
-		},
-	}),
-);
-
-const ListDoorItem: React.FC = () => {
-	const classes = useStyles();
+export const UserDialog: React.FC<UserDialogProps> = props => {
+	const { ...otherProps } = props;
+	const {
+		user: { user },
+		logout,
+	} = useUser();
 	const history = useHistory();
+	const theme = useTheme();
+	const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+	const [pending, setPending] = useState(false);
 
-	return (
-		<ListItem
-			button
-			className={classes.header}
-			onClick={() => history.push('/main/dashboard')}
-		>
-			<Grid container spacing={3} alignItems="center">
-				<Grid item>
-					<SvgIcon
-						viewBox="0 0 245 245"
-						className={classes.headerIcon}
-					>
-						<DoorIcon />
-					</SvgIcon>
-				</Grid>
-				<Grid
-					item
-					style={{ flex: 1 }}
-					container
-					direction="column"
-					className={classes.headerText}
-				>
-					<Grid item>
-						<Typography variant="h4">Door</Typography>
-					</Grid>
-					<Grid item>
-						<Typography variant="subtitle1">Desktop</Typography>
-					</Grid>
-				</Grid>
-			</Grid>
-		</ListItem>
-	);
-};
-
-const ListUserItem: React.FC = () => {
-	const classes = useStyles();
-	const user = useSelector<RootState, UserState>(state => state.user);
-	const [open, setOpen] = useState(false);
-	const dispatch = useDispatch();
-	const history = useHistory();
-
-	const handleClose = () => setOpen(false);
-	const handleLogout = async () => {
-		setOpen(false);
-		await dispatch(actions.logout().fetch());
-
-		history.push('/login');
+	const doLogout = async () => {
+		setPending(true);
+		await logout();
+		setPending(false);
+		history.replace('/');
 	};
 
 	return (
 		<>
-			<ListItem
-				button
-				className={classes.header}
-				alignItems="flex-start"
-				onClick={() => setOpen(true)}
-			>
-				<ListItemAvatar>
-					<Avatar src={user.profile?.image}>
-						{user.profile?.name.charAt(0)}
-					</Avatar>
-				</ListItemAvatar>
-				<ListItemText
-					primary={`${user.profile?.name}(${user.profile?.id})`}
-					secondary={
-						<Typography variant="subtitle2" color="inherit">
-							{user.profile?.major}
-						</Typography>
-					}
-				/>
-			</ListItem>
-			<Dialog open={open} onClose={handleClose}>
-				<DialogTitle>로그아웃하시겠습니까?</DialogTitle>
+			<Dialog maxWidth="xs" fullWidth {...otherProps} {...(pending ? { open: false } : {})}>
+				<DialogTitle>Door 유저 정보</DialogTitle>
 				<DialogContent>
-					<DialogContentText>
-						자동 로그인을 사용하는 경우 자동 로그인이 해제됩니다.
-					</DialogContentText>
+					{user && (
+						<Box display="flex" flexDirection="column">
+							{[
+								{ label: '이름', value: user.name },
+								{ label: '학번', value: user.id },
+								{ label: '전공', value: user.major },
+							].map(({ label, value }) => (
+								<Box key={label} marginBottom="0.8rem">
+									<Typography variant="subtitle2" color="textSecondary" display="inline">
+										{label}
+									</Typography>
+									<Box width="0.8rem" />
+									<Typography variant="h6" display="inline">
+										{value}
+									</Typography>
+								</Box>
+							))}
+						</Box>
+					)}
+
+					<Dialog open={!pending && showLogoutDialog} onClose={() => setShowLogoutDialog(false)}>
+						<DialogTitle>정말로 로그아웃하시겠습니까?</DialogTitle>
+						<DialogContent>만일 자동 로그인을 사용하신다면, 이후 해제됩니다.</DialogContent>
+						<DialogActions>
+							<Button onClick={() => setShowLogoutDialog(false)} color="default" size="large">
+								취소
+							</Button>
+							<Button onClick={doLogout} color="primary" size="large">
+								확인
+							</Button>
+						</DialogActions>
+					</Dialog>
+
+					<DialogActions>
+						<Button fullWidth color="primary" size="large" onClick={() => setShowLogoutDialog(true)}>
+							로그아웃
+						</Button>
+					</DialogActions>
 				</DialogContent>
-				<DialogActions>
-					<Button onClick={handleClose} color="primary">
-						아니오
-					</Button>
-					<Button onClick={handleLogout} color="primary">
-						예
-					</Button>
-				</DialogActions>
 			</Dialog>
 
-			<Backdrop open={!!user.pending}>
+			<Backdrop open={pending} style={{ zIndex: theme.zIndex.drawer + 99 }}>
 				<CircularProgress color="inherit" />
 			</Backdrop>
 		</>
 	);
 };
 
-export const Navigator: React.FC = props => {
-	const classes = useStyles();
+export type NavigatorProps = {
+	onSideBarOpen: () => void;
+} & AppBarProps;
 
+export const Navigator: React.FC<NavigatorProps> = props => {
+	const { onSideBarOpen, ...appBarProps } = props;
+	const {
+		user: { user, authenticated },
+	} = useUser();
 	const history = useHistory();
-	const location = useLocation();
-	const courses = useSelector<RootState, CourseState>(state => state.courses);
-
-	const coursesByCategory: { [key: string]: Course[] } = {};
-	courses.categories.forEach(type => (coursesByCategory[type] = []));
-
-	Object.values(courses.items).forEach(c => {
-		coursesByCategory[c.type] = coursesByCategory[c.type] || [];
-		coursesByCategory[c.type].push(c);
-	});
+	const [open, setOpen] = useState(false);
 
 	return (
-		<Drawer
-			variant="permanent"
-			ModalProps={{ keepMounted: true }}
-			className={classes.drawer}
-			classes={{ paper: classes.drawer }}
-		>
-			<List disablePadding>
-				<ListDoorItem />
-				<Divider />
-				<ListUserItem />
-			</List>
-			{Object.keys(coursesByCategory).map(category => (
-				<React.Fragment key={category}>
-					<Divider className={classes.divider} />
-					<List
-						subheader={
-							<ListSubheader
-								component="div"
-								className={classes.category}
-							>
-								{category}
-							</ListSubheader>
-						}
-					>
-						{coursesByCategory[category].map(
-							({ id, name, professor }) => {
-								const path = '/main/courses/' + id;
+		<AppBar position="sticky" {...appBarProps}>
+			<Container maxWidth="lg">
+				<Toolbar
+					style={{
+						paddingLeft: 0,
+						paddingRight: 0,
+					}}
+				>
+					<Hidden mdUp>
+						<IconButton color="inherit" edge="start" onClick={onSideBarOpen}>
+							<Menu />
+						</IconButton>
+						<Box width="0.5rem" />
+					</Hidden>
 
-								return (
-									<ListItem
-										key={name}
-										button
-										className={clsx(
-											classes.item,
-											location.pathname === path &&
-												classes.itemActive,
-										)}
-										onClick={() => history.push(path)}
-									>
-										<ListItemText>
-											<Typography
-												variant="subtitle1"
-												className={classes.itemTitle}
-											>
-												{name}
-											</Typography>
-											<Typography
-												variant="subtitle2"
-												className={classes.itemSubtitle}
-											>
-												{professor}
-											</Typography>
-										</ListItemText>
-									</ListItem>
-								);
-							},
-						)}
-					</List>
-				</React.Fragment>
-			))}
-		</Drawer>
+					<IconButton onClick={() => history.replace('/courses')}>
+						<img style={{ width: '2.4rem' }} alt="logo-original-white" src={LogoOriginalWhite} />
+					</IconButton>
+
+					<UserDialog open={open} onClose={() => setOpen(false)} />
+
+					{user && (
+						<>
+							<Button
+								disabled
+								style={{
+									marginLeft: 'auto',
+									color: authenticated ? lightGreen['A200'] : red['A200'],
+									fontWeight: 'bolder',
+								}}
+							>
+								{authenticated ? 'Login' : 'Offline'}
+							</Button>
+							<Box width="1rem" />
+							<Button onClick={() => setOpen(true)} color="inherit">
+								<Avatar>{user.name.charAt(0)}</Avatar>
+								<Box display="flex" flexDirection="column" alignItems="flex-start" marginLeft="0.8rem">
+									<Typography variant="subtitle2">{user.name}</Typography>
+									<Typography variant="body2">{user.id}</Typography>
+								</Box>
+							</Button>
+						</>
+					)}
+				</Toolbar>
+			</Container>
+		</AppBar>
 	);
 };

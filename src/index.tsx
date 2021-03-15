@@ -8,7 +8,7 @@ import door from 'services/door';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from 'store';
 import { downloader } from 'services/downloader';
-import { doorAxios } from 'services/door/util';
+import { driver } from 'services/door/util';
 
 axios.interceptors.request.use(request => {
 	console.log('[Axios] Starting Request', request);
@@ -29,8 +29,8 @@ axios.interceptors.response.use(response => {
 // Debug downloader
 (window as any).downloader = downloader;
 
-// Debug with doorAxios
-(window as any).doorAxios = doorAxios;
+// Debug with driver
+(window as any).driver = driver;
 
 ReactDOM.render(
 	// <React.StrictMode>

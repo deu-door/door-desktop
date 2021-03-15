@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import Electron from 'electron';
-import { doorAxios } from './door/util';
+import { driver } from './door/util';
 
 const { session } = window.require('electron').remote;
 
@@ -12,23 +12,14 @@ export interface Progress {
 	totalBytes: number;
 }
 
-type DownloadEvent =
-	| 'start'
-	| 'progress'
-	| 'pause'
-	| 'cancel'
-	| 'failed'
-	| 'complete';
+type DownloadEvent = 'start' | 'progress' | 'pause' | 'cancel' | 'failed' | 'complete';
 
 type Listener = (item: Electron.DownloadItem) => void;
 
 export const downloader = {
-	on: (event: DownloadEvent, listener: Listener): EventEmitter =>
-		eventEmitter.addListener(event, listener),
-	emit: (event: DownloadEvent, item: Electron.DownloadItem): boolean =>
-		eventEmitter.emit(event, item),
-	remove: (event: DownloadEvent, listener: Listener): EventEmitter =>
-		eventEmitter.removeListener(event, listener),
+	on: (event: DownloadEvent, listener: Listener): EventEmitter => eventEmitter.addListener(event, listener),
+	emit: (event: DownloadEvent, item: Electron.DownloadItem): boolean => eventEmitter.emit(event, item),
+	remove: (event: DownloadEvent, listener: Listener): EventEmitter => eventEmitter.removeListener(event, listener),
 
 	download: async (url: string): Promise<void> => {
 		if (url.startsWith('/')) url = 'http://door.deu.ac.kr' + url;
@@ -37,16 +28,11 @@ export const downloader = {
 	},
 
 	isDownloadable: async (url: string): Promise<boolean> => {
-		const response = await doorAxios.head(url);
+		const response = await driver.head(url);
 
 		console.log(response.headers);
 
-		if (
-			response.headers['content-disposition']?.startsWith(
-				'attachment' ||
-					!response.headers['content-type']?.startsWith('text/'),
-			)
-		) {
+		if (response.headers['content-disposition']?.startsWith('attachment' || !response.headers['content-type']?.startsWith('text/'))) {
 			return true;
 		}
 
@@ -55,9 +41,7 @@ export const downloader = {
 };
 
 downloader.on('start', item => console.log('Starting download ...', item));
-downloader.on('progress', item =>
-	console.log('Received bytes: ' + item.getReceivedBytes(), item),
-);
+downloader.on('progress', item => console.log('Received bytes: ' + item.getReceivedBytes(), item));
 downloader.on('pause', item => console.log('Download is paused.', item));
 downloader.on('cancel', item => console.log('Download cancelled.', item));
 downloader.on('failed', item => console.log('Download failed.', item));
