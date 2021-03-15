@@ -111,7 +111,7 @@ export const LoginPage: React.FC = props => {
 								disabled={user.pending}
 							/>
 						}
-						label="자동 로그인"
+						label="로그인 상태 유지"
 					/>
 
 					<Box height="1.2rem">
