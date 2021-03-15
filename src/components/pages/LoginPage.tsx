@@ -4,7 +4,9 @@ import {
 	Checkbox,
 	CircularProgress,
 	Container,
+	FormControl,
 	FormControlLabel,
+	FormHelperText,
 	styled,
 	TextField,
 	TextFieldProps,
@@ -111,6 +113,14 @@ export const LoginPage: React.FC = props => {
 						}
 						label="자동 로그인"
 					/>
+
+					<Box height="1.2rem">
+						{autoLogin && (
+							<Typography variant="caption" color="error">
+								개인정보 보호를 위해, 개인 PC에서만 사용해 주세요.
+							</Typography>
+						)}
+					</Box>
 
 					<Box height="1rem" />
 
