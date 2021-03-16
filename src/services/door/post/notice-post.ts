@@ -38,6 +38,7 @@ export async function getNoticePost(params: Pick<INoticePost, 'courseId' | 'id'>
 			createdAt: new Date(detail['등록일'].text).toISOString(),
 			views: Number(detail['조회'].text),
 			contents: detail['내용'].element.innerHTML || '',
+			noted: true,
 
 			attachments: attachments,
 
@@ -67,6 +68,7 @@ export async function getNoticePosts(params: Pick<ICourse, 'id'> & Partial<ICour
 			createdAt: new Date(row['등록일'].text).toISOString(),
 			title: row['제목'].text,
 			views: Number(row['조회'].text),
+			noted: row['읽음'].element.querySelector('img[alt=확인]') instanceof HTMLImageElement,
 
 			partial: true,
 		}))

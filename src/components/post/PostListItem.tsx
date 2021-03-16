@@ -1,6 +1,8 @@
 import { Box, ListItem, ListItemText, ListItemTextProps, styled, Typography } from '@material-ui/core';
+import { yellow } from '@material-ui/core/colors';
 import { DateTime } from 'components/common/DateTime';
 import { Due, IPostHead, ISubmittablePost } from 'models/door';
+import { Notable } from 'models/door/notable';
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { PostSubtitle } from './PostSubtitle';
@@ -16,6 +18,10 @@ const BorderedListItem = styled(ListItem)({
 	},
 });
 
+const isNotable = (post: IPostHead): post is IPostHead & Notable => {
+	return 'noted' in post;
+};
+
 export type PostListItemProps = ListItemTextProps & {
 	post: IPostHead;
 	trailing?: React.ReactNode;
@@ -24,10 +30,13 @@ export type PostListItemProps = ListItemTextProps & {
 export const PostListItem: React.FC<PostListItemProps> = props => {
 	const { post, trailing, ...otherProps } = props;
 	const history = useHistory();
-	const location = useLocation();
 
 	return (
-		<BorderedListItem button onClick={() => history.push(`/courses/${post.courseId}/${post.variant}/${post.id}`)}>
+		<BorderedListItem
+			button
+			onClick={() => history.push(`/courses/${post.courseId}/${post.variant}/${post.id}`)}
+			style={{ backgroundColor: isNotable(post) && !post.noted ? yellow[100] : undefined }}
+		>
 			<ListItemText
 				primary={post.title}
 				primaryTypographyProps={{ variant: 'h6' }}

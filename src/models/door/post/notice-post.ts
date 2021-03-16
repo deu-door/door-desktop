@@ -1,4 +1,5 @@
 import { CourseSubordinated } from '../course/course';
+import { Notable } from '../notable';
 import { Authored, IPost } from './post';
 
 /**
@@ -11,7 +12,7 @@ export type INoticePostHead = Omit<INoticePost, 'contents' | 'attachments'>;
  *
  * @url http://door.deu.ac.kr/BBS/Board/Detail/CourseNotice/{id}?cNo={course.id}
  */
-export interface INoticePost extends IPost, Authored, CourseSubordinated {
+export interface INoticePost extends IPost, Authored, Notable, CourseSubordinated {
 	/**
 	 * @description 공지사항의 작성자
 	 */
