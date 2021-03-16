@@ -14,6 +14,7 @@ import { ResponsiveSideBar } from 'components/layout/ResponsiveSideBar';
 import { RouteTermDashboard } from 'components/term/TermDashboard';
 import { useTerms } from 'hooks/door/useTerms';
 import { KeepLatestState } from 'components/common/KeepLatestState';
+import { Footer } from 'components/common/Footer';
 
 export type CoursePageProps = RouteComponentProps<{
 	termId?: ITerm['id'];
@@ -88,13 +89,17 @@ export const CoursePage: React.FC<CoursePageProps> = props => {
 					<Box component="section" flex={1} display="flex" flexDirection="column">
 						{course === undefined ? (
 							terms.length > 0 && (
-								<Box flex={1} overflow="hidden auto">
+								<>
 									<Switch>
 										<Route path={`/terms/:termId`} component={RouteTermDashboard} />
 
 										<Redirect to={`/terms/${terms[0].id}`} />
 									</Switch>
-								</Box>
+
+									<Box minHeight="5rem" />
+
+									<Footer />
+								</>
 							)
 						) : (
 							<>
