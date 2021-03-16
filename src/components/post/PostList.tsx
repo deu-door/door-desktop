@@ -1,10 +1,10 @@
-import { Box, Link, LinkProps, List, ListItem, styled, Typography } from '@material-ui/core';
+import { Box, Link, LinkProps, List, ListItem, ListItemText, styled, Typography } from '@material-ui/core';
 import { AsyncThunkState } from 'components/common/AsyncThunkState';
 import { KeepLatestState } from 'components/common/KeepLatestState';
 import { useCourses } from 'hooks/door/useCourses';
 import { useCoursePosts } from 'hooks/door/usePosts';
 import { Due, ICourse, IPostHead, ISubmittablePost, PostVariant } from 'models/door';
-import React from 'react';
+import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { DuePostListItem, PostListItem, SubmittablePostListItem } from './PostListItem';
 
@@ -35,15 +35,29 @@ export type PostListProps = {
 	posts: IPostHead[];
 	empty?: React.ReactNode;
 	itemRenderer?: (post: IPostHead) => React.ReactNode;
+	threshold?: number;
 };
 
 export const PostList: React.FC<PostListProps> = props => {
-	const { posts, empty, itemRenderer = postListItemRenderer } = props;
+	const { posts, empty, itemRenderer = postListItemRenderer, threshold = 50 } = props;
+	const [expanded, setExpanded] = useState(1);
 
 	return (
 		<List disablePadding>
 			{posts.length > 0 ? (
-				posts.sort((postA, postB) => new Date(postB.createdAt).valueOf() - new Date(postA.createdAt).valueOf()).map(itemRenderer)
+				<>
+					{posts
+						.sort((postA, postB) => new Date(postB.createdAt).valueOf() - new Date(postA.createdAt).valueOf())
+						.slice(0, threshold * expanded)
+						.map(itemRenderer)}
+					{threshold * expanded < posts.length && (
+						<ListItem button onClick={() => setExpanded(expanded + 1)} style={{ display: 'flex', justifyContent: 'center' }}>
+							<Typography variant="subtitle2" color="textSecondary">
+								더보기
+							</Typography>
+						</ListItem>
+					)}
+				</>
 			) : (
 				<ListItem>{empty ?? <Typography color="textSecondary">목록이 비어있습니다</Typography>}</ListItem>
 			)}

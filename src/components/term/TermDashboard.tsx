@@ -101,6 +101,7 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 			<Box height="0.3rem" />
 			<PostList
 				posts={posts}
+				threshold={8}
 				itemRenderer={post => (
 					<PostListItem post={post} secondary={<PostSubtitle post={post} showCourse showVariant showAuthor={false} />} />
 				)}
