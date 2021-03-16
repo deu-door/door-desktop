@@ -84,7 +84,7 @@ export const SideBar: React.FC<SideBarProps> = props => {
 								if (courses.length === 0) return undefined;
 
 								return (
-									<List key={type} subheader={<ListSubheader>{type}</ListSubheader>}>
+									<List key={type} subheader={<ListSubheader disableSticky>{type}</ListSubheader>}>
 										{courses.map(course => (
 											<ListItem key={course.id} button onClick={() => onSelectCourse?.(course)}>
 												<ListItemText

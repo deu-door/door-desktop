@@ -111,7 +111,7 @@ export const Navigator: React.FC<NavigatorProps> = props => {
 	const [open, setOpen] = useState(false);
 
 	return (
-		<AppBar position="sticky" {...appBarProps}>
+		<AppBar position="static" {...appBarProps}>
 			<Container maxWidth="lg">
 				<Toolbar
 					style={{

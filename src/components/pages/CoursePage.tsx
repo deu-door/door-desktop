@@ -60,10 +60,8 @@ export const CoursePage: React.FC<CoursePageProps> = props => {
 				</KeepLatestState>
 			</KeepLatestState>
 
-			<Box height="1.5rem" flexShrink={0} />
-
-			<Box flex="1" display="flex" justifyContent="center" overflow="auto">
-				<Container maxWidth="lg" style={{ height: '100%', display: 'flex' }}>
+			<Box flex={1} display="flex" overflow="auto">
+				<Container maxWidth="lg" style={{ flex: 1, display: 'flex', justifyContent: 'center', paddingTop: '1.5rem' }}>
 					{term !== undefined && (
 						<ResponsiveSideBar
 							open={mobileOpen}

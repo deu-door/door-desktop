@@ -1,4 +1,4 @@
-import { Drawer, Hidden, useTheme } from '@material-ui/core';
+import { Box, Drawer, Hidden, useTheme } from '@material-ui/core';
 import React from 'react';
 import { SideBar, SideBarProps } from './SideBar';
 
@@ -15,18 +15,11 @@ export const ResponsiveSideBar: React.FC<ResponsiveSideBarProps> = props => {
 	const container = window !== undefined ? () => window.document.body : undefined;
 
 	return (
-		<nav
-			style={{
-				[theme.breakpoints.up('md')]: {
-					width: width,
-					flexShrink: 0,
-					position: 'sticky',
-					top: 0,
-				},
-			}}
-		>
+		<nav>
 			<Hidden smDown implementation="css">
-				<SideBar width={width} marginRight={3} {...sideBarProps} />
+				<Box width={width} marginRight="2rem">
+					<SideBar width={width} marginRight={3} position="fixed" {...sideBarProps} />
+				</Box>
 			</Hidden>
 
 			<Hidden mdUp implementation="css">
@@ -35,9 +28,9 @@ export const ResponsiveSideBar: React.FC<ResponsiveSideBarProps> = props => {
 					variant="temporary"
 					open={open}
 					onClose={onClose}
-					PaperProps={{ style: { background: 'transparent', boxShadow: 'none', padding: theme.spacing(2) } }}
+					PaperProps={{ style: { background: 'transparent', boxShadow: 'none' } }}
 				>
-					<SideBar width={width} {...sideBarProps} />
+					<SideBar width={width} style={{ marginTop: theme.spacing(2), marginLeft: theme.spacing(2) }} {...sideBarProps} />
 				</Drawer>
 			</Hidden>
 		</nav>
