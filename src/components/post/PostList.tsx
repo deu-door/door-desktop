@@ -1,4 +1,4 @@
-import { Box, Link, LinkProps, List, ListItem, ListItemText, styled, Typography } from '@material-ui/core';
+import { Box, Link, LinkProps, List, ListItem, ListItemText, ListProps, styled, Typography } from '@material-ui/core';
 import { AsyncThunkState } from 'components/common/AsyncThunkState';
 import { KeepLatestState } from 'components/common/KeepLatestState';
 import { useCourses } from 'hooks/door/useCourses';
@@ -6,7 +6,7 @@ import { useCoursePosts } from 'hooks/door/usePosts';
 import { Due, ICourse, IPostHead, ISubmittablePost, PostVariant } from 'models/door';
 import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { DuePostListItem, PostListItem, SubmittablePostListItem } from './PostListItem';
+import { PostListItemRenderer } from './PostListItem';
 
 const FetchLink = styled((props: LinkProps) => <Link component="a" {...props} />)({
 	'&:hover': {
@@ -15,23 +15,7 @@ const FetchLink = styled((props: LinkProps) => <Link component="a" {...props} />
 	cursor: 'pointer',
 });
 
-const isDue = (post: IPostHead): post is IPostHead & Due => {
-	return 'duration' in post;
-};
-
-const isSubmittable = (post: IPostHead): post is ISubmittablePost => {
-	return isDue(post) && 'submitted' in post;
-};
-
-const postListItemRenderer = (post: IPostHead) => {
-	if (isSubmittable(post)) return <SubmittablePostListItem key={post.id} post={post} />;
-
-	if (isDue(post)) return <DuePostListItem key={post.id} post={post} />;
-
-	return <PostListItem key={post.id} post={post} />;
-};
-
-export type PostListProps = {
+export type PostListProps = ListProps & {
 	posts: IPostHead[];
 	empty?: React.ReactNode;
 	itemRenderer?: (post: IPostHead) => React.ReactNode;
@@ -39,17 +23,17 @@ export type PostListProps = {
 };
 
 export const PostList: React.FC<PostListProps> = props => {
-	const { posts, empty, itemRenderer = postListItemRenderer, threshold = 50 } = props;
+	const { posts, empty, itemRenderer, threshold = 50, ...otherProps } = props;
 	const [expanded, setExpanded] = useState(1);
 
 	return (
-		<List disablePadding>
+		<List disablePadding {...otherProps}>
 			{posts.length > 0 ? (
 				<>
 					{posts
 						.sort((postA, postB) => new Date(postB.createdAt).valueOf() - new Date(postA.createdAt).valueOf())
 						.slice(0, threshold * expanded)
-						.map(itemRenderer)}
+						.map(post => (itemRenderer !== undefined ? itemRenderer(post) : <PostListItemRenderer post={post} />))}
 					{threshold * expanded < posts.length && (
 						<ListItem button onClick={() => setExpanded(expanded + 1)} style={{ display: 'flex', justifyContent: 'center' }}>
 							<Typography variant="subtitle2" color="textSecondary">

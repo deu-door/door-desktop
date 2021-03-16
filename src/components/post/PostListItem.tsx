@@ -5,7 +5,7 @@ import { Due, IPostHead, ISubmittablePost } from 'models/door';
 import { Notable } from 'models/door/notable';
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
-import { PostSubtitle } from './PostSubtitle';
+import { PostSubtitle, PostSubtitleProps } from './PostSubtitle';
 import { SubmitDuration } from './SubmitDuration';
 
 const BorderedListItem = styled(ListItem)({
@@ -18,17 +18,38 @@ const BorderedListItem = styled(ListItem)({
 	},
 });
 
+const isDue = (post: IPostHead): post is IPostHead & Due => {
+	return 'duration' in post;
+};
+
+const isSubmittable = (post: IPostHead): post is ISubmittablePost => {
+	return isDue(post) && 'submitted' in post;
+};
+
 const isNotable = (post: IPostHead): post is IPostHead & Notable => {
 	return 'noted' in post;
 };
 
+export type PostListItemRendererProps = PostListItemProps;
+
+export const PostListItemRenderer: React.FC<PostListItemRendererProps> = props => {
+	const { post, ...otherProps } = props;
+
+	if (isSubmittable(post)) return <SubmittablePostListItem post={post} {...otherProps} />;
+
+	if (isDue(post)) return <DuePostListItem post={post} {...otherProps} />;
+
+	return <PostListItem post={post} {...otherProps} />;
+};
+
 export type PostListItemProps = ListItemTextProps & {
 	post: IPostHead;
+	PostSubtitleProps?: Partial<PostSubtitleProps>;
 	trailing?: React.ReactNode;
 };
 
 export const PostListItem: React.FC<PostListItemProps> = props => {
-	const { post, trailing, ...otherProps } = props;
+	const { post, PostSubtitleProps, trailing, ...otherProps } = props;
 	const history = useHistory();
 
 	return (
@@ -39,8 +60,8 @@ export const PostListItem: React.FC<PostListItemProps> = props => {
 		>
 			<ListItemText
 				primary={post.title}
-				primaryTypographyProps={{ variant: 'h6' }}
-				secondary={<PostSubtitle post={post} />}
+				primaryTypographyProps={{ variant: 'subtitle1' }}
+				secondary={<PostSubtitle post={post} {...(PostSubtitleProps ?? {})} />}
 				{...otherProps}
 			/>
 			{trailing}
@@ -58,25 +79,28 @@ export const DuePostListItem: React.FC<DuePostListItemProps> = props => {
 	return <PostListItem post={post} trailing={<SubmitDuration from={post.duration.from} to={post.duration.to} />} {...otherProps} />;
 };
 
-export type SubmittablePostListItemProps = {
+export type SubmittablePostListItemProps = PostListItemProps & {
 	post: ISubmittablePost;
 };
 
 export const SubmittablePostListItem: React.FC<SubmittablePostListItemProps> = props => {
-	const { post } = props;
+	const { post, PostSubtitleProps, trailing, ...otherProps } = props;
 
 	return (
 		<DuePostListItem
 			post={post}
 			secondary={
 				<>
-					<PostSubtitle post={post}>
-						<Box color={post.submitted ? 'success.main' : 'warning.main'} display="inline">
-							{post.submitted ? '제출 완료' : '미제출'}
-						</Box>
-					</PostSubtitle>
+					{trailing ?? (
+						<PostSubtitle post={post} {...(PostSubtitleProps ?? {})}>
+							<Box color={post.submitted ? 'success.main' : 'warning.main'} display="inline">
+								{post.submitted ? '제출 완료' : '미제출'}
+							</Box>
+						</PostSubtitle>
+					)}
 				</>
 			}
+			{...otherProps}
 		/>
 	);
 };

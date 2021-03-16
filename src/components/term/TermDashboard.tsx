@@ -1,13 +1,14 @@
 import { Box, Grid, Hidden, Typography } from '@material-ui/core';
 import { Refresh } from '@material-ui/icons';
+import { Advertisement } from 'components/common/Advertisement';
 import { AsyncThunkState } from 'components/common/AsyncThunkState';
-import { PostList } from 'components/post/PostList';
-import { PostListItem } from 'components/post/PostListItem';
+import { PostList, PostListProps } from 'components/post/PostList';
+import { PostListItem, PostListItemRenderer } from 'components/post/PostListItem';
 import { PostSubtitle } from 'components/post/PostSubtitle';
 import { useCourses } from 'hooks/door/useCourses';
 import { usePosts } from 'hooks/door/usePosts';
 import { useTerms } from 'hooks/door/useTerms';
-import { ITerm, PostVariant } from 'models/door';
+import { ICourse, ITerm, PostVariant, PostVariantNames, PostVariants } from 'models/door';
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { IAsyncThunkState } from 'store/modules/util';
@@ -31,23 +32,26 @@ export const RouteTermDashboard: React.FC<RouteTermDashboardProps> = props => {
 	return <TermDashboard term={term} />;
 };
 
-export type TermPostListProps = {
+export type TermPostListProps = Omit<PostListProps, 'posts'> & {
 	term: ITerm;
+	// posts by course
+	course?: ICourse;
+	// filter by variants
+	variants: PostVariant[];
 };
 
 export const TermPostList: React.FC<TermPostListProps> = props => {
-	const { term } = props;
+	const { term, course, variants, ...otherProps } = props;
 	const { coursesByTerm } = useCourses();
 	const { allPosts, fetchPosts, postsStateByVariantByCourseId } = usePosts();
 
 	const [progress, setProgress] = useState({ pending: false, meter: 0, status: '' });
 
-	const courses = coursesByTerm(term.id);
+	const courses = course !== undefined ? [course] : coursesByTerm(term.id);
 	const courseIds = new Set(courses.map(course => course.id));
 
-	const posts = allPosts().filter(
-		post => (post.variant === PostVariant.notice || post.variant === PostVariant.reference) && courseIds.has(post.courseId),
-	);
+	// filter posts by variant and term
+	const posts = allPosts().filter(post => variants.some(variant => variant === post.variant) && courseIds.has(post.courseId));
 
 	const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -58,15 +62,18 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 		for (let i = 0; i < courses.length; i++) {
 			const course = courses[i];
 
-			await delay(500);
+			for (let j = 0; j < variants.length; j++) {
+				const variant = variants[j];
 
-			setProgress({ pending: true, meter: i / courses.length, status: `${course.name} 공지사항 가져오는 중 ...` });
-			await fetchPosts({ ...course, variant: PostVariant.notice });
-
-			await delay(500);
-
-			setProgress({ pending: true, meter: (i + 0.5) / courses.length, status: `${course.name} 강의자료 가져오는 중 ...` });
-			await fetchPosts({ ...course, variant: PostVariant.reference });
+				await delay(300);
+				setProgress({
+					pending: true,
+					meter: i + j / variants.length,
+					status: `${course.name} ${PostVariantNames[variant]} 가져오는 중 ...`,
+				});
+				await fetchPosts({ ...course, variant });
+				await delay(300);
+			}
 		}
 
 		setProgress({ pending: false, meter: 1, status: '성공적으로 불러왔습니다.' });
@@ -78,10 +85,10 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 		.filter((postsState): postsState is IAsyncThunkState => postsState !== undefined);
 
 	return (
-		<Box>
+		<>
 			<Box display="flex" alignItems="center">
 				<Typography variant="subtitle2" color="textSecondary">
-					공지사항/강의자료
+					{variants.map(variant => PostVariantNames[variant]).join('/')}
 				</Typography>
 				<Box width="0.8rem" />
 				<AsyncThunkState
@@ -103,10 +110,11 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 				posts={posts}
 				threshold={8}
 				itemRenderer={post => (
-					<PostListItem post={post} secondary={<PostSubtitle post={post} showCourse showVariant showAuthor={false} />} />
+					<PostListItemRenderer post={post} PostSubtitleProps={{ showCourse: true, showVariant: true, showAuthor: false }} />
 				)}
+				{...otherProps}
 			/>
-		</Box>
+		</>
 	);
 };
 
@@ -118,8 +126,17 @@ export const TermDashboard: React.FC<TermDashboardProps> = props => {
 	const { term } = props;
 	const { coursesByTerm, fetchCourseSyllabus } = useCourses();
 	const courses = coursesByTerm(term.id);
+	const [selected, setSelected] = useState<ICourse | undefined>(undefined);
 
-	const messages = ['이번 학기 잘 보내고 있나요?', '과제는 미리미리 끝내요!', '그만큼 지옥같으시단거지~'];
+	const messages = [
+		'이번 학기 잘 보내고 있나요?',
+		'과제는 미리미리 끝내요!',
+		'그만큼 지옥같으시단거지~',
+		'조금만 더 힘을 내요. 종강까지!',
+		'종강이 멀지 않았어요. 화이팅!',
+	];
+
+	const [tip] = useState(messages[Math.floor(Math.random() * messages.length)]);
 
 	useEffect(() => {
 		// fetch all course's syllabus
@@ -138,10 +155,27 @@ export const TermDashboard: React.FC<TermDashboardProps> = props => {
 				<Typography variant="subtitle1" color="textSecondary">
 					{term.name}
 				</Typography>
-				<Typography variant="h5">{messages[Math.floor(Math.random() * messages.length)]}</Typography>
+				<Typography variant="h5">{tip}</Typography>
 			</Box>
 
 			<Box height="2rem" />
+
+			<Grid container>
+				<Grid item sm={12}>
+					<TermPostList
+						term={term}
+						course={selected}
+						threshold={3}
+						variants={[PostVariant.assignment, PostVariant.activity, PostVariant.teamProject]}
+					/>
+				</Grid>
+			</Grid>
+
+			<Box height="3rem" />
+
+			<Advertisement />
+
+			<Box height="3rem" />
 
 			<Grid container spacing={2} direction="row-reverse">
 				<Grid item sm={12} md={6}>
@@ -150,7 +184,7 @@ export const TermDashboard: React.FC<TermDashboardProps> = props => {
 							시간표
 						</Typography>
 						<Box height="0.3rem" />
-						<TimeTable courses={courses} />
+						<TimeTable courses={courses} onSelect={setSelected} />
 					</Box>
 				</Grid>
 
@@ -161,7 +195,7 @@ export const TermDashboard: React.FC<TermDashboardProps> = props => {
 				</Hidden>
 
 				<Grid item sm={12} md={6}>
-					<TermPostList term={term} />
+					<TermPostList term={term} course={selected} threshold={8} variants={[PostVariant.notice, PostVariant.reference]} />
 				</Grid>
 			</Grid>
 		</Box>
