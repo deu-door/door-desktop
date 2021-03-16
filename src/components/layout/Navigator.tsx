@@ -148,7 +148,7 @@ export const Navigator: React.FC<NavigatorProps> = props => {
 							<Button onClick={() => setOpen(true)} color="inherit">
 								<Box display="flex" flexDirection="column" alignItems="flex-end" marginRight="0.8rem">
 									<Typography variant="subtitle2">{user.name}</Typography>
-									<Typography variant="body2">{user.id}</Typography>
+									<Typography variant="caption">{user.major}</Typography>
 								</Box>
 								<Avatar>{user.name.charAt(0)}</Avatar>
 							</Button>
