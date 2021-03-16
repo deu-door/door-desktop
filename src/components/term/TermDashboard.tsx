@@ -110,7 +110,11 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 				posts={posts}
 				threshold={8}
 				itemRenderer={post => (
-					<PostListItemRenderer post={post} PostSubtitleProps={{ showCourse: true, showVariant: true, showAuthor: false }} />
+					<PostListItemRenderer
+						key={`${post.variant}#${post.id}`}
+						post={post}
+						PostSubtitleProps={{ showCourse: true, showVariant: true, showAuthor: false }}
+					/>
 				)}
 				{...otherProps}
 			/>

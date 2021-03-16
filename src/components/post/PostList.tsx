@@ -33,7 +33,13 @@ export const PostList: React.FC<PostListProps> = props => {
 					{posts
 						.sort((postA, postB) => new Date(postB.createdAt).valueOf() - new Date(postA.createdAt).valueOf())
 						.slice(0, threshold * expanded)
-						.map(post => (itemRenderer !== undefined ? itemRenderer(post) : <PostListItemRenderer post={post} />))}
+						.map(post =>
+							itemRenderer !== undefined ? (
+								itemRenderer(post)
+							) : (
+								<PostListItemRenderer key={`${post.variant}#${post.id}`} post={post} />
+							),
+						)}
 					{threshold * expanded < posts.length && (
 						<ListItem button onClick={() => setExpanded(expanded + 1)} style={{ display: 'flex', justifyContent: 'center' }}>
 							<Typography variant="subtitle2" color="textSecondary">
