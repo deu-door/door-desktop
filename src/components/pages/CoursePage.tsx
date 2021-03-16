@@ -43,7 +43,7 @@ export const CoursePage: React.FC<CoursePageProps> = props => {
 	// 1. pick term from parsed url params
 	// 2. else, pick from side bar
 	const [selectedTermId, setSelectedTermId] = useState(
-		(course !== undefined && termId !== undefined ? termId : undefined) ?? allTerms()[0]?.id,
+		(course !== undefined ? course.termId : termId !== undefined ? termId : undefined) ?? allTerms()[0]?.id,
 	);
 
 	// Route: /terms/:termId
