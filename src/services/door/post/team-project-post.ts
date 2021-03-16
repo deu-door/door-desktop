@@ -38,7 +38,7 @@ export async function getTeamProjectPost(
 
 	return {
 		data: {
-			variant: PostVariant.reference,
+			variant: PostVariant.teamProject,
 
 			id,
 			courseId,
@@ -78,7 +78,7 @@ export async function getTeamProjectPosts(params: Pick<ICourse, 'id'> & Partial<
 			const to = moment(row['제출기간'].text.split('~')[1].trim(), 'YY-MM-DD HH:mm').toDate().toISOString();
 
 			return {
-				variant: PostVariant.reference,
+				variant: PostVariant.teamProject,
 
 				id: row['팀프로젝트 제목'].url?.match(/ProjectNo=(\d+)/)?.[1] || '',
 				courseId: courseId,
