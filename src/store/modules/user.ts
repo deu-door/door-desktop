@@ -45,13 +45,9 @@ const loginWithSavedCredential = createAsyncThunk<IUser, void, { state: { user: 
 		try {
 			const encryptedCredential = getState().user.encryptedCredential;
 
-			console.log(encryptedCredential);
-
 			if (encryptedCredential === undefined) throw new Error('Saved credential not found.');
 
 			const decrypted = await secure.decryptCredential(encryptedCredential);
-
-			console.log(decrypted);
 
 			if (decrypted === undefined) throw new Error('Decrypt failed');
 
@@ -62,8 +58,6 @@ const loginWithSavedCredential = createAsyncThunk<IUser, void, { state: { user: 
 			return response.data;
 		} catch (e) {
 			const error: Error = e;
-
-			console.log(error?.message);
 
 			return rejectWithValue(error);
 		}

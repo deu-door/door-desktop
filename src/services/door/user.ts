@@ -54,8 +54,6 @@ export async function login(id: string, password: string): Promise<Response<IUse
 	const sessionId = loginResult.querySelector('input[name=secureSessionId]')?.getAttribute('value') || undefined;
 	const incorrectCount = loginResult.querySelector('input[name=incorrectCount]')?.getAttribute('value') || undefined;
 
-	console.log(token, sessionId);
-
 	// check login failed
 	if (token === undefined || sessionId === undefined)
 		throw new NotAcceptableError(
