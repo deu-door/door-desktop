@@ -100,14 +100,14 @@ export const UserDialog: React.FC<UserDialogProps> = props => {
 
 export type NavigatorProps = {
 	onSideBarOpen: () => void;
+	onClickHome: () => void;
 } & AppBarProps;
 
 export const Navigator: React.FC<NavigatorProps> = props => {
-	const { onSideBarOpen, ...appBarProps } = props;
+	const { onSideBarOpen, onClickHome, ...appBarProps } = props;
 	const {
 		user: { user, authenticated },
 	} = useUser();
-	const history = useHistory();
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -126,7 +126,7 @@ export const Navigator: React.FC<NavigatorProps> = props => {
 						<Box width="0.5rem" />
 					</Hidden>
 
-					<IconButton onClick={() => history.replace('/courses')}>
+					<IconButton onClick={onClickHome}>
 						<img style={{ width: '2.4rem' }} alt="logo-original-white" src={LogoOriginalWhite} />
 					</IconButton>
 

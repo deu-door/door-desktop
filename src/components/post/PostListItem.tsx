@@ -27,7 +27,7 @@ export const PostListItem: React.FC<PostListItemProps> = props => {
 	const location = useLocation();
 
 	return (
-		<BorderedListItem button onClick={() => history.push(`${location.pathname}/${post.id}`)}>
+		<BorderedListItem button onClick={() => history.push(`/courses/${post.courseId}/${post.variant}/${post.id}`)}>
 			<ListItemText
 				primary={post.title}
 				primaryTypographyProps={{ variant: 'h6' }}

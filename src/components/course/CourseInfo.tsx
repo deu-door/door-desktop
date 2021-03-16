@@ -45,21 +45,30 @@ const getRateLabel = (name: keyof ICourseRateInfo) => {
 	return [name, grey[300]];
 };
 
-export type CourseInfoProps = RouteComponentProps<{
+export type RouteCourseInfoProps = RouteComponentProps<{
 	courseId: ICourse['id'];
 }>;
 
-export const CourseInfo: React.FC<CourseInfoProps> = props => {
+export const RouteCourseInfo: React.FC<RouteCourseInfoProps> = props => {
 	const {
 		match: {
 			params: { courseId },
 		},
 	} = props;
 	const { courseById } = useCourses();
-
 	const course = courseById(courseId);
 
-	if (course === undefined) return <Box>404 NOT FOUND for course {courseId}</Box>;
+	if (course === undefined) return <Box>404 NOT FOUND</Box>;
+
+	return <CourseInfo course={course} />;
+};
+
+export type CourseInfoProps = {
+	course: ICourse;
+};
+
+export const CourseInfo: React.FC<CourseInfoProps> = props => {
+	const { course } = props;
 
 	return (
 		<Box>

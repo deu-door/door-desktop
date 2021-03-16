@@ -1,6 +1,7 @@
 import { styled, Typography, TypographyProps } from '@material-ui/core';
 import { DateTime } from 'components/common/DateTime';
-import { Authored, IPost, IPostHead } from 'models/door';
+import { useCourses } from 'hooks/door/useCourses';
+import { Authored, IPost, IPostHead, PostVariantNames } from 'models/door';
 import React, { useState } from 'react';
 
 const isAuthored = (post: IPostHead): post is IPostHead & Authored => {
@@ -18,16 +19,25 @@ const PostSubtitleTypography = styled((props: TypographyProps) => (
 
 export type PostSubtitleProps = {
 	post: IPostHead | IPost;
+	showCourse?: boolean;
+	showVariant?: boolean;
+	showAuthor?: boolean;
 };
 
 export const PostSubtitle: React.FC<PostSubtitleProps> = props => {
-	const { post, children } = props;
+	const { post, children, showCourse, showVariant, showAuthor = true } = props;
 	const [hover, setHover] = useState(false);
+	const { courseById } = useCourses();
 
 	return (
 		<PostSubtitleTypography>
 			{[
-				isAuthored(post) ? post.author : undefined,
+				showCourse || showVariant ? (
+					<strong>
+						{`${showCourse ? courseById(post.courseId)?.name : ''} ${showVariant ? PostVariantNames[post.variant] : ''}`.trim()}
+					</strong>
+				) : undefined,
+				showAuthor && isAuthored(post) ? post.author : undefined,
 				post.views !== undefined ? `조회수 ${post.views}회` : undefined,
 				<span key={0} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
 					<DateTime date={post.createdAt} {...(hover ? { format: 'YYYY년 M월 D일 A h시 m분' } : { fromNow: true })} />

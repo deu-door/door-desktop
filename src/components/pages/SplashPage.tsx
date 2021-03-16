@@ -30,7 +30,7 @@ export const SplashPage: React.FC = () => {
 	useEffect(() => {
 		if (autoLoginTried) {
 			if (authenticated) {
-				setRedirectTo('/courses');
+				setRedirectTo('/terms');
 			} else {
 				setRedirectTo('/login');
 			}

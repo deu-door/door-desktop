@@ -30,7 +30,7 @@ export const HomeRoutes: React.FC<RouteComponentProps> = ({ match }) => {
 			<Route exact path="/splash" component={SplashPage} />
 			<Route exact path="/login" component={LoginPage} />
 
-			<Redirect to={authenticated ? '/courses' : '/splash'} />
+			<Redirect to={authenticated ? '/terms' : '/splash'} />
 		</Switch>
 	);
 };
@@ -48,10 +48,25 @@ export const CourseRoutes: React.FC<RouteComponentProps> = ({ match }) => {
 	);
 };
 
+export const TermRoutes: React.FC<RouteComponentProps> = ({ match }) => {
+	return (
+		<>
+			<Downloads />
+			<KeepLoginState />
+
+			<Switch>
+				<Route exact path={match.url} component={CoursePage} />
+				<Route path={`${match.url}/:termId`} component={CoursePage} />
+			</Switch>
+		</>
+	);
+};
+
 export const Routes: React.FC = () => {
 	return (
 		<HashRouter>
 			<Switch>
+				<Route path="/terms" component={TermRoutes} />
 				<Route path="/courses" component={CourseRoutes} />
 				<Route path="/external" component={ExternalLinkPage} />
 				<Route path="/" component={HomeRoutes} />

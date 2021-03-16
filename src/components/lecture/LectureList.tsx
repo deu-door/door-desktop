@@ -1,6 +1,7 @@
 import { Box, createStyles, Link, LinkProps, List, ListItem, makeStyles, styled, Typography } from '@material-ui/core';
 import { AsyncThunkState } from 'components/common/AsyncThunkState';
 import { KeepLatestState } from 'components/common/KeepLatestState';
+import { useCourses } from 'hooks/door/useCourses';
 import { useCourseLectures } from 'hooks/door/useLectures';
 import { ICourse } from 'models/door';
 import React, { useEffect } from 'react';
@@ -33,18 +34,32 @@ const useStyles = makeStyles(theme =>
 	}),
 );
 
-export type LectureListProps = RouteComponentProps<{
+export type RouteLectureListProps = RouteComponentProps<{
 	courseId: ICourse['id'];
 }>;
 
-export const LectureList: React.FC<LectureListProps> = props => {
+export const RouteLectureList: React.FC<RouteLectureListProps> = props => {
 	const {
 		match: {
 			params: { courseId },
 		},
 	} = props;
+	const { courseById } = useCourses();
+	const course = courseById(courseId);
+
+	if (course === undefined) return <Box>404 NOT FOUND</Box>;
+
+	return <LectureList course={course} />;
+};
+
+export type LectureListProps = {
+	course: ICourse;
+};
+
+export const LectureList: React.FC<LectureListProps> = props => {
+	const { course } = props;
 	const classes = useStyles();
-	const { lecturesState, lecturesByWeek, weeks, fetchLectures, fetchLectureProgresses } = useCourseLectures(courseId);
+	const { lecturesState, lecturesByWeek, weeks, fetchLectures, fetchLectureProgresses } = useCourseLectures(course.id);
 
 	const triggerFetch = async () => {
 		await fetchLectures();

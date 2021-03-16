@@ -79,12 +79,12 @@ export const PostAttachment: React.FC<PostAttachmentProps> = props => {
 	);
 };
 
-export type PostDetailsProps = RouteComponentProps<{
+export type RoutePostDetailsProps = RouteComponentProps<{
 	postVariant: PostVariant;
 	postId: IPost['id'];
 }>;
 
-export const PostDetails: React.FC<PostDetailsProps> = props => {
+export const RoutePostDetails: React.FC<RoutePostDetailsProps> = props => {
 	const {
 		match: {
 			params: { postId: id, postVariant: variant },
@@ -103,16 +103,16 @@ export const PostDetails: React.FC<PostDetailsProps> = props => {
 
 	if (isFulfilledPost(post) && isSubmittablePost(post)) return <SubmittablePostDetails post={post} />;
 
-	return <SimplePostDetails post={post} />;
+	return <PostDetails post={post} />;
 };
 
-export type SimplePostDetailsProps = {
+export type PostDetailsProps = {
 	post: IPostHead & IAsyncThunkState;
 	header?: React.ReactNode;
 	footer?: React.ReactNode;
 };
 
-export const SimplePostDetails: React.FC<SimplePostDetailsProps> = props => {
+export const PostDetails: React.FC<PostDetailsProps> = props => {
 	const { post, children, header, footer } = props;
 	const history = useHistory();
 	const { fetchPost } = usePosts();
@@ -134,9 +134,7 @@ export const SimplePostDetails: React.FC<SimplePostDetailsProps> = props => {
 
 			<Box height="1rem" />
 
-			<KeepLatestState state={post} onTriggerFetch={triggerFetch}>
-				<Typography variant="h5">{post.title}</Typography>
-			</KeepLatestState>
+			<Typography variant="h5">{post.title}</Typography>
 
 			<Typography variant="subtitle1">
 				<PostSubtitle post={post} />
@@ -144,9 +142,11 @@ export const SimplePostDetails: React.FC<SimplePostDetailsProps> = props => {
 
 			<Box height="0.3rem" />
 
-			<FetchLink onClick={triggerFetch}>
-				<AsyncThunkState state={post} />
-			</FetchLink>
+			<KeepLatestState state={post} onTriggerFetch={triggerFetch}>
+				<FetchLink onClick={triggerFetch}>
+					<AsyncThunkState state={post} />
+				</FetchLink>
+			</KeepLatestState>
 
 			<Box paddingY="1rem">
 				<Divider />
@@ -181,7 +181,7 @@ export const SimplePostDetails: React.FC<SimplePostDetailsProps> = props => {
 	);
 };
 
-export type SubmittablePostDetailsProps = SimplePostDetailsProps & {
+export type SubmittablePostDetailsProps = PostDetailsProps & {
 	post: ISubmittablePost;
 };
 
@@ -245,7 +245,7 @@ export const SubmittablePostDetails: React.FC<SubmittablePostDetailsProps> = pro
 	const editing = edit && !pending;
 
 	return (
-		<SimplePostDetails
+		<PostDetails
 			header={
 				<Paper elevation={0} style={{ backgroundColor: post.submitted ? theme.palette.success.main : theme.palette.warning.main }}>
 					<Box padding="1rem" display="flex" justifyContent="space-between" alignItems="center" color="white">

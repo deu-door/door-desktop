@@ -54,6 +54,12 @@ export interface ICourseSyllabus {
 	 */
 	goal: string;
 	/**
+	 * @description 강의실 및 시간
+	 *
+	 * @example 정보810[월5-6], 정보810[수5]
+	 */
+	times: ICourseTime[];
+	/**
 	 * @description 주교재
 	 *
 	 * @example C언어 스케치
@@ -67,4 +73,30 @@ export interface ICourseSyllabus {
 	 * @description 주차별 강의계획
 	 */
 	weeks: ICourseWeekInfo[];
+}
+
+/**
+ * @description 강의실 및 시간
+ *
+ * @example 정보810[월5-6]
+ */
+export interface ICourseTime {
+	/**
+	 * @description 강의실
+	 *
+	 * @example 정보810
+	 */
+	room: string;
+	/**
+	 * @description 요일
+	 *
+	 * @example 월
+	 */
+	day: string;
+	/**
+	 * @description 시간
+	 *
+	 * @example [1, 2] (1교시, 2교시)
+	 */
+	times: number[];
 }

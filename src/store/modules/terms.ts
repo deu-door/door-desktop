@@ -1,20 +1,20 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { ITerm } from 'models/door';
 import { persistReducer } from 'redux-persist';
 import door from 'services/door';
 import { HttpError } from 'services/response';
 import { persistedStorage } from 'store/modules/persisted-storage';
 import { IAsyncThunkState, AsyncThunkTransform, ResetOnVersionChange, toPending, toFulfilled, toRejectedWithError } from './util';
+import { actions as coursesActions } from './courses';
 
-export interface TermsState extends IAsyncThunkState {
-	terms: ITerm[];
-}
+const termsAdapter = createEntityAdapter<ITerm & IAsyncThunkState>({
+	selectId: term => term.id,
+});
 
-const initialState: TermsState = {
+const initialState = termsAdapter.getInitialState({
 	pending: false,
 	error: undefined,
-	terms: [],
-};
+} as IAsyncThunkState);
 
 const fetchTerms = createAsyncThunk<ITerm[], Parameters<typeof door.getTerms> | undefined, { rejectValue: HttpError }>(
 	'terms/fetchTerms',
@@ -32,17 +32,49 @@ const fetchTerms = createAsyncThunk<ITerm[], Parameters<typeof door.getTerms> | 
 
 const termsSlice = createSlice({
 	name: 'terms',
-	initialState: initialState,
+	initialState,
 	reducers: {},
 	extraReducers: builder =>
 		builder
 			.addCase(fetchTerms.pending, toPending)
 			.addCase(fetchTerms.fulfilled, (state, { payload: terms }) => {
 				toFulfilled(state);
-				state.terms = terms;
+				termsAdapter.addMany(
+					state,
+					terms.map(term => ({
+						...term,
+
+						pending: false,
+						error: undefined,
+					})),
+				);
 			})
 			.addCase(fetchTerms.rejected, (state, { payload: error }) => {
 				toRejectedWithError(state, error?.message);
+			})
+			.addCase(coursesActions.fetchCourses.pending, (state, { meta: { arg } }) => {
+				const { id } = arg[0];
+
+				termsAdapter.updateOne(state, {
+					id: id,
+					changes: toPending({}),
+				});
+			})
+			.addCase(coursesActions.fetchCourses.fulfilled, (state, { meta: { arg } }) => {
+				const { id } = arg[0];
+
+				termsAdapter.updateOne(state, {
+					id: id,
+					changes: toFulfilled({}),
+				});
+			})
+			.addCase(coursesActions.fetchCourses.rejected, (state, { payload: error, meta: { arg } }) => {
+				const { id } = arg[0];
+
+				termsAdapter.updateOne(state, {
+					id: id,
+					changes: toRejectedWithError({}, error?.message),
+				});
 			}),
 });
 
@@ -51,7 +83,7 @@ export const reducer = persistReducer(
 		key: 'terms',
 		storage: persistedStorage,
 		transforms: [AsyncThunkTransform],
-		version: 1,
+		version: 2,
 		migrate: ResetOnVersionChange,
 	},
 	termsSlice.reducer,
@@ -59,4 +91,8 @@ export const reducer = persistReducer(
 
 export const actions = {
 	fetchTerms,
+};
+
+export const selectors = {
+	termsSelector: termsAdapter.getSelectors(),
 };

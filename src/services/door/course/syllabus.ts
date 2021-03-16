@@ -1,4 +1,4 @@
-import { ICourse, ICourseSyllabus, ResourceID } from 'models/door';
+import { ICourse, ICourseSyllabus, ICourseTime, ResourceID } from 'models/door';
 import { Response, UnauthorizedError } from 'services/response';
 import { driver, parse, parseInformaticTableElement, parseTableElement } from '../util';
 
@@ -52,6 +52,25 @@ export async function getCourseSyllabus(params: { id: ResourceID } & Partial<ICo
 			email: description['연락처/이메일'].text.split('/')[1].trim(),
 			description: description['교과목개요'].text,
 			goal: description['교과 교육목표'].text,
+			times: description['강의실(시간)'].text
+				.split(',')
+				.map(timeText => timeText.trim())
+				.map(timeText => {
+					const matches = timeText.match(/([가-힣\w]+)\[([월화수목금토일])(\d)(?:-(\d))?\]/);
+
+					if (matches === null) return undefined;
+
+					const start = Number(matches[3]);
+					const end = Number(matches[4] ?? start);
+
+					return {
+						room: matches[1],
+						day: matches[2],
+						times: [...Array(end - start + 1).keys()].map(i => i + start),
+					};
+				})
+				.filter((time): time is ICourseTime => time !== undefined),
+
 			book: description['주교재'].text,
 
 			rateInfo: {

@@ -12,6 +12,7 @@ import { actions as coursesActions } from './courses';
 import { actions as postsActions } from './posts';
 import { actions as lecturesActions } from './lectures';
 
+import { selectors as termsSelectors } from './terms';
 import { selectors as coursesSelectors } from './courses';
 import { selectors as postsSelectors } from './posts';
 import { selectors as lecturesSelectors } from './lectures';
@@ -33,6 +34,7 @@ export const actions = {
 };
 
 export const selectors = {
+	...termsSelectors,
 	...coursesSelectors,
 	...postsSelectors,
 	...lecturesSelectors,

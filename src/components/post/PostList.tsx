@@ -31,17 +31,35 @@ const postListItemRenderer = (post: IPostHead) => {
 	return <PostListItem key={post.id} post={post} />;
 };
 
-export type PostListProps = RouteComponentProps<{
-	courseId: ICourse['id'];
-	postVariant: PostVariant;
-}>;
+export type PostListProps = {
+	posts: IPostHead[];
+	empty?: React.ReactNode;
+	itemRenderer?: (post: IPostHead) => React.ReactNode;
+};
 
 export const PostList: React.FC<PostListProps> = props => {
+	const { posts, empty, itemRenderer = postListItemRenderer } = props;
+
+	return (
+		<List disablePadding>
+			{posts.length > 0 ? (
+				posts.sort((postA, postB) => new Date(postB.createdAt).valueOf() - new Date(postA.createdAt).valueOf()).map(itemRenderer)
+			) : (
+				<ListItem>{empty ?? <Typography color="textSecondary">목록이 비어있습니다</Typography>}</ListItem>
+			)}
+		</List>
+	);
+};
+
+export type RoutePostListProps = RouteComponentProps<{ courseId: ICourse['id']; postVariant: PostVariant }>;
+
+export const RoutePostList: React.FC<RoutePostListProps> = props => {
 	const {
 		match: {
 			params: { courseId, postVariant: variant },
 		},
 	} = props;
+
 	const { courseById } = useCourses();
 	const { allPosts, fetchPosts, postsStateByVariant } = useCoursePosts(courseId);
 
@@ -59,17 +77,7 @@ export const PostList: React.FC<PostListProps> = props => {
 				</FetchLink>
 			</KeepLatestState>
 
-			<List>
-				{posts.length > 0 ? (
-					posts
-						.sort((postA, postB) => new Date(postB.createdAt).valueOf() - new Date(postA.createdAt).valueOf())
-						.map(postListItemRenderer)
-				) : (
-					<ListItem>
-						<Typography color="textSecondary">목록이 비어있습니다</Typography>
-					</ListItem>
-				)}
-			</List>
+			<PostList posts={posts} />
 		</Box>
 	);
 };
