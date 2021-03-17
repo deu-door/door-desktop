@@ -31,7 +31,7 @@ export const SubmitDuration: React.FC<SubmitDurationProps> = props => {
 					</>
 				) : now < from ? (
 					<>
-						<DateTime date={from} durationFromNow format="D일 h시간 m분 s초" interval={0} />후 제출가능
+						<DateTime duration={now} date={from} format="D일 h시간 m분 s초" interval={0} />후 제출가능
 					</>
 				) : now < to ? (
 					<>
