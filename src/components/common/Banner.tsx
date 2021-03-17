@@ -1,9 +1,9 @@
 import { Box, BoxProps, Paper, Typography } from '@material-ui/core';
 import React from 'react';
 
-export type AdvertisementProps = BoxProps;
+export type BannerProps = BoxProps;
 
-export const Advertisement: React.FC<AdvertisementProps> = props => {
+export const Banner: React.FC<BannerProps> = props => {
 	const { ...otherProps } = props;
 
 	return (

@@ -1,6 +1,5 @@
 import { Box, Grid, Hidden, Typography } from '@material-ui/core';
 import { Refresh } from '@material-ui/icons';
-import { Advertisement } from 'components/common/Advertisement';
 import { AsyncThunkState } from 'components/common/AsyncThunkState';
 import { PostList, PostListProps } from 'components/post/PostList';
 import { PostListItem, PostListItemRenderer } from 'components/post/PostListItem';
@@ -135,9 +134,10 @@ export const TermDashboard: React.FC<TermDashboardProps> = props => {
 	const messages = [
 		'이번 학기 잘 보내고 있나요?',
 		'과제는 미리미리 끝내요!',
-		'그만큼 지옥같으시단거지~',
 		'조금만 더 힘을 내요. 종강까지!',
 		'종강이 멀지 않았어요. 화이팅!',
+		'동의대의 아름다운 밤 경치를 보신 적 있나요?',
+		'정보관 8층에서 내려다 보는 경치는 정말 멋져요.',
 	];
 
 	const [tip] = useState(messages[Math.floor(Math.random() * messages.length)]);
@@ -177,7 +177,7 @@ export const TermDashboard: React.FC<TermDashboardProps> = props => {
 
 			<Box height="3rem" />
 
-			<Advertisement />
+			<Banner />
 
 			<Box height="3rem" />
 
