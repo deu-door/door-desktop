@@ -139,13 +139,11 @@ export const TimeTable: React.FC<TimeTableProps> = props => {
 				</tbody>
 			</table>
 
-			{selected !== undefined && (
-				<Box display="flex" justifyContent="space-around" marginTop="0.5rem">
-					<Button startIcon={<Clear />} onClick={() => handleSelect(undefined)} size="small">
-						선택 취소
-					</Button>
-				</Box>
-			)}
+			<Box display="flex" visibility={selected ? undefined : 'collapse'} justifyContent="space-around" marginTop="0.5rem">
+				<Button startIcon={<Clear />} onClick={() => handleSelect(undefined)} size="small">
+					선택 취소
+				</Button>
+			</Box>
 		</Typography>
 	);
 };
