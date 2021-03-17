@@ -45,8 +45,6 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
     2. [왜 이런 프로젝트를 시작했나요?](#왜-이런-프로젝트를-시작했나요)
     3. [기존 Door보다 어떤 점이 더 좋나요?](#기존-door보다-어떤-점이-더-좋나요)
 2. [설치](#설치)
-    1. [프로젝트 테스트 및 빌드](#프로젝트-테스트-및-빌드)
-    2. [프로젝트에 사용된 기술 스택](#프로젝트에-사용된-기술-스택)
 3. [기존 Door와 비교](#기존-door와-비교)
 4. [개발자들을 위한 정보](#개발자들을-위한-정보)
     1. [프로젝트 테스트 및 빌드](#프로젝트-테스트-및-빌드)
@@ -104,7 +102,7 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 
 <br><br>
 
-## 설치
+# 설치
 
 이 프로젝트는 데스크탑 앱으로 제공됩니다. 현재 Windows 10 플랫폼만 지원하며 Mac OS (Intel, M1), Linux는 추후 지원할 예정입니다.
 
