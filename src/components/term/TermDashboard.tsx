@@ -1,6 +1,7 @@
 import { Box, Grid, Hidden, Typography } from '@material-ui/core';
 import { Refresh } from '@material-ui/icons';
 import { AsyncThunkState } from 'components/common/AsyncThunkState';
+import { Banner } from 'components/common/Banner';
 import { PostList, PostListProps } from 'components/post/PostList';
 import { PostListItem, PostListItemRenderer } from 'components/post/PostListItem';
 import { PostSubtitle } from 'components/post/PostSubtitle';
