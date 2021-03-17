@@ -24,7 +24,7 @@ export const SubmitDuration: React.FC<SubmitDurationProps> = props => {
 
 	return (
 		<Box onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-			<Typography variant="subtitle2" {...otherProps}>
+			<Typography variant="subtitle2" {...otherProps} style={{ opacity: from < now && now < to ? 1 : 0.7 }}>
 				{hover ? (
 					<>
 						<DateTime date={from} format="M월 D일 h시 m분" /> ~ <DateTime date={to} format="M월 D일 h시 m분" />
