@@ -5,6 +5,9 @@ import { Routes } from 'Routes';
 const App: React.FC = () => {
 	const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
+	const defaultFontFamily = ['NanumSquare Regular'].join(',');
+	const headingFontFamily = ['NanumSquare'].join(',');
+
 	const theme = React.useMemo(
 		() =>
 			createMuiTheme({
@@ -26,7 +29,22 @@ const App: React.FC = () => {
 						  }),
 				},
 				typography: {
-					fontFamily: ['NanumSquare', 'Noto Sans'].join(','),
+					h1: { fontFamily: headingFontFamily },
+					h2: { fontFamily: headingFontFamily },
+					h3: { fontFamily: headingFontFamily },
+					h4: { fontFamily: headingFontFamily },
+					h5: { fontFamily: headingFontFamily },
+					h6: { fontFamily: headingFontFamily },
+
+					subtitle1: { fontFamily: defaultFontFamily },
+					subtitle2: { fontFamily: defaultFontFamily },
+
+					body1: { fontFamily: defaultFontFamily },
+					body2: { fontFamily: defaultFontFamily },
+
+					button: { fontFamily: defaultFontFamily },
+					caption: { fontFamily: defaultFontFamily },
+					overline: { fontFamily: defaultFontFamily },
 				},
 			}),
 		[prefersDarkMode],
