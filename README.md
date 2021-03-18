@@ -45,8 +45,9 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
     2. [왜 이런 프로젝트를 시작했나요?](#왜-이런-프로젝트를-시작했나요)
     3. [기존 Door보다 어떤 점이 더 좋나요?](#기존-door보다-어떤-점이-더-좋나요)
 2. [설치](#설치)
-3. [기존 Door와 비교](#기존-door와-비교)
-4. [개발자들을 위한 정보](#개발자들을-위한-정보)
+3. [Door 기능 지원 현황](#door-기능-지원-현황)
+4. [기존 Door와 비교](#기존-door와-비교)
+5. [개발자들을 위한 정보](#개발자들을-위한-정보)
     1. [프로젝트 테스트 및 빌드](#프로젝트-테스트-및-빌드)
     2. [Typed models](#typed-models)
     3. [통신 구조](#통신-구조)
@@ -64,7 +65,7 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 
 ## 왜 이런 프로젝트를 시작했나요?
 
-기존의 Door 홈페이지는 매우 느립니다. 서버가 느린 것도 있지만 원하는 정보를 얻는 데 걸리는 시간도 말이죠. 사용자가 알아야 할 정보들이 여기저기 흩어져 있고, 한눈에 이해하기 힘들게 표시되어 있는 정보들이 많습니다. 사용자들이 새 게시물이 올라왔는지 확인하거나 완료하지 못한 과제가 있는지, 또 과제 마감까지 얼마나 남았는지 확인하기 위해선 곳곳에 흩어져 있는 게시물 목록들을 하나하나 클릭하여 확인해야 합니다. 서버도 무척 느린데 말이죠.
+기존의 Door 홈페이지는 매우 느립니다. 서버가 느린 것도 있지만 원하는 정보를 얻는 데 걸리는 시간도 말이죠. 사용자가 알아야 할 정보들이 여기저기 흩어져 있고, 한눈에 이해하기 힘들게 표시되어 있는 정보들이 많습니다. 사용자들이 새 게시물이 올라왔는지 확인하거나 완료하지 못한 과제가 있는지, 또 과제 마감까지 얼마나 남았는지 확인하기 위해선 곳곳에 흩어져 있는 게시물 목록들을 하나하나 클릭하여 확인해야 합니다.
 
 이 프로젝트는 이런 불편한 점들을 개선하기 위해 시작하였습니다. 사용자 경험(UX) 측면에서, 사용자가 원하는 정보를 어떻게 적절하게 표시할 지, 또 불필요한 클릭을 어떻게 줄일 수 있을 지, 해당 정보엔 어떤 색이 적절한지 등 많은 부분을 고민하여 제작하였습니다.
 
@@ -109,6 +110,176 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 **[Releases](https://github.com/deu-door/door-desktop/releases)** 에서 최신 버전을 확인하세요!
 
 설치 가능한 바이너리 파일(exe 등)이 제공됩니다. 클릭하신 후 설치 진행하시면 됩니다.
+
+<br><br>
+
+# Door 기능 지원 현황
+
+<table>
+    <thead>
+        <tr>
+            <th>분류</th>
+            <th>기능</th>
+            <th>지원 여부</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan="3">주요기능</td>
+            <td>정규과정 강의</td>
+            <td>O</td>
+        </tr>
+        <tr>
+            <td>D-MOOC</td>
+            <td>X</td>
+        </tr>
+        <tr>
+            <td>쪽지</td>
+            <td>X</td>
+        </tr>
+        <tr>
+            <td rowspan="4">온라인강의</td>
+            <td>수강</td>
+            <td>O</td>
+        </tr>
+        <tr>
+            <td>출석 확인</td>
+            <td>O</td>
+        </tr>
+        <tr>
+            <td>출석 기록</td>
+            <td>O</td>
+        </tr>
+        <tr>
+            <td>학습 시간 확인</td>
+            <td>O</td>
+        </tr>
+        <tr>
+            <td rowspan="1">DOOR</td>
+            <td>DOOR 열람</td>
+            <td>지원 예정</td>
+        </tr>
+        <tr>
+            <td rowspan="4">수업계획서</td>
+            <td>수업 정보 조회</td>
+            <td>O</td>
+        </tr>
+        <tr>
+            <td>수업 평가 방법</td>
+            <td>O</td>
+        </tr>
+        <tr>
+            <td>참여도 세부 비율 확인</td>
+            <td>X</td>
+        </tr>
+        <tr>
+            <td>주차별 강의계획</td>
+            <td>X</td>
+        </tr>
+        <tr>
+            <td rowspan="5">과제</td>
+            <td>열람 및 첨부파일 다운</td>
+            <td>O</td>
+        </tr>
+        <tr>
+            <td>제출</td>
+            <td>O</td>
+        </tr>
+        <tr>
+            <td>제출기간 확인</td>
+            <td>O</td>
+        </tr>
+        <tr>
+            <td>추가 제출기간 확인</td>
+            <td>지원 예정</td>
+        </tr>
+        <tr>
+            <td>평가 정보</td>
+            <td>지원 예정</td>
+        </tr>
+        <tr>
+            <td rowspan="5">수업활동일지</td>
+            <td>열람 및 첨부파일 다운</td>
+            <td>O</td>
+        </tr>
+        <tr>
+            <td>제출</td>
+            <td>O</td>
+        </tr>
+        <tr>
+            <td>제출기간 확인</td>
+            <td>O</td>
+        </tr>
+        <tr>
+            <td>추가 제출기간 확인</td>
+            <td>지원 예정</td>
+        </tr>
+        <tr>
+            <td>평가 정보</td>
+            <td>지원 예정</td>
+        </tr>
+        <tr>
+            <td rowspan="4">팀 프로젝트 결과</td>
+            <td>열람 및 첨부파일 다운</td>
+            <td>O</td>
+        </tr>
+        <tr>
+            <td>제출</td>
+            <td>O</td>
+        </tr>
+        <tr>
+            <td>제출기간 확인</td>
+            <td>O</td>
+        </tr>
+        <tr>
+            <td>팀 편성 확인</td>
+            <td>지원 예정</td>
+        </tr>
+        <tr>
+            <td rowspan="2">공지사항</td>
+            <td>열람 및 첨부파일 다운</td>
+            <td>O</td>
+        </tr>
+        <tr>
+            <td>읽음 여부 확인</td>
+            <td>O</td>
+        </tr>
+        <tr>
+            <td rowspan="2">강의자료</td>
+            <td>열람 및 첨부파일 다운</td>
+            <td>O</td>
+        </tr>
+        <tr>
+            <td>읽음 여부 확인</td>
+            <td>O</td>
+        </tr>
+        <tr>
+            <td rowspan="6">기타</td>
+            <td>퀴즈</td>
+            <td>X</td>
+        </tr>
+        <tr>
+            <td>토론</td>
+            <td>X</td>
+        </tr>
+        <tr>
+            <td>Q&A</td>
+            <td>X</td>
+        </tr>
+        <tr>
+            <td>1:1 교수 상담</td>
+            <td>X</td>
+        </tr>
+        <tr>
+            <td>팀별 게시판</td>
+            <td>X</td>
+        </tr>
+        <tr>
+            <td>멘토링 게시판</td>
+            <td>X</td>
+        </tr>
+    </tbody>
+</table>
 
 <br><br>
 
