@@ -1,6 +1,6 @@
 import { Box, Container } from '@material-ui/core';
-import { CourseInfo, RouteCourseInfo } from 'components/course/CourseInfo';
-import { LectureList, RouteLectureList } from 'components/lecture/LectureList';
+import { RouteCourseInfo } from 'components/course/CourseInfo';
+import { RouteLectureList } from 'components/lecture/LectureList';
 import { useCourses } from 'hooks/door/useCourses';
 import { ICourse, ITerm } from 'models/door';
 import React, { useEffect, useState } from 'react';

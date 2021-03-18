@@ -25,6 +25,7 @@ export const SplashPage: React.FC = () => {
 		};
 
 		tryLoginWithSavedIdPassword();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {

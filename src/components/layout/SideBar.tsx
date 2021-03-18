@@ -17,7 +17,7 @@ import {
 import { useCourses } from 'hooks/door/useCourses';
 import { useTerms } from 'hooks/door/useTerms';
 import { ICourse, ITerm } from 'models/door';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 const RoundedPaper = styled(withTheme((props: PaperProps) => <Paper elevation={0} {...props} />))(props => ({
 	borderRadius: 16,

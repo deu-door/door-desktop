@@ -1,10 +1,9 @@
-import { Box, ListItem, ListItemText, ListItemTextProps, styled, Typography } from '@material-ui/core';
+import { Box, ListItem, ListItemText, ListItemTextProps, styled } from '@material-ui/core';
 import { yellow } from '@material-ui/core/colors';
-import { DateTime } from 'components/common/DateTime';
 import { Due, IPostHead, ISubmittablePost } from 'models/door';
 import { Notable } from 'models/door/notable';
-import React, { useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router';
+import React from 'react';
+import { useHistory } from 'react-router';
 import { PostSubtitle, PostSubtitleProps } from './PostSubtitle';
 import { SubmitDuration } from './SubmitDuration';
 

@@ -148,6 +148,7 @@ export const Downloads: React.FC = props => {
 			downloader.remove('progress', upsert);
 			downloader.remove('complete', upsert);
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [items]);
 
 	return (

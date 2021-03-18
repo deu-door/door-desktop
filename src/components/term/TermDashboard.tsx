@@ -3,12 +3,11 @@ import { Refresh } from '@material-ui/icons';
 import { AsyncThunkState } from 'components/common/AsyncThunkState';
 import { Banner } from 'components/common/Banner';
 import { PostList, PostListProps } from 'components/post/PostList';
-import { PostListItem, PostListItemRenderer } from 'components/post/PostListItem';
-import { PostSubtitle } from 'components/post/PostSubtitle';
+import { PostListItemRenderer } from 'components/post/PostListItem';
 import { useCourses } from 'hooks/door/useCourses';
 import { usePosts } from 'hooks/door/usePosts';
 import { useTerms } from 'hooks/door/useTerms';
-import { ICourse, ITerm, PostVariant, PostVariantNames, PostVariants } from 'models/door';
+import { ICourse, ITerm, PostVariant, PostVariantNames } from 'models/door';
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { IAsyncThunkState } from 'store/modules/util';
@@ -152,6 +151,7 @@ export const TermDashboard: React.FC<TermDashboardProps> = props => {
 		};
 
 		fulfill();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [term]);
 
 	return (

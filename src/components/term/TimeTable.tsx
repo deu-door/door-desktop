@@ -1,6 +1,6 @@
 import { Box, Button, createStyles, makeStyles, Typography } from '@material-ui/core';
-import { blue, blueGrey, brown, deepOrange, green, grey, indigo, lime, orange, purple, red, yellow } from '@material-ui/core/colors';
-import { Clear, Close } from '@material-ui/icons';
+import { blue, blueGrey, brown, deepOrange, green, grey, indigo, orange, purple, red } from '@material-ui/core/colors';
+import { Clear } from '@material-ui/icons';
 import { ICourse } from 'models/door';
 import React, { useState } from 'react';
 

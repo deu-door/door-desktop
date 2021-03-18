@@ -1,6 +1,6 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 import qs from 'qs';
-import { IAttachment, ILink, ISubmission } from 'models/door';
+import { ILink, ISubmission } from 'models/door';
 import { YouTubeURLParser } from '@iktakahiro/youtube-url-parser';
 
 /**
@@ -183,6 +183,7 @@ export const parseSubmission = (table: HTMLTableElement): ISubmission => {
 // javascript:viewDoor(34300,557, 0, 2, '', 0, 560, 315, 'frmpop', 436049, 'CLAT001');
 // javascript:viewDoor(34300,563, 0, 2, '', 0, 560, 315, 'frmpop', 436055, 'CLAT001');
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const parseViewDoorFunction = (func: string) => {
 	const params = (func.match(/viewDoor\((?<params>.*)\)/)?.groups?.params || '').split(',').map(d => d.replaceAll("'", '').trim());
 

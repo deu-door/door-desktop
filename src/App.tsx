@@ -47,6 +47,7 @@ const App: React.FC = () => {
 					overline: { fontFamily: defaultFontFamily },
 				},
 			}),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[prefersDarkMode],
 	);
 

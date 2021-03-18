@@ -1,4 +1,4 @@
-import { ICourse, ITerm, ResourceID } from 'models/door';
+import { ICourse, ITerm } from 'models/door';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions, RootState } from 'store';

@@ -20,17 +20,16 @@ axios.interceptors.response.use(response => {
 	return response;
 });
 
-// Debug door APIs (i.e. getCourses(), getNotices(), ...)
-(window as any).door = door;
-
-// Debug current redux state (store.getState())
-(window as any).store = store;
-
-// Debug downloader
-(window as any).downloader = downloader;
-
-// Debug with driver
-(window as any).driver = driver;
+Object.assign(window, {
+	// Debug door APIs (i.e. getCourses(), getNotices(), ...)
+	door,
+	// Debug current redux state (store.getState())
+	store,
+	// Debug downloader
+	downloader,
+	// Debug with axios driver
+	driver,
+});
 
 ReactDOM.render(
 	// <React.StrictMode>

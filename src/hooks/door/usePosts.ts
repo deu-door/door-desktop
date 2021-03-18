@@ -1,4 +1,4 @@
-import { ICourse, IPost, PostVariant, ResourceID } from 'models/door';
+import { ICourse, IPost, PostVariant } from 'models/door';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions, RootState } from 'store';
@@ -49,11 +49,13 @@ export function useCoursePosts(courseId: ICourse['id']) {
 
 	const fetchPosts = useCallback(
 		(params: Omit<Parameters<typeof actions.fetchPosts>[0], 'id'>) => dispatch(actions.fetchPosts({ id: courseId, ...params })),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[dispatch],
 	);
 
 	const putSubmission = useCallback(
 		(params: Omit<Parameters<typeof actions.putSubmission>[0], 'courseId'>) => dispatch(actions.putSubmission({ courseId, ...params })),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[dispatch],
 	);
 

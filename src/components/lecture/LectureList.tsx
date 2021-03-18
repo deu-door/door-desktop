@@ -71,6 +71,7 @@ export const LectureList: React.FC<LectureListProps> = props => {
 		const timer = setInterval(fetchLectureProgresses, 1000 * 30);
 
 		return () => clearInterval(timer);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (

@@ -1,7 +1,6 @@
-import { YouTubeURLParser } from '@iktakahiro/youtube-url-parser';
 import moment from 'moment';
 import { driver, parse, parseTableElement, parseViewDoorFunction } from '../util';
-import { ILink, IDoor, IDoorPost, ICourse, PostVariant, IDoorPostHead } from 'models/door';
+import { IDoor, IDoorPost, ICourse, PostVariant, IDoorPostHead } from 'models/door';
 import { Response, UnauthorizedError } from 'services/response';
 
 export async function getDoorPosts(params: Pick<ICourse, 'id'> & Partial<ICourse>): Promise<Response<IDoorPostHead[]>> {

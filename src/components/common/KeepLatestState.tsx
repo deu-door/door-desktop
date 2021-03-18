@@ -37,6 +37,7 @@ export const KeepLatestState: React.FC<KeepLatestStateProps> = props => {
 		}
 	};
 
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect(() => checkTriggerCondition(), [state, visible]);
 
 	return <VisibilitySensor onChange={setVisible}>{children}</VisibilitySensor>;

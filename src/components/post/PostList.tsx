@@ -1,9 +1,9 @@
-import { Box, Link, LinkProps, List, ListItem, ListItemText, ListProps, styled, Typography } from '@material-ui/core';
+import { Box, Link, LinkProps, List, ListItem, ListProps, styled, Typography } from '@material-ui/core';
 import { AsyncThunkState } from 'components/common/AsyncThunkState';
 import { KeepLatestState } from 'components/common/KeepLatestState';
 import { useCourses } from 'hooks/door/useCourses';
 import { useCoursePosts } from 'hooks/door/usePosts';
-import { Due, ICourse, IPostHead, ISubmittablePost, PostVariant } from 'models/door';
+import { ICourse, IPostHead, PostVariant } from 'models/door';
 import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { PostListItemRenderer } from './PostListItem';
