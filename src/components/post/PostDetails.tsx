@@ -2,6 +2,9 @@ import {
 	Box,
 	Button,
 	CircularProgress,
+	Dialog,
+	DialogActions,
+	DialogContent,
 	Divider,
 	IconButton,
 	Link,
@@ -195,6 +198,7 @@ export const SubmittablePostDetails: React.FC<SubmittablePostDetailsProps> = pro
 	const [contents, setContents] = useState<string | undefined>(undefined);
 	const [file, setFile] = useState<File | undefined>(undefined);
 	const [pending, setPending] = useState(false);
+	const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
 	const fileInputRef = React.createRef<HTMLInputElement>();
 
@@ -209,6 +213,8 @@ export const SubmittablePostDetails: React.FC<SubmittablePostDetailsProps> = pro
 	};
 
 	const deleteFile = async (link: string) => {
+		setOpenDeleteDialog(false);
+
 		setPending(true);
 
 		await driver.post('/Common/FileDeleteNew', { fno: link.match(/\d+$/)?.[0] });
@@ -280,9 +286,22 @@ export const SubmittablePostDetails: React.FC<SubmittablePostDetailsProps> = pro
 								<PostAttachment attachment={attachment} />
 								{canEdit && (
 									<>
+										<Dialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)}>
+											<DialogContent>
+												<strong>{attachment.title}</strong> 파일을 정말로 삭제하시겠습니까?
+											</DialogContent>
+											<DialogActions>
+												<Button onClick={() => setOpenDeleteDialog(false)} color="primary">
+													취소
+												</Button>
+												<Button onClick={() => deleteFile(attachment.link)} color="primary">
+													삭제
+												</Button>
+											</DialogActions>
+										</Dialog>
 										<Box width="0.5rem" display="inline-block" />
 										{/* TODO: IMPORTANT: add delete modal */}
-										<IconButton size="small" onClick={() => deleteFile(attachment.link)}>
+										<IconButton size="small" onClick={() => setOpenDeleteDialog(true)}>
 											<Delete />
 										</IconButton>
 									</>
