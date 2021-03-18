@@ -165,23 +165,6 @@ export const TermDashboard: React.FC<TermDashboardProps> = props => {
 
 			<Box height="2rem" />
 
-			<Grid container>
-				<Grid item sm={12}>
-					<TermPostList
-						term={term}
-						course={selected}
-						threshold={3}
-						variants={[PostVariant.assignment, PostVariant.activity, PostVariant.teamProject]}
-					/>
-				</Grid>
-			</Grid>
-
-			<Box height="3rem" />
-
-			<Banner />
-
-			<Box height="3rem" />
-
 			<Grid container spacing={2} direction="row-reverse">
 				<Grid item sm={12} md={6}>
 					<Box>
@@ -200,7 +183,24 @@ export const TermDashboard: React.FC<TermDashboardProps> = props => {
 				</Hidden>
 
 				<Grid item sm={12} md={6}>
-					<TermPostList term={term} course={selected} threshold={8} variants={[PostVariant.notice, PostVariant.reference]} />
+					<TermPostList term={term} course={selected} threshold={6} variants={[PostVariant.notice, PostVariant.reference]} />
+				</Grid>
+			</Grid>
+
+			<Box height="3rem" />
+
+			<Banner />
+
+			<Box height="3rem" />
+
+			<Grid container>
+				<Grid item sm={12}>
+					<TermPostList
+						term={term}
+						course={selected}
+						threshold={3}
+						variants={[PostVariant.assignment, PostVariant.activity, PostVariant.teamProject]}
+					/>
 				</Grid>
 			</Grid>
 		</Box>
