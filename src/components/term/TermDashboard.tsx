@@ -43,8 +43,9 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 	const { coursesByTerm } = useCourses();
 	const { allPosts, fetchPosts, postsStateByVariantByCourseId } = usePosts();
 
-	// totally managed progress
-	const [progress, setProgress] = useState({ pending: false, status: '새로고침' });
+	// totally managed progress (tasks[id])
+	const [taskId, setTaskId] = useState<number | undefined>(undefined);
+	const [status, setStatus] = useState('새로고침');
 
 	const courses = course !== undefined ? [course] : coursesByTerm(term.id);
 	const courseIds = new Set(courses.map(course => course.id));
@@ -54,28 +55,38 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 
 	const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-	const fetch = async () => {
-		if (progress.pending) return;
-		setProgress({ pending: true, status: '잠시만 기다려 주세요 ...' });
+	const tasks = courses
+		.map(course =>
+			variants.map(variant => async () => {
+				setStatus(`${course.name} ${PostVariantNames[variant]} 가져오는 중 ...`);
 
-		for (let i = 0; i < courses.length; i++) {
-			const course = courses[i];
-
-			for (let j = 0; j < variants.length; j++) {
-				const variant = variants[j];
-
-				await delay(300);
-				setProgress({
-					pending: true,
-					status: `${course.name} ${PostVariantNames[variant]} 가져오는 중 ...`,
-				});
+				await delay(350);
 				await fetchPosts({ ...course, variant });
-				await delay(300);
-			}
-		}
+				await delay(350);
+			}),
+		)
+		.flat();
 
-		setProgress({ pending: false, status: '성공적으로 불러왔습니다.' });
-	};
+	// do task
+	useEffect(() => {
+		const doTask = async () => {
+			if (taskId === undefined) return;
+
+			await tasks[taskId]();
+
+			// still progress ...
+			if (taskId + 1 < tasks.length) {
+				setTaskId(taskId + 1);
+			}
+			// all tasks finished!
+			else {
+				setTaskId(undefined);
+				setStatus('성공적으로 불러왔습니다.');
+			}
+		};
+
+		doTask();
+	}, [taskId]);
 
 	const postsStates = courses
 		.map(course =>
@@ -87,7 +98,6 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 		)
 		.flat();
 
-	const anyOfPending = postsStates.find(({ state }) => state?.pending === true);
 	const anyOfError = postsStates.find(({ state }) => state?.error !== undefined);
 
 	return (
@@ -98,24 +108,22 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 				</Typography>
 				<Box width="0.8rem" />
 				<AsyncThunkState
-					onClick={fetch}
+					onClick={() => setTaskId(0)}
 					state={
-						anyOfPending?.state ??
-						anyOfError?.state ?? {
-							...progress,
-							error: undefined,
-							fulfilledAt: '0',
-						}
+						taskId !== undefined
+							? {
+									pending: true,
+									error: undefined,
+							  }
+							: anyOfError?.state ?? {
+									pending: false,
+									error: undefined,
+									fulfilledAt: '0',
+							  }
 					}
-					pending={
-						anyOfPending !== undefined
-							? `${anyOfPending.course.name} ${PostVariantNames[anyOfPending.variant]} 가져오는 중 ...`
-							: progress.status
-					}
-					fulfilled={progress.status}
-					{...((anyOfPending !== undefined || progress.pending) === false
-						? { color: 'primary.main', startIcon: <Refresh />, style: { cursor: 'pointer' } }
-						: {})}
+					pending={status}
+					fulfilled={status}
+					{...(taskId !== undefined ? {} : { color: 'primary.main', startIcon: <Refresh />, style: { cursor: 'pointer' } })}
 				/>
 			</Box>
 			<Box height="0.3rem" />
