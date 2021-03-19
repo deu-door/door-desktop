@@ -191,7 +191,7 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
         </tr>
         <tr>
             <td>추가 제출기간 확인</td>
-            <td>지원 예정</td>
+            <td>O</td>
         </tr>
         <tr>
             <td>평가 정보</td>
@@ -212,7 +212,7 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
         </tr>
         <tr>
             <td>추가 제출기간 확인</td>
-            <td>지원 예정</td>
+            <td>O</td>
         </tr>
         <tr>
             <td>평가 정보</td>

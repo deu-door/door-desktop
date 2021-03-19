@@ -247,7 +247,14 @@ export const SubmittablePostDetails: React.FC<SubmittablePostDetailsProps> = pro
 		setPending(false);
 	};
 
-	const canEdit = new Date(post.duration.from).valueOf() < now && now < new Date(post.duration.to).valueOf();
+	const canEdit =
+		// check for default duration
+		(new Date(post.duration.from).valueOf() < now && now < new Date(post.duration.to).valueOf()) ||
+		// check for additional Duration
+		(post.additionalDuration !== undefined &&
+			new Date(post.additionalDuration.from).valueOf() < now &&
+			now < new Date(post.additionalDuration.to).valueOf());
+
 	const editing = edit && !pending;
 
 	return (
@@ -260,7 +267,7 @@ export const SubmittablePostDetails: React.FC<SubmittablePostDetailsProps> = pro
 							<Box width="0.5rem" />
 							<Typography>{post.submitted ? '제출 완료' : '미제출'}</Typography>
 						</Box>
-						<SubmitDuration from={post.duration.from} to={post.duration.to} />
+						<SubmitDuration duration={post.duration} additionalDuration={post.additionalDuration} />
 					</Box>
 				</Paper>
 			}

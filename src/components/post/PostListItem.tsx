@@ -75,7 +75,13 @@ export type DuePostListItemProps = PostListItemProps & {
 export const DuePostListItem: React.FC<DuePostListItemProps> = props => {
 	const { post, ...otherProps } = props;
 
-	return <PostListItem post={post} trailing={<SubmitDuration from={post.duration.from} to={post.duration.to} />} {...otherProps} />;
+	return (
+		<PostListItem
+			post={post}
+			trailing={<SubmitDuration duration={post.duration} additionalDuration={post.additionalDuration} />}
+			{...otherProps}
+		/>
+	);
 };
 
 export type SubmittablePostListItemProps = PostListItemProps & {
