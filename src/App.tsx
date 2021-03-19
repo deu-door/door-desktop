@@ -5,7 +5,7 @@ import { Routes } from 'Routes';
 const App: React.FC = () => {
 	const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
-	const defaultFontFamily = ['NanumSquare Regular'].join(',');
+	const defaultFontFamily = ['NanumSquareRound'].join(',');
 	const headingFontFamily = ['NanumSquare'].join(',');
 
 	const theme = React.useMemo(
