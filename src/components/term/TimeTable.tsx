@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme =>
 				backgroundColor: theme.palette.background.paper,
 			},
 
-			'& > thead td': {
+			'& > thead th': {
 				height: '1.2rem',
 			},
 
@@ -90,9 +90,9 @@ export const TimeTable: React.FC<TimeTableProps> = props => {
 			<table className={classes.table}>
 				<thead>
 					<tr>
-						<td className={classes.tableTimeColumn}>시간</td>
+						<th className={classes.tableTimeColumn}>시간</th>
 						{days.map(day => (
-							<td key={day}>{day}</td>
+							<th key={day}>{day}</th>
 						))}
 					</tr>
 				</thead>
