@@ -8,16 +8,13 @@ const useStyles = makeStyles(theme =>
 	createStyles({
 		table: {
 			width: '100%',
-			borderCollapse: 'collapse',
-			borderSpacing: 0,
+			borderCollapse: 'separate',
+			borderSpacing: '2px',
 			tableLayout: 'fixed',
 
 			'& td': {
-				borderWidth: '2px',
-				borderStyle: 'solid',
-				borderColor: 'white',
 				textAlign: 'center',
-				backgroundColor: grey[50],
+				backgroundColor: theme.palette.background.paper,
 			},
 
 			'& > thead td': {
