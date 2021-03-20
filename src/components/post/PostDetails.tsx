@@ -31,6 +31,8 @@ import { IAsyncThunkState } from 'store/modules/util';
 import { PostSubtitle } from './PostSubtitle';
 import { SubmitDuration } from './SubmitDuration';
 
+const { shell } = window.require('electron');
+
 export const PostContents = styled(
 	withTheme((props: TypographyProps) => (
 		<Typography variant="body2" color="textSecondary" component="span" paragraph {...props}>
@@ -172,7 +174,27 @@ export const PostDetails: React.FC<PostDetailsProps> = props => {
 				</Box>
 			)}
 
-			{children ?? (isFulfilledPost(post) && <PostContents dangerouslySetInnerHTML={{ __html: post.contents }} />)}
+			{children ??
+				(isFulfilledPost(post) && (
+					<PostContents
+						onClick={event => {
+							// find HTMLAnchorElement for iterating parents
+							event.preventDefault();
+
+							let element: HTMLElement | null = event.target as HTMLElement;
+							while (element instanceof HTMLElement) {
+								if (element instanceof HTMLAnchorElement) {
+									console.log(`External Link clicked: ${element.href}`);
+									shell.openExternal(element.href);
+									break;
+								}
+
+								element = element.parentElement;
+							}
+						}}
+						dangerouslySetInnerHTML={{ __html: post.contents }}
+					/>
+				))}
 
 			{footer && (
 				<>
