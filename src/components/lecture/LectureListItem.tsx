@@ -100,10 +100,10 @@ export const LectureListItem: React.FC<LectureListItemProps> = props => {
 						)}`}
 						target="_blank"
 					>
-						<Typography variant="h6">{lecture.title || '-'}</Typography>
+						<Typography variant="subtitle1">{lecture.title || '-'}</Typography>
 					</Link>
 				) : (
-					<Typography variant="h6">{lecture.title || '-'}</Typography>
+					<Typography variant="subtitle1">{lecture.title || '-'}</Typography>
 				)}
 
 				{lecture.progress?.startedAt !== undefined ? (
