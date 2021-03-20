@@ -150,7 +150,7 @@ export const Navigator: React.FC<NavigatorProps> = props => {
 									<Typography variant="subtitle2">{user.name}</Typography>
 									<Typography variant="caption">{user.major}</Typography>
 								</Box>
-								<Avatar>{user.name.charAt(0)}</Avatar>
+								<Avatar />
 							</Button>
 						</>
 					)}
