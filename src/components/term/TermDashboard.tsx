@@ -188,7 +188,7 @@ export const TermDashboard: React.FC<TermDashboardProps> = props => {
 			<Box height="2rem" />
 
 			<Grid container spacing={2} direction="row-reverse">
-				<Grid item sm={12} md={6}>
+				<Grid item xs={12} md={6}>
 					<Box>
 						<Typography variant="subtitle2" color="textSecondary">
 							시간표
@@ -199,12 +199,12 @@ export const TermDashboard: React.FC<TermDashboardProps> = props => {
 				</Grid>
 
 				<Hidden mdUp>
-					<Grid item sm={12}>
+					<Grid item xs={12}>
 						<Box minHeight="3rem" />
 					</Grid>
 				</Hidden>
 
-				<Grid item sm={12} md={6}>
+				<Grid item xs={12} md={6}>
 					<TermPostList term={term} course={selected} threshold={6} variants={[PostVariant.notice, PostVariant.reference]} />
 				</Grid>
 			</Grid>
@@ -216,7 +216,7 @@ export const TermDashboard: React.FC<TermDashboardProps> = props => {
 			<Box height="3rem" />
 
 			<Grid container>
-				<Grid item sm={12}>
+				<Grid item xs={12}>
 					<TermPostList
 						term={term}
 						course={selected}
