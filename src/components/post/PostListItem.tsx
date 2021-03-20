@@ -1,4 +1,4 @@
-import { Box, ListItem, ListItemText, ListItemTextProps, styled } from '@material-ui/core';
+import { Box, ListItem, ListItemText, ListItemTextProps, styled, useTheme } from '@material-ui/core';
 import { yellow } from '@material-ui/core/colors';
 import { Due, IPostHead, ISubmittablePost } from 'models/door';
 import { Notable } from 'models/door/notable';
@@ -49,18 +49,30 @@ export type PostListItemProps = ListItemTextProps & {
 
 export const PostListItem: React.FC<PostListItemProps> = props => {
 	const { post, PostSubtitleProps, trailing, ...otherProps } = props;
+	const theme = useTheme();
 	const history = useHistory();
+
+	const notNoted = isNotable(post) && !post.noted;
 
 	return (
 		<BorderedListItem
 			button
 			onClick={() => history.push(`/courses/${post.courseId}/${post.variant}/${post.id}`)}
-			style={{ backgroundColor: isNotable(post) && !post.noted ? yellow[100] : undefined }}
+			style={
+				notNoted
+					? {
+							backgroundColor: yellow[100],
+							color: theme.palette.getContrastText(yellow[100]),
+					  }
+					: {}
+			}
 		>
 			<ListItemText
 				primary={post.title}
 				primaryTypographyProps={{ variant: 'subtitle1' }}
-				secondary={<PostSubtitle post={post} {...(PostSubtitleProps ?? {})} />}
+				secondary={<PostSubtitle post={post} {...(notNoted ? { color: 'inherit' } : {})} {...(PostSubtitleProps ?? {})} />}
+				secondaryTypographyProps={{ color: 'inherit' }}
+				color="inherit"
 				{...otherProps}
 			/>
 			{trailing}
@@ -89,7 +101,7 @@ export type SubmittablePostListItemProps = PostListItemProps & {
 };
 
 export const SubmittablePostListItem: React.FC<SubmittablePostListItemProps> = props => {
-	const { post, PostSubtitleProps, trailing, ...otherProps } = props;
+	const { post, PostSubtitleProps = {}, trailing, ...otherProps } = props;
 
 	return (
 		<DuePostListItem
@@ -97,7 +109,7 @@ export const SubmittablePostListItem: React.FC<SubmittablePostListItemProps> = p
 			secondary={
 				<>
 					{trailing ?? (
-						<PostSubtitle post={post} {...(PostSubtitleProps ?? {})}>
+						<PostSubtitle post={post} {...PostSubtitleProps}>
 							<Box color={post.submitted ? 'success.main' : 'warning.main'} display="inline">
 								{post.submitted ? '제출 완료' : '미제출'}
 							</Box>

@@ -8,16 +8,14 @@ const isAuthored = (post: IPostHead): post is IPostHead & Authored => {
 	return 'author' in post;
 };
 
-const PostSubtitleTypography = styled((props: TypographyProps) => (
-	<Typography component="span" variant="subtitle2" color="textSecondary" {...props} />
-))({
+const PostSubtitleTypography = styled(Typography)({
 	'& span:not(:first-child)::before': {
 		content: `" · "`,
 		fontWeight: 'bolder',
 	},
 });
 
-export type PostSubtitleProps = {
+export type PostSubtitleProps = TypographyProps & {
 	post: IPostHead | IPost;
 	showCourse?: boolean;
 	showVariant?: boolean;
@@ -25,12 +23,12 @@ export type PostSubtitleProps = {
 };
 
 export const PostSubtitle: React.FC<PostSubtitleProps> = props => {
-	const { post, children, showCourse, showVariant, showAuthor = true } = props;
+	const { post, children, showCourse, showVariant, showAuthor = true, ...otherProps } = props;
 	const [hover, setHover] = useState(false);
 	const { courseById } = useCourses();
 
 	return (
-		<PostSubtitleTypography>
+		<PostSubtitleTypography variant="subtitle2" color="textSecondary" {...otherProps}>
 			{[
 				showCourse || showVariant ? (
 					<strong>
