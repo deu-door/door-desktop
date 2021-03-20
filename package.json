@@ -104,23 +104,5 @@
 			"last 1 firefox version",
 			"last 1 safari version"
 		]
-	},
-	"build": {
-		"appId": "enhancedapps.door-desktop",
-		"productName": "Door Desktop",
-		"icon": "build/icon.png",
-		"extends": null,
-		"files": [
-			"build/**/*"
-		],
-		"directories": {
-			"buildResources": "build"
-		},
-		"win": {
-			"target": "nsis"
-		},
-		"nsis": {
-			"deleteAppDataOnUninstall": true
-		}
 	}
 }

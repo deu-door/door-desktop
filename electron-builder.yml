@@ -1,0 +1,38 @@
+productName: Door Desktop
+appId: enhancedapps.DoorDesktop
+icon: icon.png
+extends: null
+
+files:
+  - package.json
+  - build/**/*
+
+directories:
+  buildResources: build
+  output: release
+
+# Windows configuration
+win:
+  target:
+    - nsis
+    - appx
+  #publisherName: solo5star
+  #signAndEditExecutable: true
+
+# Config for the windows installer
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  deleteAppDataOnUninstall: true
+  # 0x0412 = ko-KR
+  language: 1042
+
+appx:
+  applicationId: enhancedapps.DoorDesktop
+  identityName: enhancedapps.DoorDesktop
+  #publisher: CN=solo5star
+  backgroundColor: "#2F71E9"
+  showNameOnTiles: true
+  languages:
+    - ko-KR
