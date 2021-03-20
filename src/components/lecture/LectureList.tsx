@@ -81,7 +81,10 @@ export const LectureList: React.FC<LectureListProps> = props => {
 					<AsyncThunkState state={lecturesState} />
 				</FetchLink>
 			</KeepLatestState>
-			<List>
+
+			<Box height="0.7rem" />
+
+			<List disablePadding>
 				{weeks().map(week => (
 					<ListItem className={classes.outerBordered} key={week}>
 						<Box width="4rem" alignSelf="flex-start" marginTop={1}>

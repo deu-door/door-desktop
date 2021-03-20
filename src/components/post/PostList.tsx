@@ -81,6 +81,8 @@ export const RoutePostList: React.FC<RoutePostListProps> = props => {
 				</FetchLink>
 			</KeepLatestState>
 
+			<Box height="0.7rem" />
+
 			<PostList posts={posts} />
 		</Box>
 	);
