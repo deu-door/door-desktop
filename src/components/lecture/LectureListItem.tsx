@@ -14,7 +14,13 @@ declare module '@material-ui/core/Box' {
 const ProgressBar = React.forwardRef<HTMLElement, BoxProps & { progress: number }>(function ProgressBar({ progress, ...otherProps }, ref) {
 	return (
 		<Box ref={ref as React.MutableRefObject<HTMLElement>} bgcolor="black" {...otherProps}>
-			<Box height="100%" width={`${Math.min(100, Math.max(0, progress * 100))}%`} bgcolor={green['A200']} />
+			<Box
+				height="100%"
+				width={`${Math.min(100, Math.max(0, progress * 100))}%`}
+				style={{
+					background: `linear-gradient(90deg, ${green['A200']} 60%, ${green['A400']})`,
+				}}
+			/>
 		</Box>
 	);
 });
@@ -109,8 +115,8 @@ export const LectureListItem: React.FC<LectureListItemProps> = props => {
 				{lecture.progress?.startedAt !== undefined ? (
 					<Tooltip title={<ProgressDates progress={lecture.progress} />} placement="top" arrow>
 						<ProgressBar
-							width="20rem"
-							height="1rem"
+							width="17rem"
+							height="0.7rem"
 							marginLeft="auto"
 							progress={lecture.progress.current / lecture.progress.length}
 						/>
@@ -125,7 +131,7 @@ export const LectureListItem: React.FC<LectureListItemProps> = props => {
 					{lecture.duration.from + ' ~ ' + lecture.duration.to}
 				</Typography>
 				{lecture.progress && (
-					<Box width="20rem" marginLeft="auto" display="flex" justifyContent="space-between">
+					<Box width="17rem" marginLeft="auto" display="flex" justifyContent="space-between">
 						{lecture.attendance === '-' ? <span>-</span> : <TypeBadge type={lecture.attendance} />}
 						<span>
 							<span style={{ fontWeight: 'bold' }}>
