@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, session, webviewTag } from 'electron';
+import { app, BrowserWindow, session, shell } from 'electron';
 import * as isDev from 'electron-is-dev';
 import * as path from 'path';
 import installExtension, { REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } from 'electron-devtools-installer';
