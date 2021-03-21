@@ -5,12 +5,14 @@ import { reducer as termsReducer } from './terms';
 import { reducer as coursesReducer } from './courses';
 import { reducer as postsReducer } from './posts';
 import { reducer as lecturesReducer } from './lectures';
+import { reducer as onlineResourcesReducer } from './online-resources';
 
 import { actions as userActions } from './user';
 import { actions as termsActions } from './terms';
 import { actions as coursesActions } from './courses';
 import { actions as postsActions } from './posts';
 import { actions as lecturesActions } from './lectures';
+import { actions as onlineResourcesActions } from './online-resources';
 
 import { selectors as termsSelectors } from './terms';
 import { selectors as coursesSelectors } from './courses';
@@ -23,6 +25,7 @@ export const rootReducer = combineReducers({
 	courses: coursesReducer,
 	posts: postsReducer,
 	lectures: lecturesReducer,
+	onlineResources: onlineResourcesReducer,
 });
 
 export const actions = {
@@ -31,6 +34,7 @@ export const actions = {
 	...coursesActions,
 	...postsActions,
 	...lecturesActions,
+	...onlineResourcesActions,
 };
 
 export const selectors = {

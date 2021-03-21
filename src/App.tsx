@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, createMuiTheme, CssBaseline, MuiThemeProvider, useMediaQuery } from '@material-ui/core';
 import { Routes } from 'Routes';
+import { useDispatch } from 'react-redux';
+import { useOnlineResources } from 'hooks/online-resources/useOnlineResources';
 
 const App: React.FC = () => {
 	const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -50,6 +52,15 @@ const App: React.FC = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[prefersDarkMode],
 	);
+
+	// Load online resources
+	const { fetchExternalLinks } = useOnlineResources();
+
+	useEffect(() => {
+		setTimeout(() => {
+			fetchExternalLinks();
+		}, 5 * 1000);
+	}, []);
 
 	return (
 		<MuiThemeProvider theme={theme}>
