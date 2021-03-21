@@ -1,5 +1,5 @@
 productName: Door Desktop
-appId: enhancedapps.DoorDesktop
+appId: solo5star.DoorDesktop
 icon: icon.png
 extends: null
 
@@ -31,10 +31,10 @@ nsis:
   language: 1042
 
 appx:
-  applicationId: enhancedapps.DoorDesktop
-  identityName: enhancedapps.DoorDesktop
   #publisher: CN=solo5star
   backgroundColor: "#2F71E9"
+  applicationId: DoorDesktop
+  identityName: 31910solo5star.DoorDesktop
   showNameOnTiles: true
   languages:
     - ko-KR
