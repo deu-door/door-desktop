@@ -3,13 +3,15 @@ appId: enhancedapps.DoorDesktop
 icon: icon.png
 extends: null
 
+
+directories:
+  buildResources: resources
+  output: release
+
 files:
   - package.json
   - build/**/*
-
-directories:
-  buildResources: build
-  output: release
+  - resources/**/*
 
 # Windows configuration
 win:
