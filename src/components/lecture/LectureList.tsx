@@ -76,11 +76,7 @@ export const LectureList: React.FC<LectureListProps> = props => {
 
 	return (
 		<Box>
-			<KeepLatestState state={lecturesState} onTriggerFetch={triggerFetch}>
-				<FetchLink onClick={triggerFetch}>
-					<AsyncThunkState state={lecturesState} />
-				</FetchLink>
-			</KeepLatestState>
+			<KeepLatestState state={lecturesState} onTriggerFetch={triggerFetch} />
 
 			<Box height="0.7rem" />
 

@@ -147,11 +147,7 @@ export const PostDetails: React.FC<PostDetailsProps> = props => {
 
 			<Box height="0.3rem" />
 
-			<KeepLatestState state={post} onTriggerFetch={triggerFetch}>
-				<FetchLink onClick={triggerFetch}>
-					<AsyncThunkState state={post} />
-				</FetchLink>
-			</KeepLatestState>
+			<KeepLatestState state={post} onTriggerFetch={triggerFetch} />
 
 			<Box paddingY="1rem">
 				<Divider />

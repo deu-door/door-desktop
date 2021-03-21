@@ -75,11 +75,7 @@ export const RoutePostList: React.FC<RoutePostListProps> = props => {
 
 	return (
 		<Box>
-			<KeepLatestState state={postsState} onTriggerFetch={triggerFetch}>
-				<FetchLink onClick={triggerFetch}>
-					<AsyncThunkState state={postsState} />
-				</FetchLink>
-			</KeepLatestState>
+			<KeepLatestState state={postsState} onTriggerFetch={triggerFetch} />
 
 			<Box height="0.7rem" />
 

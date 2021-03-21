@@ -87,20 +87,20 @@ export const CourseHead: React.FC<CourseHeadProps> = props => {
 
 	return (
 		<Box component="header" position="sticky" top={0} bgcolor="background.default" zIndex={1}>
-			<KeepLatestState state={course} onTriggerFetch={() => fetchCourseSyllabus(course)} expirationInterval={6 * 60 * 60 * 1000}>
-				<Grid container spacing={2} alignItems="flex-end">
-					<Grid item>
-						<Typography variant="h4">{course.name}</Typography>
-					</Grid>
+			<KeepLatestState state={course} onTriggerFetch={() => fetchCourseSyllabus(course)} expirationInterval={6 * 60 * 60 * 1000} />
 
-					<Grid item>
-						<CourseTag icon={<Class fontSize="inherit" />} text={`${course.division}분반`} />
-					</Grid>
-					<Grid item>
-						<CourseTag icon={<Person fontSize="inherit" />} text={course.professor} />
-					</Grid>
+			<Grid container spacing={2} alignItems="flex-end">
+				<Grid item>
+					<Typography variant="h4">{course.name}</Typography>
 				</Grid>
-			</KeepLatestState>
+
+				<Grid item>
+					<CourseTag icon={<Class fontSize="inherit" />} text={`${course.division}분반`} />
+				</Grid>
+				<Grid item>
+					<CourseTag icon={<Person fontSize="inherit" />} text={course.professor} />
+				</Grid>
+			</Grid>
 
 			<Box marginTop="1.2rem">
 				{Array.from(tabs.reduce((accumulator, tab) => accumulator.add(tab.group), new Set<number>())).map(group => (

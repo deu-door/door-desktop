@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { IAsyncThunkState } from 'store/modules/util';
-import VisibilitySensor from 'react-visibility-sensor';
 
 export type KeepLatestStateProps = {
 	expirationInterval?: number;
@@ -10,7 +9,6 @@ export type KeepLatestStateProps = {
 
 export const KeepLatestState: React.FC<KeepLatestStateProps> = props => {
 	const { children, expirationInterval = 30 * 60 * 1000, state, onTriggerFetch } = props;
-	const [visible, setVisible] = useState(false);
 	const [triggeredOnce, setTriggeredOnce] = useState(false);
 
 	const trigger = () => {
@@ -20,7 +18,7 @@ export const KeepLatestState: React.FC<KeepLatestStateProps> = props => {
 	};
 
 	const checkTriggerCondition = () => {
-		if (visible && onTriggerFetch !== undefined) {
+		if (onTriggerFetch !== undefined) {
 			if (state === undefined) {
 				trigger();
 				return;
@@ -38,7 +36,7 @@ export const KeepLatestState: React.FC<KeepLatestStateProps> = props => {
 	};
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	useEffect(() => checkTriggerCondition(), [state, visible]);
+	useEffect(() => checkTriggerCondition(), [state]);
 
-	return <VisibilitySensor onChange={setVisible}>{children}</VisibilitySensor>;
+	return <>{children}</>;
 };
