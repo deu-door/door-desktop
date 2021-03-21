@@ -19,7 +19,6 @@ files:
 win:
   target:
     - nsis
-    - appx
   publish:
     - github
   signAndEditExecutable: true
