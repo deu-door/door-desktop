@@ -52,14 +52,13 @@ export const CoursePage: React.FC<CoursePageProps> = props => {
 
 	return (
 		<Box flex={1} display="flex" flexDirection="column">
-			<KeepLatestState state={termsState} expirationInterval={1 * 60 * 60 * 1000} onTriggerFetch={fetchTerms}>
-				<KeepLatestState state={term} expirationInterval={1 * 60 * 60 * 1000} onTriggerFetch={() => term && fetchCourses(term)}>
-					<Navigator
-						onSideBarOpen={() => setMobileOpen(true)}
-						onClickHome={() => history.replace(term === undefined ? '/terms' : `/terms/${term.id}`)}
-					/>
-				</KeepLatestState>
-			</KeepLatestState>
+			<KeepLatestState state={termsState} expirationInterval={1 * 60 * 60 * 1000} onTriggerFetch={fetchTerms} />
+			<KeepLatestState state={term} expirationInterval={1 * 60 * 60 * 1000} onTriggerFetch={() => term && fetchCourses(term)} />
+
+			<Navigator
+				onSideBarOpen={() => setMobileOpen(true)}
+				onClickHome={() => history.replace(term === undefined ? '/terms' : `/terms/${term.id}`)}
+			/>
 
 			<Box flex={1} display="flex" overflow="auto">
 				<Container maxWidth="lg" style={{ flex: 1, display: 'flex', justifyContent: 'center', paddingTop: '1.5rem' }}>
