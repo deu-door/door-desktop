@@ -30,3 +30,9 @@ yarn-error.log*
 
 # old files
 /old
+
+# electron-builder environments
+# - CSC_NAME
+# - CSC_KEY_PASSWORD
+# - GITHUB_TOKEN
+electron-builder.env
