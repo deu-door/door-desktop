@@ -10,7 +10,7 @@ export const Banner: React.FC<BannerProps> = props => {
 		<Paper elevation={0}>
 			<Box height="72px" {...otherProps} display="flex" alignItems="center" paddingLeft="1.5rem">
 				<Typography variant="subtitle1" color="textSecondary">
-					Door Desktop 알파 테스트 버전입니다!
+					Door Desktop 베타 테스트 버전입니다!
 				</Typography>
 			</Box>
 		</Paper>
