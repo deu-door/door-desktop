@@ -3,6 +3,7 @@ appId: solo5star.DoorDesktop
 icon: icon.png
 extends: null
 
+asar: true
 
 directories:
   buildResources: resources
