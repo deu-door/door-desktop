@@ -1,5 +1,6 @@
 productName: Door Desktop
 appId: solo5star.DoorDesktop
+artifactName: ${name}-${version}-setup-${os}-${arch}.${ext}
 icon: icon.png
 extends: null
 
