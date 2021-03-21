@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme =>
 			borderSpacing: '2px',
 			tableLayout: 'fixed',
 
-			'& td': {
+			'& th,td': {
 				textAlign: 'center',
 				backgroundColor: theme.palette.background.paper,
 			},
