@@ -2,6 +2,7 @@ import { Box, Grid, Hidden, Typography } from '@material-ui/core';
 import { Refresh } from '@material-ui/icons';
 import { AsyncThunkState } from 'components/common/AsyncThunkState';
 import { Banner } from 'components/common/Banner';
+import { FetchButton } from 'components/common/FetchButton';
 import { PostList, PostListProps } from 'components/post/PostList';
 import { PostListItemRenderer } from 'components/post/PostListItem';
 import { useCourses } from 'hooks/door/useCourses';
@@ -44,8 +45,8 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 	const { allPosts, fetchPosts, postsStateByVariantByCourseId } = usePosts();
 
 	// totally managed progress (tasks[id])
-	const [taskId, setTaskId] = useState<number | undefined>(undefined);
-	const [status, setStatus] = useState('새로고침');
+	const [tasks, setTasks] = useState<Array<() => Promise<unknown>>>([]);
+	const [text, setText] = useState('새로고침');
 
 	const courses = course !== undefined ? [course] : coursesByTerm(term.id);
 	const courseIds = new Set(courses.map(course => course.id));
@@ -55,38 +56,39 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 
 	const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-	const tasks = courses
-		.map(course =>
-			variants.map(variant => async () => {
-				setStatus(`${course.name} ${PostVariantNames[variant]} 가져오는 중 ...`);
+	const startFetch = () => {
+		setTasks(
+			courses
+				.map(course =>
+					variants.map(variant => async () => {
+						setText(`${course.name} ${PostVariantNames[variant]} 가져오는 중 ...`);
 
-				await delay(350);
-				await fetchPosts({ ...course, variant });
-				await delay(350);
-			}),
-		)
-		.flat();
+						await delay(350);
+						await fetchPosts({ ...course, variant });
+						await delay(350);
+					}),
+				)
+				.flat(),
+		);
+	};
 
 	// do task
 	useEffect(() => {
 		const doTask = async () => {
-			if (taskId === undefined) return;
+			if (tasks.length === 0) return;
 
-			await tasks[taskId]();
+			await tasks[0]();
 
-			// still progress ...
-			if (taskId + 1 < tasks.length) {
-				setTaskId(taskId + 1);
-			}
+			setTasks(tasks.splice(1));
+
 			// all tasks finished!
-			else {
-				setTaskId(undefined);
-				setStatus('성공적으로 불러왔습니다.');
+			if (tasks.splice(1).length === 0) {
+				setText('성공적으로 불러왔습니다.');
 			}
 		};
 
 		doTask();
-	}, [taskId]);
+	}, [tasks]);
 
 	const postsStates = courses
 		.map(course =>
@@ -100,6 +102,18 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 
 	const anyOfError = postsStates.find(({ state }) => state?.error !== undefined);
 
+	const state =
+		tasks.length > 0
+			? {
+					pending: true,
+					error: undefined,
+			  }
+			: anyOfError?.state ?? {
+					pending: false,
+					error: undefined,
+					fulfilledAt: '0',
+			  };
+
 	return (
 		<>
 			<Box display="flex" alignItems="center">
@@ -107,24 +121,14 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 					{variants.map(variant => PostVariantNames[variant]).join('/')}
 				</Typography>
 				<Box width="0.8rem" />
-				<AsyncThunkState
-					onClick={() => setTaskId(0)}
-					state={
-						taskId !== undefined
-							? {
-									pending: true,
-									error: undefined,
-							  }
-							: anyOfError?.state ?? {
-									pending: false,
-									error: undefined,
-									fulfilledAt: '0',
-							  }
-					}
-					pending={status}
-					fulfilled={status}
-					{...(taskId !== undefined ? {} : { color: 'primary.main', startIcon: <Refresh />, style: { cursor: 'pointer' } })}
-				/>
+				<FetchButton state={state} onFetch={startFetch}>
+					<AsyncThunkState
+						state={state}
+						pending={text}
+						fulfilled={text}
+						{...(tasks.length > 0 ? {} : { color: 'primary.main', startIcon: <Refresh />, style: { cursor: 'pointer' } })}
+					/>
+				</FetchButton>
 			</Box>
 			<Box height="0.3rem" />
 			<PostList
