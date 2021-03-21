@@ -36,3 +36,6 @@ yarn-error.log*
 # - CSC_KEY_PASSWORD
 # - GITHUB_TOKEN
 electron-builder.env
+
+# certification files (cert.cer, cert.pfx, cert.pvk)
+/cert
