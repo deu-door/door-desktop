@@ -1,8 +1,9 @@
-import { app, BrowserWindow, session, shell } from 'electron';
+import { app, BrowserWindow, session } from 'electron';
 import * as isDev from 'electron-is-dev';
 import * as path from 'path';
 import installExtension, { REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } from 'electron-devtools-installer';
 import unusedFilename from 'unused-filename';
+import { checkForUpdates } from './updater';
 
 // Garbage Collection이 일어나지 않도록 함수 밖에 선언함.
 let mainWindow: BrowserWindow;
@@ -119,6 +120,9 @@ async function createWindow() {
 		// build/index.html
 		mainWindow.loadURL(`file://${__dirname}/../index.html`);
 	}
+
+	// check for update
+	checkForUpdates();
 
 	mainWindow.on('closed', () => {
 		mainWindow = undefined!;
