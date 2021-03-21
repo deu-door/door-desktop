@@ -41,3 +41,8 @@ appx:
   showNameOnTiles: true
   languages:
     - ko-KR
+
+publish:
+  provider: github
+  releaseType: draft
+  vPrefixedTagName: true
