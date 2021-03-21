@@ -19,8 +19,10 @@ win:
   target:
     - nsis
     - appx
-  #publisherName: solo5star
-  #signAndEditExecutable: true
+  publish:
+    - github
+  signAndEditExecutable: true
+  publisherName: solo5star
 
 # Config for the windows installer
 nsis:
@@ -32,10 +34,10 @@ nsis:
   language: 1042
 
 appx:
-  #publisher: CN=solo5star
-  backgroundColor: "#2F71E9"
   applicationId: DoorDesktop
   identityName: 31910solo5star.DoorDesktop
+  publisher: CN=BE74F9B7-7C0B-4D43-9066-8724D97A5AD2
+  backgroundColor: '#2F71E9'
   showNameOnTiles: true
   languages:
     - ko-KR
