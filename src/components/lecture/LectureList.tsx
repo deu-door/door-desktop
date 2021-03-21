@@ -1,5 +1,6 @@
-import { Box, createStyles, Link, LinkProps, List, ListItem, makeStyles, styled, Typography } from '@material-ui/core';
+import { Box, createStyles, List, ListItem, makeStyles, Typography } from '@material-ui/core';
 import { AsyncThunkState } from 'components/common/AsyncThunkState';
+import { FetchButton } from 'components/common/FetchButton';
 import { KeepLatestState } from 'components/common/KeepLatestState';
 import { useCourses } from 'hooks/door/useCourses';
 import { useCourseLectures } from 'hooks/door/useLectures';
@@ -7,13 +8,6 @@ import { ICourse } from 'models/door';
 import React, { useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { LectureListItem } from './LectureListItem';
-
-const FetchLink = styled((props: LinkProps) => <Link component="a" {...props} />)({
-	'&:hover': {
-		textDecoration: 'none',
-	},
-	cursor: 'pointer',
-});
 
 const useStyles = makeStyles(theme =>
 	createStyles({
@@ -77,6 +71,8 @@ export const LectureList: React.FC<LectureListProps> = props => {
 	return (
 		<Box>
 			<KeepLatestState state={lecturesState} onTriggerFetch={triggerFetch} />
+
+			<FetchButton state={lecturesState} onFetch={triggerFetch} />
 
 			<Box height="0.7rem" />
 

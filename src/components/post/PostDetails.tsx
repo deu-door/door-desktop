@@ -7,8 +7,6 @@ import {
 	DialogContent,
 	Divider,
 	IconButton,
-	Link,
-	LinkProps,
 	Paper,
 	styled,
 	TextField,
@@ -19,6 +17,7 @@ import {
 } from '@material-ui/core';
 import { Add, ArrowBack, Attachment, CheckCircleOutline, Delete, ErrorOutline } from '@material-ui/icons';
 import { AsyncThunkState } from 'components/common/AsyncThunkState';
+import { FetchButton } from 'components/common/FetchButton';
 import { KeepLatestState } from 'components/common/KeepLatestState';
 import { usePosts } from 'hooks/door/usePosts';
 import { IAttachment, IPost, IPostHead, ISubmittablePost, PostVariant } from 'models/door';
@@ -47,13 +46,6 @@ export const PostContents = styled(
 		marginBottom: props.theme.spacing(0),
 	},
 }));
-
-const FetchLink = styled((props: LinkProps) => <Link component="a" {...props} />)({
-	'&:hover': {
-		textDecoration: 'none',
-	},
-	cursor: 'pointer',
-});
 
 const isFulfilledPost = (post: IPostHead): post is IPost => {
 	return 'contents' in post;
@@ -148,6 +140,8 @@ export const PostDetails: React.FC<PostDetailsProps> = props => {
 			<Box height="0.3rem" />
 
 			<KeepLatestState state={post} onTriggerFetch={triggerFetch} />
+
+			<FetchButton state={post} onFetch={triggerFetch} />
 
 			<Box paddingY="1rem">
 				<Divider />

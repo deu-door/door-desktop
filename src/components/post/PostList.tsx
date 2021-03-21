@@ -1,5 +1,6 @@
-import { Box, Link, LinkProps, List, ListItem, ListProps, styled, Typography } from '@material-ui/core';
+import { Box, List, ListItem, ListProps, Typography } from '@material-ui/core';
 import { AsyncThunkState } from 'components/common/AsyncThunkState';
+import { FetchButton } from 'components/common/FetchButton';
 import { KeepLatestState } from 'components/common/KeepLatestState';
 import { useCourses } from 'hooks/door/useCourses';
 import { useCoursePosts } from 'hooks/door/usePosts';
@@ -7,13 +8,6 @@ import { ICourse, IPostHead, PostVariant } from 'models/door';
 import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { PostListItemRenderer } from './PostListItem';
-
-const FetchLink = styled((props: LinkProps) => <Link component="a" {...props} />)({
-	'&:hover': {
-		textDecoration: 'none',
-	},
-	cursor: 'pointer',
-});
 
 export type PostListProps = ListProps & {
 	posts: IPostHead[];
@@ -76,6 +70,8 @@ export const RoutePostList: React.FC<RoutePostListProps> = props => {
 	return (
 		<Box>
 			<KeepLatestState state={postsState} onTriggerFetch={triggerFetch} />
+
+			<FetchButton state={postsState} onFetch={triggerFetch} />
 
 			<Box height="0.7rem" />
 
