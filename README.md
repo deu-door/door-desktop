@@ -4,14 +4,14 @@
 Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Dong-eui University</a></strong>
 </p>
 
-<br><br>
-
 <div align="center">
 
 [![GitHub Release](https://img.shields.io/github/v/release/deu-door/door-desktop.svg)](https://github.com/deu-door/door-desktop/releases/latest)
 [![GitHub Downloads](https://img.shields.io/github/downloads/deu-door/door-desktop/total.svg)](https://github.com/deu-door/door-desktop/releases/)
 
 </div>
+
+<br><br>
 
 |                      대시보드                       |                        강의정보                         |
 | :-------------------------------------------------: | :-----------------------------------------------------: |
