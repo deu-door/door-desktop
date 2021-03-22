@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Box, createMuiTheme, CssBaseline, MuiThemeProvider, useMediaQuery } from '@material-ui/core';
 import { Routes } from 'Routes';
-import { useDispatch } from 'react-redux';
 import { useOnlineResources } from 'hooks/online-resources/useOnlineResources';
 
 const App: React.FC = () => {
@@ -54,11 +53,12 @@ const App: React.FC = () => {
 	);
 
 	// Load online resources
-	const { fetchExternalLinks } = useOnlineResources();
+	const { fetchExternalLinks, fetchSplashTexts } = useOnlineResources();
 
 	useEffect(() => {
 		setTimeout(() => {
 			fetchExternalLinks();
+			fetchSplashTexts();
 		}, 5 * 1000);
 	}, []);
 

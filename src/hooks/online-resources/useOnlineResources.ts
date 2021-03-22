@@ -8,10 +8,12 @@ export function useOnlineResources() {
 	const dispatch = useDispatch();
 
 	const fetchExternalLinks = useCallback(() => dispatch(actions.fetchExternalLinks()), [dispatch]);
+	const fetchSplashTexts = useCallback(() => dispatch(actions.fetchSplashTexts()), [dispatch]);
 
 	return {
-		externalLinks: onlineResources.externalLinks,
+		...onlineResources,
 
 		fetchExternalLinks,
+		fetchSplashTexts,
 	};
 }

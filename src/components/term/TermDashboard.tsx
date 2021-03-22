@@ -8,6 +8,7 @@ import { PostListItemRenderer } from 'components/post/PostListItem';
 import { useCourses } from 'hooks/door/useCourses';
 import { usePosts } from 'hooks/door/usePosts';
 import { useTerms } from 'hooks/door/useTerms';
+import { useOnlineResources } from 'hooks/online-resources/useOnlineResources';
 import { ICourse, ITerm, PostVariant, PostVariantNames } from 'models/door';
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -157,16 +158,9 @@ export const TermDashboard: React.FC<TermDashboardProps> = props => {
 	const courses = coursesByTerm(term.id);
 	const [selected, setSelected] = useState<ICourse | undefined>(undefined);
 
-	const messages = [
-		'이번 학기 잘 보내고 있나요?',
-		'과제는 미리미리 끝내요!',
-		'조금만 더 힘을 내요. 종강까지!',
-		'종강이 멀지 않았어요. 화이팅!',
-		'동의대의 아름다운 밤 경치를 보신 적 있나요?',
-		'정보관 8층에서 내려다 보는 경치는 정말 멋져요.',
-	];
+	const { splashTexts } = useOnlineResources();
 
-	const [tip] = useState(messages[Math.floor(Math.random() * messages.length)]);
+	const [tip] = useState(splashTexts[Math.floor(Math.random() * splashTexts.length)]);
 
 	useEffect(() => {
 		// fetch all course's syllabus
