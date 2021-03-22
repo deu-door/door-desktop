@@ -6,6 +6,13 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 
 <br><br>
 
+<div align="center">
+
+[![GitHub Release](https://img.shields.io/github/v/release/deu-door/door-desktop.svg)](https://github.com/deu-door/door-desktop/releases/latest)
+[![GitHub Downloads](https://img.shields.io/github/downloads/deu-door/door-desktop/total.svg)](https://github.com/deu-door/door-desktop/releases/)
+
+</div>
+
 |                      대시보드                       |                        강의정보                         |
 | :-------------------------------------------------: | :-----------------------------------------------------: |
 | ![](./screenshots/door-desktop-0.3.0/dashboard.png) | ![](./screenshots/door-desktop-0.3.0/course-detail.png) |
