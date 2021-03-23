@@ -13,13 +13,12 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 
 <br><br>
 
-|                      대시보드                       |                        강의정보                         |
-| :-------------------------------------------------: | :-----------------------------------------------------: |
-| ![](./screenshots/door-desktop-0.3.0/dashboard.png) | ![](./screenshots/door-desktop-0.3.0/course-detail.png) |
+<div align="center">
 
-<br><br>
+![dashboard-filter-posts](./screenshots/door-desktop-0.3.0/dashboard-filter-posts.gif)
+![lectures](./screenshots/door-desktop-0.3.0/lectures.gif)
 
-# 📢 현재 지속적으로 개발중인 프로젝트입니다.
+</div>
 
 <br><br>
 
