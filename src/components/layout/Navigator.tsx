@@ -142,7 +142,7 @@ export const Navigator: React.FC<NavigatorProps> = props => {
 									fontWeight: 'bolder',
 								}}
 							>
-								{authenticated ? 'Login' : 'Offline'}
+								{authenticated ? 'Connected' : 'Disconnected'}
 							</Button>
 							<Box width="1rem" />
 							<Button onClick={() => setOpen(true)} color="inherit">
