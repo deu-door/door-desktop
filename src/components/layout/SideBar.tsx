@@ -17,7 +17,7 @@ import {
 import { useCourses } from 'hooks/door/useCourses';
 import { useTerms } from 'hooks/door/useTerms';
 import { ICourse, ITerm } from 'models/door';
-import React from 'react';
+import React, { useState } from 'react';
 
 const RoundedPaper = styled(withTheme((props: PaperProps) => <Paper elevation={0} {...props} />))(props => ({
 	borderRadius: 16,
@@ -35,6 +35,8 @@ const SelectWithoutBorder = styled(withTheme((props: SelectProps) => <Select {..
 	},
 }));
 
+const isDense = () => window.innerHeight < 768;
+
 export type SideBarProps = {
 	selectedCourse?: Pick<ICourse, 'id' | 'termId'>;
 	onSelectCourse?: (course: Pick<ICourse, 'id' | 'termId'>) => void;
@@ -51,6 +53,15 @@ export const SideBar: React.FC<SideBarProps> = props => {
 	const { coursesByTerm, courseTypes } = useCourses();
 
 	const terms = allTerms();
+	const courses = coursesByTerm(selectedTerm.id);
+
+	const [dense, setDense] = useState(isDense());
+
+	// height-responsive-sidebar
+	window.addEventListener('resize', () => {
+		// use breakpoint=768px
+		setDense(isDense());
+	});
 
 	return (
 		<Box component="aside" {...boxProps}>
@@ -72,21 +83,26 @@ export const SideBar: React.FC<SideBarProps> = props => {
 
 			{selectedTerm !== undefined && (
 				<RoundedPaper>
-					{coursesByTerm(selectedTerm.id).length === 0 ? (
+					{courses.length === 0 ? (
 						<ListItem>
 							<ListItemText>항목이 없습니다</ListItemText>
 						</ListItem>
 					) : (
 						courseTypes()
 							.map(type => {
-								const courses = coursesByTerm(selectedTerm.id).filter(course => course.type === type);
+								const coursesByType = courses.filter(course => course.type === type);
 
-								if (courses.length === 0) return undefined;
+								if (coursesByType.length === 0) return undefined;
 
 								return (
 									<List key={type} subheader={<ListSubheader disableSticky>{type}</ListSubheader>}>
-										{courses.map(course => (
-											<ListItem key={course.id} button onClick={() => onSelectCourse?.(course)}>
+										{coursesByType.map(course => (
+											<ListItem
+												key={course.id}
+												button
+												onClick={() => onSelectCourse?.(course)}
+												style={dense ? { paddingTop: '0.1rem', paddingBottom: '0.1rem' } : {}}
+											>
 												<ListItemText
 													primary={course.name}
 													style={{
