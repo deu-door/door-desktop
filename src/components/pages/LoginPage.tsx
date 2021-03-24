@@ -10,8 +10,8 @@ import {
 	TextFieldProps,
 	Typography,
 } from '@material-ui/core';
-import { default as LogoOriginalWhite } from 'resources/logo-original-white.svg';
 import React, { useState } from 'react';
+import { default as IconOriginal } from 'resources/icon-original.svg';
 import { useUser } from 'hooks/door/useUser';
 import { Alert } from '@material-ui/lab';
 import { useHistory } from 'react-router';
@@ -75,20 +75,34 @@ export const LoginPage: React.FC = props => {
 	};
 
 	return (
-		<Box flex={1} display="flex" alignItems="center" justifyContent="center" bgcolor="primary.main" color="primary.contrastText">
+		<Box
+			flex={1}
+			display="flex"
+			alignItems="center"
+			justifyContent="center"
+			color="primary.contrastText"
+			style={{
+				background: 'linear-gradient(#2F71E9, 40%, #1657d0)',
+			}}
+		>
 			<Container maxWidth="xs">
 				<Box component="form" display="flex" flexDirection="column" alignItems="center" onSubmit={tryLogin}>
-					<img width="128" alt="logo-original-white" src={LogoOriginalWhite} />
+					<img
+						width="128px"
+						alt="icon-original"
+						src={IconOriginal}
+						style={{ filter: 'drop-shadow(rgba(255, 255, 255, 0.6) 0 0 30px)' }}
+					/>
 
-					<Box height="3rem" />
+					<Box height="1.8rem" />
 
-					<Typography variant="h4">환영합니다!</Typography>
+					<Typography variant="h5">환영합니다!</Typography>
 
-					<Box height="2rem" />
+					<Box height="0.8rem" />
 
-					<Typography>Door Desktop을 사용하려면 Door 홈페이지에서 사용하는 아이디와 비밀번호로 로그인해 주세요.</Typography>
-
-					<Box height="1rem" />
+					<Typography variant="subtitle1">
+						Door Desktop을 사용하려면 Door 홈페이지에서 사용하는 아이디와 비밀번호로 로그인해 주세요.
+					</Typography>
 
 					<LoginTextField id="door-id" label="Door ID" disabled={user.pending} onChange={e => setId(e.target.value)} />
 					<LoginTextField
@@ -134,7 +148,7 @@ export const LoginPage: React.FC = props => {
 					{user.pending ? (
 						<CircularProgress color="secondary" />
 					) : (
-						<Button type="submit" variant="contained" color="secondary" fullWidth>
+						<Button type="submit" variant="contained" color="primary" fullWidth>
 							<Typography variant="subtitle1">로그인</Typography>
 						</Button>
 					)}
