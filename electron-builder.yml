@@ -21,6 +21,7 @@ win:
     - nsis
   publish:
     - github
+  forceCodeSigning: true
   signAndEditExecutable: true
   publisherName: solo5star
 
