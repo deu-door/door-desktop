@@ -254,7 +254,7 @@ export const TermDashboard: React.FC<TermDashboardProps> = props => {
 				</Grid>
 			</Grid>
 
-			<Box height="3rem" />
+			<Box height="1rem" />
 
 			<Banner />
 
