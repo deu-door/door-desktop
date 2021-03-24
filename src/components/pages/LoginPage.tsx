@@ -10,8 +10,8 @@ import {
 	TextFieldProps,
 	Typography,
 } from '@material-ui/core';
-import React, { useState } from 'react';
 import { default as IconOriginal } from 'resources/icon-original.svg';
+import React, { useEffect, useState } from 'react';
 import { useUser } from 'hooks/door/useUser';
 import { Alert } from '@material-ui/lab';
 import { useHistory } from 'react-router';
@@ -68,11 +68,14 @@ export const LoginPage: React.FC = props => {
 
 			// check using auto login, and save credential
 			if (autoLogin) await saveCredential({ id, password });
-
-			// successfully logined
-			history.replace('/');
 		} catch (e) {}
 	};
+
+	// detect authenticate
+	useEffect(() => {
+		// means successfully logined
+		if (user.authenticated) history.replace('/');
+	}, [user.authenticated]);
 
 	return (
 		<Box
