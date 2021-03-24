@@ -65,7 +65,7 @@ const App: React.FC = () => {
 	return (
 		<MuiThemeProvider theme={theme}>
 			<CssBaseline />
-			<Box display="flex" height="100vh" boxSizing="border-box">
+			<Box display="flex" height="100%" boxSizing="border-box">
 				<Routes />
 			</Box>
 		</MuiThemeProvider>

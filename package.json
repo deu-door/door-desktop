@@ -26,6 +26,7 @@
 		"axios": "^0.21.1",
 		"clsx": "^1.1.1",
 		"cross-env": "^7.0.3",
+		"custom-electron-titlebar": "^3.2.6",
 		"electron-devtools-installer": "^3.1.1",
 		"electron-is-dev": "^1.2.0",
 		"electron-log": "^4.3.2",

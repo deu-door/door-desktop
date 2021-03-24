@@ -30,7 +30,7 @@ export const ResponsiveSideBar: React.FC<ResponsiveSideBarProps> = props => {
 					onClose={onClose}
 					PaperProps={{ style: { background: 'transparent', boxShadow: 'none' } }}
 				>
-					<SideBar width={width} style={{ marginTop: theme.spacing(2), marginLeft: theme.spacing(2) }} {...sideBarProps} />
+					<SideBar width={width} style={{ marginTop: theme.spacing(6), marginLeft: theme.spacing(2) }} {...sideBarProps} />
 				</Drawer>
 			</Hidden>
 		</nav>

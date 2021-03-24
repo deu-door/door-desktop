@@ -82,6 +82,9 @@ async function createWindow() {
 
 	mainWindow = new BrowserWindow({
 		title: 'Door Desktop',
+		titleBarStyle: 'hidden',
+		frame: false,
+
 		center: true,
 		// kiosk: !isDev,
 		resizable: true,
