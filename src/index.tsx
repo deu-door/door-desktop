@@ -47,6 +47,7 @@ new Titlebar({
 	backgroundColor: Color.fromHex('#204fa3'),
 	menu: undefined,
 	titleHorizontalAlignment: 'left',
+	unfocusEffect: false,
 });
 
 // If you want your app to work offline and load faster, you can change
