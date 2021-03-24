@@ -303,7 +303,7 @@ export const SubmittablePostDetails: React.FC<SubmittablePostDetailsProps> = pro
 						{post.submission.attachments.map(attachment => (
 							<Box key={attachment.link} marginRight="0.5rem" marginBottom="1rem" display="inline-block">
 								<PostAttachment attachment={attachment} />
-								{canEdit && (
+								{editing && (
 									<>
 										<Dialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)}>
 											<DialogContent>
