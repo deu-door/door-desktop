@@ -29,7 +29,7 @@ export const Duration: React.FC<DurationProps> = props => {
 			<Typography variant="subtitle2" {...otherProps} style={{ opacity: from < now && now < to ? 1 : 0.7 }}>
 				{hover ? (
 					<>
-						<DateTime date={from} format="M월 D일 h시 m분" /> ~ <DateTime date={to} format="M월 D일 h시 m분" />
+						<DateTime date={from} format="M월 D일 a h시 m분" /> ~ <DateTime date={to} format="M월 D일 a h시 m분" />
 					</>
 				) : now < from ? (
 					<>
