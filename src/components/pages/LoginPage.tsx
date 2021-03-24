@@ -4,7 +4,9 @@ import {
 	Checkbox,
 	CircularProgress,
 	Container,
+	createStyles,
 	FormControlLabel,
+	makeStyles,
 	styled,
 	TextField,
 	TextFieldProps,
@@ -15,6 +17,25 @@ import React, { useEffect, useState } from 'react';
 import { useUser } from 'hooks/door/useUser';
 import { Alert } from '@material-ui/lab';
 import { useHistory } from 'react-router';
+
+const useStyles = makeStyles(theme =>
+	createStyles({
+		breathIcon: {
+			animation: `$breathAnimation 6s infinite`,
+		},
+		'@keyframes breathAnimation': {
+			'0%': {
+				filter: 'drop-shadow(0 0 30px rgba(255, 255, 255, 0.4))',
+			},
+			'50%': {
+				filter: 'drop-shadow(0 0 50px rgba(255, 255, 255, 0.9))',
+			},
+			'100%': {
+				filter: 'drop-shadow(0 0 30px rgba(255, 255, 255, 0.4))',
+			},
+		},
+	}),
+);
 
 const LoginTextField = styled((props: TextFieldProps) => <TextField fullWidth variant="outlined" {...props} />)(props => ({
 	'& label.Mui-focused': {
@@ -53,7 +74,8 @@ const AlertFullwidth = styled(Alert)({
 	alignSelf: 'stretch',
 });
 
-export const LoginPage: React.FC = props => {
+export const LoginPage: React.FC = () => {
+	const classes = useStyles();
 	const [capsLockPressed, setCapsLockPressed] = useState(false);
 	const [id, setId] = useState('');
 	const [password, setPassword] = useState('');
@@ -95,12 +117,7 @@ export const LoginPage: React.FC = props => {
 		>
 			<Container maxWidth="xs">
 				<Box component="form" display="flex" flexDirection="column" alignItems="center" onSubmit={tryLogin}>
-					<img
-						width="128px"
-						alt="icon-original"
-						src={IconOriginal}
-						style={{ filter: 'drop-shadow(rgba(255, 255, 255, 0.6) 0 0 30px)' }}
-					/>
+					<img className={classes.breathIcon} width="128px" alt="icon-original" src={IconOriginal} />
 
 					<Box height="1.8rem" />
 
