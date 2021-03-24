@@ -16,9 +16,15 @@ export const Footer: React.FC = props => {
 			<Box height="1.2rem" />
 
 			<Typography color="textSecondary" variant="body2">
-				<span>외부 링크 : </span>
+				<span>외부 링크 :</span>
 				{externalLinks.map(externalLink => (
-					<Link key={externalLink.url} href="#" color="inherit" onClick={() => shell.openExternal(externalLink.url)}>
+					<Link
+						key={externalLink.url}
+						href="#"
+						color="inherit"
+						onClick={() => shell.openExternal(externalLink.url)}
+						style={{ marginLeft: '0.5rem' }}
+					>
 						{externalLink.label}
 					</Link>
 				))}
