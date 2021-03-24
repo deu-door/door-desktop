@@ -64,12 +64,13 @@ const bytesToSize = (bytes: number): string => {
 
 export type DownloadProps = {
 	item: DownloadProgress;
+	onClose?: () => void;
+	open?: boolean;
 };
 
 export const Download: React.FC<DownloadProps> = props => {
-	const { item } = props;
+	const { item, onClose, open } = props;
 	const classes = useStyles();
-	const [open, setOpen] = useState(true);
 
 	return (
 		<Snackbar className={classes.notification} open={open}>
@@ -85,14 +86,20 @@ export const Download: React.FC<DownloadProps> = props => {
 									<Box display="flex">
 										{`${item.name} 파일이 다운로드되었습니다.`}
 										<Box width="0.8rem" />
-										<Link component="button" onClick={() => shell.openPath(item.path)}>
+										<Link
+											component="button"
+											onClick={() => {
+												shell.openPath(item.path);
+												onClose?.();
+											}}
+										>
 											열기
 										</Link>
 									</Box>
 								)}
 							</Grid>
 							<Grid item>
-								<IconButton size="small" color="inherit" onClick={() => setOpen(false)}>
+								<IconButton size="small" color="inherit" onClick={() => onClose?.()}>
 									<Close />
 								</IconButton>
 							</Grid>
@@ -138,6 +145,14 @@ export const Downloads: React.FC = props => {
 		});
 	};
 
+	const remove = (path: string) => {
+		setItems(
+			Object.keys(items)
+				.filter(_path => _path !== path)
+				.reduce((object, path) => ({ ...object, [path]: items[path] }), {}),
+		);
+	};
+
 	useEffect(() => {
 		downloader.on('start', upsert);
 		downloader.on('progress', upsert);
@@ -149,12 +164,12 @@ export const Downloads: React.FC = props => {
 			downloader.remove('complete', upsert);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [items]);
+	}, []);
 
 	return (
 		<Box position="fixed" bottom={0} right={0} zIndex={999}>
 			{Object.values(items).map(item => (
-				<Download key={item.path} item={item} />
+				<Download key={item.path} item={item} onClose={() => remove(item.path)} open />
 			))}
 		</Box>
 	);
