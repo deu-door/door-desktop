@@ -51,25 +51,31 @@ export const UserDialog: React.FC<UserDialogProps> = props => {
 			<Dialog maxWidth="xs" fullWidth {...otherProps} {...(pending ? { open: false } : {})}>
 				<DialogTitle>Door 유저 정보</DialogTitle>
 				<DialogContent>
-					{user && (
-						<Box display="flex" flexDirection="column">
-							{[
-								{ label: '이름', value: user.name },
-								{ label: '학번', value: user.id },
-								{ label: '전공', value: user.major },
-							].map(({ label, value }) => (
-								<Box key={label} marginBottom="0.8rem">
-									<Typography variant="subtitle2" color="textSecondary" display="inline">
-										{label}
-									</Typography>
-									<Box width="0.8rem" />
-									<Typography variant="h6" display="inline">
-										{value}
-									</Typography>
-								</Box>
-							))}
+					<Box display="flex">
+						<Box width="160px">
+							<img alt="유저 이미지" style={{ height: '100%' }} src={user?.image} />
 						</Box>
-					)}
+						<Box width="0.8rem" />
+						{user && (
+							<Box flex={1} display="flex" flexDirection="column">
+								{[
+									{ label: '이름', value: user.name },
+									{ label: '학번', value: user.id },
+									{ label: '전공', value: user.major },
+								].map(({ label, value }) => (
+									<Box key={label} marginBottom="0.8rem">
+										<Typography variant="subtitle2" color="textSecondary" display="inline">
+											{label}
+										</Typography>
+										<Box width="0.8rem" />
+										<Typography variant="h6" display="inline">
+											{value}
+										</Typography>
+									</Box>
+								))}
+							</Box>
+						)}
+					</Box>
 
 					<Dialog open={!pending && showLogoutDialog} onClose={() => setShowLogoutDialog(false)}>
 						<DialogTitle>정말로 로그아웃하시겠습니까?</DialogTitle>
