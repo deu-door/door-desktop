@@ -95,7 +95,14 @@ export const SideBar: React.FC<SideBarProps> = props => {
 								if (coursesByType.length === 0) return undefined;
 
 								return (
-									<List key={type} subheader={<ListSubheader disableSticky>{type}</ListSubheader>}>
+									<List
+										key={type}
+										subheader={
+											<ListSubheader style={dense ? { height: '2.4rem' } : {}} disableSticky>
+												{type}
+											</ListSubheader>
+										}
+									>
 										{coursesByType.map(course => (
 											<ListItem
 												key={course.id}
