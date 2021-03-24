@@ -82,13 +82,13 @@ export const Download: React.FC<DownloadProps> = props => {
 								{!item.complete ? (
 									`${item.name} 파일을 다운로드 중입니다 ...`
 								) : (
-									<span>
+									<Box display="flex">
 										{`${item.name} 파일이 다운로드되었습니다.`}
 										<Box width="0.8rem" />
 										<Link component="button" onClick={() => shell.openPath(item.path)}>
 											열기
 										</Link>
-									</span>
+									</Box>
 								)}
 							</Grid>
 							<Grid item>
