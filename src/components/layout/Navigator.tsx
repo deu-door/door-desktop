@@ -15,6 +15,7 @@ import {
 	Hidden,
 	IconButton,
 	Toolbar,
+	Tooltip,
 	Typography,
 	useTheme,
 } from '@material-ui/core';
@@ -22,7 +23,7 @@ import { Menu } from '@material-ui/icons';
 import { default as LogoOriginalWhite } from 'resources/logo-original-white.svg';
 import React, { useState } from 'react';
 import { useUser } from 'hooks/door/useUser';
-import { lightGreen, red } from '@material-ui/core/colors';
+import { red } from '@material-ui/core/colors';
 import { useHistory } from 'react-router';
 
 export type UserDialogProps = DialogProps;
@@ -106,7 +107,8 @@ export type NavigatorProps = {
 export const Navigator: React.FC<NavigatorProps> = props => {
 	const { onSideBarOpen, onClickHome, ...appBarProps } = props;
 	const {
-		user: { user, authenticated },
+		user: { user, authenticated, error, pending },
+		ensureLoginState,
 	} = useUser();
 	const [open, setOpen] = useState(false);
 
@@ -134,17 +136,23 @@ export const Navigator: React.FC<NavigatorProps> = props => {
 
 					{user && (
 						<>
-							<Button
-								disabled
-								style={{
-									marginLeft: 'auto',
-									color: authenticated ? lightGreen['A200'] : red['A200'],
-									fontWeight: 'bolder',
-								}}
-							>
-								{authenticated ? 'Connected' : 'Disconnected'}
-							</Button>
-							<Box width="1rem" />
+							<Box marginLeft="auto" />
+							{authenticated === false && (
+								<>
+									<Tooltip title="서버와 연결할 수 없거나 로그인이 끊어진 것 같아요. 눌러서 상태를 갱신하세요." arrow>
+										<Button
+											onClick={ensureLoginState}
+											style={{
+												color: red['A200'],
+												fontWeight: 'bolder',
+											}}
+										>
+											{pending ? '로그인 상태 확인 중 ...' : error !== undefined ? error : 'Disconnected'}
+										</Button>
+									</Tooltip>
+									<Box width="1rem" />
+								</>
+							)}
 							<Button onClick={() => setOpen(true)} color="inherit">
 								<Box display="flex" flexDirection="column" alignItems="flex-end" marginRight="0.8rem">
 									<Typography variant="subtitle2">{user.name}</Typography>
