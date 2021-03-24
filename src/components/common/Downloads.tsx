@@ -152,7 +152,7 @@ export const Downloads: React.FC = props => {
 	}, [items]);
 
 	return (
-		<Box position="fixed" bottom={0} right={0}>
+		<Box position="fixed" bottom={0} right={0} zIndex={999}>
 			{Object.values(items).map(item => (
 				<Download key={item.path} item={item} />
 			))}
