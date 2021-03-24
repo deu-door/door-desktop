@@ -1,5 +1,5 @@
-import { Box, Grid, Hidden, Typography } from '@material-ui/core';
-import { Refresh } from '@material-ui/icons';
+import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, Grid, Hidden, Typography } from '@material-ui/core';
+import { CheckBox, CheckBoxOutlineBlank, Refresh } from '@material-ui/icons';
 import { AsyncThunkState } from 'components/common/AsyncThunkState';
 import { Banner } from 'components/common/Banner';
 import { FetchButton } from 'components/common/FetchButton';
@@ -38,12 +38,17 @@ export type TermPostListProps = Omit<PostListProps, 'posts'> & {
 	course?: ICourse;
 	// filter by variants
 	variants: PostVariant[];
+	// shows filter
+	showFilter?: boolean;
 };
 
 export const TermPostList: React.FC<TermPostListProps> = props => {
-	const { term, course, variants, ...otherProps } = props;
+	const { term, course, variants, showFilter = true, ...otherProps } = props;
 	const { coursesByTerm } = useCourses();
 	const { allPosts, fetchPosts, postsStateByVariantByCourseId } = usePosts();
+
+	// filter by variant
+	const [filteredVariants, setFilteredVariants] = useState(new Set());
 
 	// totally managed progress (tasks[id])
 	const [tasks, setTasks] = useState<Array<() => Promise<unknown>>>([]);
@@ -53,7 +58,11 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 	const courseIds = new Set(courses.map(course => course.id));
 
 	// filter posts by variant and term
-	const posts = allPosts().filter(post => variants.some(variant => variant === post.variant) && courseIds.has(post.courseId));
+	const posts = allPosts().filter(
+		post =>
+			(filteredVariants.size > 0 ? [...filteredVariants] : variants).some(variant => variant === post.variant) &&
+			courseIds.has(post.courseId),
+	);
 
 	const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -118,9 +127,47 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 	return (
 		<>
 			<Box display="flex" alignItems="center">
-				<Typography variant="subtitle2" color="textSecondary">
-					{variants.map(variant => PostVariantNames[variant]).join('/')}
-				</Typography>
+				{showFilter ? (
+					<FormControl>
+						<FormGroup row>
+							{variants.map((variant, index) => (
+								<FormControlLabel
+									key={variant}
+									style={{ marginRight: 0, marginLeft: index !== 0 ? '0.7rem' : 0 }}
+									control={
+										<Checkbox
+											style={{ padding: 0, marginRight: '0.2rem' }}
+											color="primary"
+											icon={<CheckBoxOutlineBlank style={{ fontSize: '1.2rem' }} />}
+											checkedIcon={<CheckBox style={{ fontSize: '1.2rem' }} />}
+											checked={filteredVariants.has(variant)}
+											onChange={event =>
+												event.target.checked
+													? setFilteredVariants(new Set(filteredVariants.add(variant)))
+													: setFilteredVariants(
+															new Set([...filteredVariants].filter(_variant => _variant !== variant)),
+													  )
+											}
+										/>
+									}
+									label={
+										<Typography
+											variant="subtitle2"
+											color="textSecondary"
+											style={{ display: 'inline-block', verticalAlign: 'middle' }}
+										>
+											{PostVariantNames[variant]}
+										</Typography>
+									}
+								/>
+							))}
+						</FormGroup>
+					</FormControl>
+				) : (
+					<Typography variant="subtitle2" color="textSecondary">
+						{variants.map(variant => PostVariantNames[variant]).join('/')}
+					</Typography>
+				)}
 				<Box width="0.8rem" />
 				<FetchButton state={state} onFetch={startFetch}>
 					<AsyncThunkState
