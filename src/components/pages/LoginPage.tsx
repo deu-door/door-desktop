@@ -54,11 +54,16 @@ const AlertFullwidth = styled(Alert)({
 });
 
 export const LoginPage: React.FC = props => {
+	const [capsLockPressed, setCapsLockPressed] = useState(false);
 	const [id, setId] = useState('');
 	const [password, setPassword] = useState('');
 	const [autoLogin, setAutoLogin] = useState(false);
 	const history = useHistory();
 	const { user, login, saveCredential } = useUser();
+
+	const detectCapsLockPressed = (event: React.KeyboardEvent) => {
+		setCapsLockPressed(event.getModifierState('CapsLock'));
+	};
 
 	const tryLogin = async (event: React.FormEvent<HTMLElement>) => {
 		event.preventDefault();
@@ -114,22 +119,20 @@ export const LoginPage: React.FC = props => {
 						type="password"
 						disabled={user.pending}
 						onChange={e => setPassword(e.target.value)}
+						onBlur={() => setCapsLockPressed(false)}
+						onKeyDown={detectCapsLockPressed}
+						error={capsLockPressed}
+						helperText={capsLockPressed ? 'CapsLock이 켜져 있습니다' : ' '}
 					/>
-
-					<Box height="1rem" />
 
 					<FormControlLabel
 						control={
-							<LoginCheckbox
-								checked={autoLogin}
-								onChange={event => setAutoLogin(event.target.checked)}
-								disabled={user.pending}
-							/>
+							<LoginCheckbox checked={autoLogin} onChange={e => setAutoLogin(e.target.checked)} disabled={user.pending} />
 						}
 						label="로그인 상태 유지"
 					/>
 
-					<Box height="1.2rem">
+					<Box height="0.6rem">
 						{autoLogin && (
 							<Typography variant="caption" color="error">
 								개인정보 보호를 위해, 개인 PC에서만 사용해 주세요.
