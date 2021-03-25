@@ -62,7 +62,7 @@ export const LectureList: React.FC<LectureListProps> = props => {
 
 	// fetch lecture progresses for update state (every 30 seconds)
 	useEffect(() => {
-		const timer = setInterval(fetchLectureProgresses, 1000 * 30);
+		const timer = setInterval(triggerFetch, 1000 * 30);
 
 		return () => clearInterval(timer);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
