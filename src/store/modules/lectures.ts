@@ -131,7 +131,7 @@ const lecturesSlice = createSlice({
 
 export const reducer = persistReducer(
 	{
-		key: 'posts',
+		key: 'lectures',
 		storage: persistedStorage,
 		transforms: [AsyncThunkTransform],
 		version: 1,

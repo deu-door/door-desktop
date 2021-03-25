@@ -173,7 +173,7 @@ export const reducer = persistReducer(
 		key: 'posts',
 		storage: persistedStorage,
 		transforms: [AsyncThunkTransform],
-		version: 1,
+		version: 2,
 		migrate: ResetOnVersionChange,
 	},
 	postsSlice.reducer,
