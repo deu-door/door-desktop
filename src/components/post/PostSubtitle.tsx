@@ -1,7 +1,7 @@
 import { styled, Typography, TypographyProps } from '@material-ui/core';
 import { DateTime } from 'components/common/DateTime';
 import { useCourses } from 'hooks/door/useCourses';
-import { Authored, IPost, IPostHead, PostVariantNames } from 'models/door';
+import { Authored, ICourse, IPost, IPostHead, PostVariantNames } from 'models/door';
 import React, { useState } from 'react';
 
 const isAuthored = (post: IPostHead): post is IPostHead & Authored => {
@@ -27,13 +27,13 @@ export const PostSubtitle: React.FC<PostSubtitleProps> = props => {
 	const [hover, setHover] = useState(false);
 	const { courseById } = useCourses();
 
+	const course = courseById(post.courseId);
+
 	return (
 		<PostSubtitleTypography variant="subtitle2" color="textSecondary" {...otherProps}>
 			{[
 				showCourse || showVariant ? (
-					<strong>
-						{`${showCourse ? courseById(post.courseId)?.name : ''} ${showVariant ? PostVariantNames[post.variant] : ''}`.trim()}
-					</strong>
+					<strong>{`${showCourse ? course?.name : ''} ${showVariant ? PostVariantNames[post.variant] : ''}`.trim()}</strong>
 				) : undefined,
 				showAuthor && isAuthored(post) ? post.author : undefined,
 				post.views !== undefined ? `조회수 ${post.views}회` : undefined,
