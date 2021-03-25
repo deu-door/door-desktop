@@ -39,9 +39,9 @@ const saveCredential = createAsyncThunk<string, { id: string; password: string }
 	async (credential, { rejectWithValue }) => secure.encryptCredential(credential),
 );
 
-const loginWithSavedCredential = createAsyncThunk<IUser, void, { state: { user: UserState }; rejectvalue: Error }>(
+const loginWithSavedCredential = createAsyncThunk<void, void, { state: { user: UserState }; rejectvalue: Error }>(
 	'user/loginWithSavedCredential',
-	async (_, { rejectWithValue, getState }) => {
+	async (_, { rejectWithValue, getState, dispatch }) => {
 		try {
 			const encryptedCredential = getState().user.encryptedCredential;
 
@@ -53,9 +53,7 @@ const loginWithSavedCredential = createAsyncThunk<IUser, void, { state: { user: 
 
 			const { id, password } = decrypted;
 
-			const response = await door.login(id, password);
-
-			return response.data;
+			await dispatch(login({ id, password }));
 		} catch (e) {
 			const error: Error = e;
 
@@ -96,7 +94,7 @@ const userSlice = createSlice({
 				state.encryptedCredential = undefined;
 			})
 			.addCase(loginWithSavedCredential.rejected, state => {
-				// auto login failed, password may changed
+				// saved credential may corrupted
 				state.encryptedCredential = undefined;
 			})
 			.addCase(logout.pending, toPending)
