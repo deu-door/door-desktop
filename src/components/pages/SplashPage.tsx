@@ -9,7 +9,7 @@ import { default as LogoOriginalWhite } from 'resources/logo-original-white.svg'
  */
 export const SplashPage: React.FC = () => {
 	const {
-		user: { authenticated },
+		user: { authenticated, persistAuthorization },
 		loginWithSavedCredential,
 	} = useUser();
 	const [autoLoginTried, setAutoLoginTried] = useState(false);
@@ -30,7 +30,8 @@ export const SplashPage: React.FC = () => {
 
 	useEffect(() => {
 		if (autoLoginTried) {
-			if (authenticated) {
+			// just pass, if authorization is persisted, though authentication failed.
+			if (authenticated || persistAuthorization) {
 				setRedirectTo('/terms');
 			} else {
 				setRedirectTo('/login');
