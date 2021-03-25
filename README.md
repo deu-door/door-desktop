@@ -8,6 +8,7 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 
 [![GitHub Release](https://img.shields.io/github/v/release/deu-door/door-desktop.svg)](https://github.com/deu-door/door-desktop/releases/latest)
 [![GitHub Downloads](https://img.shields.io/github/downloads/deu-door/door-desktop/total.svg)](https://github.com/deu-door/door-desktop/releases/)
+[![GitHub Latest Downloads](https://img.shields.io/github/downloads/deu-door/door-desktop/latest/total)](https://github.com/deu-door/door-desktop/releases/latest)
 
 </div>
 
