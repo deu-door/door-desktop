@@ -47,6 +47,7 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 
 # 다운로드 기록
 
+-   2021년 3월 23일 **첫 릴리즈 (v0.3.4)**
 -   2021년 3월 25일 **500+**
 
 <br><br>
