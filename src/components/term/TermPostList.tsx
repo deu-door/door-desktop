@@ -94,6 +94,7 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 			? {
 					pending: true,
 					error: undefined,
+					fulfilledAt: undefined,
 			  }
 			: anyOfError?.state ?? {
 					pending: false,
