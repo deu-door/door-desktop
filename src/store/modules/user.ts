@@ -107,12 +107,18 @@ const userSlice = createSlice({
 				state.fulfilledAt = undefined;
 			})
 			.addMatcher(isPending(login, fetchUser), toPending)
-			.addMatcher(isFulfilled(login, loginWithSavedCredential, fetchUser), (state, { payload: user }) => {
+			.addMatcher(isFulfilled(login, fetchUser), (state, { payload: user }) => {
 				toFulfilled(state);
 				state.authenticated = true;
 				state.user = user;
 			})
 			.addMatcher(isRejected(login, fetchUser), (state, { payload: error }) => {
+				// incorrect password?
+				if (error instanceof NotAcceptableError) {
+					// remove incorrect credential
+					state.encryptedCredential = undefined;
+				}
+
 				toRejectedWithError(state, error?.message);
 
 				// cannot ensure login state
