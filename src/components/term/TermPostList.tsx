@@ -116,7 +116,15 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 
 	return (
 		<>
-			<Box display="flex" alignItems="center">
+			<Box display="flex" flexDirection="column" alignItems="flex-start">
+				<FetchButton state={state} onFetch={startFetch}>
+					<AsyncThunkState
+						state={state}
+						pending={text}
+						{...(tasks.length > 0 ? {} : { color: 'primary.main', startIcon: <Refresh />, style: { cursor: 'pointer' } })}
+					/>
+				</FetchButton>
+				<Box height="0.2rem" />
 				{showFilter ? (
 					<FormControl>
 						<FormGroup row>
@@ -158,14 +166,6 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 						{variants.map(variant => PostVariantNames[variant]).join('/')}
 					</Typography>
 				)}
-				<Box width="0.8rem" />
-				<FetchButton state={state} onFetch={startFetch}>
-					<AsyncThunkState
-						state={state}
-						pending={text}
-						{...(tasks.length > 0 ? {} : { color: 'primary.main', startIcon: <Refresh />, style: { cursor: 'pointer' } })}
-					/>
-				</FetchButton>
 			</Box>
 			<Box height="0.3rem" />
 			<PostList
