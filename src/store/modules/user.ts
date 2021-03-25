@@ -1,8 +1,18 @@
-import { createAction, createAsyncThunk, createSlice, isAnyOf, isFulfilled, isPending, isRejected } from '@reduxjs/toolkit';
+import {
+	AnyAction,
+	AsyncThunk,
+	createAction,
+	createAsyncThunk,
+	createSlice,
+	isAnyOf,
+	isFulfilled,
+	isPending,
+	isRejected,
+} from '@reduxjs/toolkit';
 import { IUser } from 'models/door';
 import { createTransform, persistReducer } from 'redux-persist';
 import door from 'services/door';
-import { HttpError, NotAcceptableError } from 'services/response';
+import { HttpError, NotAcceptableError, UnauthorizedError } from 'services/response';
 import { secure } from 'services/secure';
 import { persistedStorage } from 'store/modules/persisted-storage';
 import { AsyncThunkTransform, IAsyncThunkState, ResetOnVersionChange, toFulfilled, toPending, toRejectedWithError } from './util';
@@ -87,6 +97,10 @@ const logout = createAsyncThunk('user/logout', async (_, { dispatch }) => {
 	dispatch(reset());
 });
 
+const isRejectedAction = (action: AnyAction): action is ReturnType<AsyncThunk<unknown, unknown, any>['rejected']> => {
+	return action.type.endsWith('/rejected');
+};
+
 const userSlice = createSlice({
 	name: 'user',
 	initialState,
@@ -133,6 +147,12 @@ const userSlice = createSlice({
 
 				// cannot ensure login state
 				state.authenticated = false;
+			})
+			.addMatcher(isRejectedAction, (state, { payload: error }) => {
+				// detect unauthorized state from other actions
+				if (error instanceof UnauthorizedError) {
+					state.authenticated = false;
+				}
 			}),
 });
 
