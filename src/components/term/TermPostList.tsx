@@ -87,7 +87,19 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 		)
 		.flat();
 
-	const anyOfError = postsStates.find(({ state }) => state?.error !== undefined);
+	const minFulfilledAt =
+		postsStates.length === 0
+			? undefined
+			: postsStates.reduce<number | undefined>((minFulfilledAt, current) => {
+					// some of state not loaded
+					if (minFulfilledAt === undefined) return undefined;
+
+					if (current.state?.fulfilledAt === undefined) return undefined;
+
+					return Math.min(minFulfilledAt, new Date(current.state.fulfilledAt).valueOf());
+			  }, Date.now());
+
+	const anyError = postsStates.find(({ state }) => state?.error !== undefined);
 
 	const state =
 		tasks.length > 0
@@ -96,10 +108,10 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 					error: undefined,
 					fulfilledAt: undefined,
 			  }
-			: anyOfError?.state ?? {
+			: anyError?.state ?? {
 					pending: false,
 					error: undefined,
-					fulfilledAt: '0',
+					fulfilledAt: minFulfilledAt !== undefined ? new Date(minFulfilledAt).toISOString() : undefined,
 			  };
 
 	return (
@@ -151,7 +163,6 @@ export const TermPostList: React.FC<TermPostListProps> = props => {
 					<AsyncThunkState
 						state={state}
 						pending={text}
-						fulfilled={text}
 						{...(tasks.length > 0 ? {} : { color: 'primary.main', startIcon: <Refresh />, style: { cursor: 'pointer' } })}
 					/>
 				</FetchButton>
