@@ -43,7 +43,13 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 
 메인 화면에서 모든 게시판의 게시물을 모아서 보여줍니다.
 
-<br>
+<br><br>
+
+# 다운로드 기록
+
+-   2021년 3월 25일 **500+**
+
+<br><br>
 
 # 목차
 
