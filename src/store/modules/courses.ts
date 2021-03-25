@@ -3,7 +3,15 @@ import { persistedStorage } from 'store/modules/persisted-storage';
 import { persistReducer } from 'redux-persist';
 import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { ICourse, ICourseSyllabus } from 'models/door';
-import { IAsyncThunkState, AsyncThunkTransform, ResetOnVersionChange, toRejectedWithError, toPending, toFulfilled } from './util';
+import {
+	IAsyncThunkState,
+	AsyncThunkTransform,
+	ResetOnVersionChange,
+	toRejectedWithError,
+	toPending,
+	toFulfilled,
+	UserDataTransform,
+} from './util';
 import { HttpError } from 'services/response';
 import { reset } from './user';
 
@@ -119,7 +127,7 @@ export const reducer = persistReducer(
 	{
 		key: 'courses',
 		storage: persistedStorage,
-		transforms: [AsyncThunkTransform],
+		transforms: [UserDataTransform, AsyncThunkTransform],
 		version: 4,
 		migrate: ResetOnVersionChange,
 	},

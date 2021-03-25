@@ -1,4 +1,5 @@
 import { createMigrate, createTransform, PersistMigrate } from 'redux-persist';
+import { environment } from './environment';
 
 export interface IAsyncThunkState {
 	pending: boolean;
@@ -66,6 +67,15 @@ export const AsyncThunkTransform = createTransform(
 	// transform state being rehydrated
 	(outboundState, key) => {
 		return transformNestedAsyncThunk({ [key]: outboundState })[key as string];
+	},
+);
+
+export const UserDataTransform = createTransform(
+	(inboundState, key) => {
+		return environment.persistUserData === true ? inboundState : undefined;
+	},
+	(outboundState, key) => {
+		return outboundState;
 	},
 );
 

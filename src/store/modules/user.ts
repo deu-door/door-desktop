@@ -8,6 +8,7 @@ import {
 	isFulfilled,
 	isPending,
 	isRejected,
+	PayloadAction,
 } from '@reduxjs/toolkit';
 import { IUser } from 'models/door';
 import { createTransform, persistReducer } from 'redux-persist';
@@ -15,12 +16,22 @@ import door from 'services/door';
 import { HttpError, NotAcceptableError, UnauthorizedError } from 'services/response';
 import { secure } from 'services/secure';
 import { persistedStorage } from 'store/modules/persisted-storage';
-import { AsyncThunkTransform, IAsyncThunkState, ResetOnVersionChange, toFulfilled, toPending, toRejectedWithError } from './util';
+import { environment } from './environment';
+import {
+	AsyncThunkTransform,
+	IAsyncThunkState,
+	ResetOnVersionChange,
+	toFulfilled,
+	toPending,
+	toRejectedWithError,
+	UserDataTransform,
+} from './util';
 
 export interface UserState extends IAsyncThunkState {
 	authenticated: boolean;
 	encryptedCredential?: string;
 	user?: IUser;
+	persistAuthorization: boolean;
 }
 
 const initialState: UserState = {
@@ -28,13 +39,21 @@ const initialState: UserState = {
 	error: undefined,
 	fulfilledAt: undefined,
 	authenticated: false,
+	persistAuthorization: false,
 };
+
+const saveCredential = createAsyncThunk<string, { id: string; password: string }>(
+	'user/saveCredential',
+	async (credential, { rejectWithValue }) => secure.encryptCredential(credential),
+);
 
 const login = createAsyncThunk<IUser, { id: string; password: string }, { rejectValue: HttpError }>(
 	'user/login',
-	async ({ id, password }, { rejectWithValue }) => {
+	async ({ id, password }, { rejectWithValue, dispatch }) => {
 		try {
 			const response = await door.login(id, password);
+
+			dispatch(saveCredential({ id, password }));
 
 			return response.data;
 		} catch (e) {
@@ -43,11 +62,6 @@ const login = createAsyncThunk<IUser, { id: string; password: string }, { reject
 			return rejectWithValue(error);
 		}
 	},
-);
-
-const saveCredential = createAsyncThunk<string, { id: string; password: string }>(
-	'user/saveCredential',
-	async (credential, { rejectWithValue }) => secure.encryptCredential(credential),
 );
 
 const loginWithSavedCredential = createAsyncThunk<void, void, { state: { user: UserState }; rejectvalue: Error }>(
@@ -105,8 +119,8 @@ const userSlice = createSlice({
 	name: 'user',
 	initialState,
 	reducers: {
-		deleteSavedCredential: state => {
-			state.encryptedCredential = undefined;
+		setPersistAuthorization: (state, action: PayloadAction<boolean>) => {
+			state.persistAuthorization = action.payload;
 		},
 	},
 	extraReducers: builder =>
@@ -126,6 +140,8 @@ const userSlice = createSlice({
 			.addMatcher(isAnyOf(logout.fulfilled, logout.rejected), (state: UserState) => {
 				state.authenticated = false;
 				state.encryptedCredential = undefined;
+				state.persistAuthorization = false;
+
 				state.pending = false;
 				state.error = undefined;
 				state.fulfilledAt = undefined;
@@ -135,6 +151,9 @@ const userSlice = createSlice({
 				toFulfilled(state);
 				state.authenticated = true;
 				state.user = user;
+
+				// determine persist user data
+				environment.persistUserData = state.persistAuthorization;
 			})
 			.addMatcher(isRejected(login, fetchUser), (state, { payload: error }) => {
 				// incorrect password?
@@ -175,8 +194,8 @@ export const reducer = persistReducer(
 	{
 		key: 'user',
 		storage: persistedStorage,
-		transforms: [AsyncThunkTransform, AuthenticatedTransform],
-		version: 2,
+		transforms: [UserDataTransform, AsyncThunkTransform, AuthenticatedTransform],
+		version: 3,
 		migrate: ResetOnVersionChange,
 	},
 	userSlice.reducer,

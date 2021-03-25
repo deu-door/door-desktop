@@ -22,6 +22,11 @@ export function useUser() {
 
 	const ensureLoginState = useCallback(() => dispatch(actions.fetchUser()), [dispatch]);
 
+	const setPersistAuthorization = useCallback(
+		(...params: Parameters<typeof actions.setPersistAuthorization>) => dispatch(actions.setPersistAuthorization(...params)),
+		[dispatch],
+	);
+
 	return {
 		user,
 
@@ -31,5 +36,6 @@ export function useUser() {
 		logout,
 
 		ensureLoginState,
+		setPersistAuthorization,
 	};
 }

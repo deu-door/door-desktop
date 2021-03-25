@@ -79,9 +79,8 @@ export const LoginPage: React.FC = () => {
 	const [capsLockPressed, setCapsLockPressed] = useState(false);
 	const [id, setId] = useState('');
 	const [password, setPassword] = useState('');
-	const [autoLogin, setAutoLogin] = useState(false);
 	const history = useHistory();
-	const { user, login, saveCredential } = useUser();
+	const { user, login, setPersistAuthorization } = useUser();
 
 	const detectCapsLockPressed = (event: React.KeyboardEvent) => {
 		setCapsLockPressed(event.getModifierState('CapsLock'));
@@ -94,7 +93,7 @@ export const LoginPage: React.FC = () => {
 			await login({ id, password });
 
 			// check using auto login, and save credential
-			if (autoLogin) await saveCredential({ id, password });
+			//if (autoLogin) await saveCredential({ id, password });
 		} catch (e) {}
 	};
 
@@ -144,13 +143,17 @@ export const LoginPage: React.FC = () => {
 
 					<FormControlLabel
 						control={
-							<LoginCheckbox checked={autoLogin} onChange={e => setAutoLogin(e.target.checked)} disabled={user.pending} />
+							<LoginCheckbox
+								checked={user.persistAuthorization}
+								onChange={e => setPersistAuthorization(e.target.checked)}
+								disabled={user.pending}
+							/>
 						}
 						label="로그인 상태 유지"
 					/>
 
 					<Box height="0.6rem">
-						{autoLogin && (
+						{user.persistAuthorization && (
 							<Typography variant="caption" color="error">
 								개인정보 보호를 위해, 개인 PC에서만 사용해 주세요.
 							</Typography>

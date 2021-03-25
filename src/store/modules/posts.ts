@@ -5,7 +5,15 @@ import door from 'services/door';
 import { HttpError } from 'services/response';
 import { persistedStorage } from 'store/modules/persisted-storage';
 import { reset } from './user';
-import { IAsyncThunkState, AsyncThunkTransform, ResetOnVersionChange, toPending, toFulfilled, toRejectedWithError } from './util';
+import {
+	IAsyncThunkState,
+	AsyncThunkTransform,
+	ResetOnVersionChange,
+	toPending,
+	toFulfilled,
+	toRejectedWithError,
+	UserDataTransform,
+} from './util';
 
 type CourseAsyncState = Record<PostVariant, IAsyncThunkState> & Pick<ICourse, 'id'>;
 
@@ -172,7 +180,7 @@ export const reducer = persistReducer(
 	{
 		key: 'posts',
 		storage: persistedStorage,
-		transforms: [AsyncThunkTransform],
+		transforms: [UserDataTransform, AsyncThunkTransform],
 		version: 2,
 		migrate: ResetOnVersionChange,
 	},

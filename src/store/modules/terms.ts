@@ -4,7 +4,15 @@ import { persistReducer } from 'redux-persist';
 import door from 'services/door';
 import { HttpError } from 'services/response';
 import { persistedStorage } from 'store/modules/persisted-storage';
-import { IAsyncThunkState, AsyncThunkTransform, ResetOnVersionChange, toPending, toFulfilled, toRejectedWithError } from './util';
+import {
+	IAsyncThunkState,
+	AsyncThunkTransform,
+	ResetOnVersionChange,
+	toPending,
+	toFulfilled,
+	toRejectedWithError,
+	UserDataTransform,
+} from './util';
 import { actions as coursesActions } from './courses';
 import { reset } from './user';
 
@@ -88,7 +96,7 @@ export const reducer = persistReducer(
 	{
 		key: 'terms',
 		storage: persistedStorage,
-		transforms: [AsyncThunkTransform],
+		transforms: [UserDataTransform, AsyncThunkTransform],
 		version: 2,
 		migrate: ResetOnVersionChange,
 	},
