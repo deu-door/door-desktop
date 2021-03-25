@@ -5,6 +5,7 @@ import { AsyncThunkTransform, ResetOnVersionChange } from './util';
 
 import { IExternalLink } from 'models/online-resources';
 import axios from 'axios';
+import { reset } from './user';
 
 const initialState: {
 	externalLinks: IExternalLink[];
@@ -50,6 +51,9 @@ const onlineResourcesSlice = createSlice({
 	reducers: {},
 	extraReducers: builder =>
 		builder
+			.addCase(reset, state => {
+				Object.assign(state, initialState);
+			})
 			.addCase(fetchExternalLinks.fulfilled, (state, { payload: externalLinks }) => {
 				state.externalLinks = externalLinks;
 			})

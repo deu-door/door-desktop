@@ -6,6 +6,7 @@ import { HttpError } from 'services/response';
 import { persistedStorage } from 'store/modules/persisted-storage';
 import { IAsyncThunkState, AsyncThunkTransform, ResetOnVersionChange, toPending, toFulfilled, toRejectedWithError } from './util';
 import { actions as coursesActions } from './courses';
+import { reset } from './user';
 
 const termsAdapter = createEntityAdapter<ITerm & IAsyncThunkState>({
 	selectId: term => term.id,
@@ -14,6 +15,7 @@ const termsAdapter = createEntityAdapter<ITerm & IAsyncThunkState>({
 const initialState = termsAdapter.getInitialState({
 	pending: false,
 	error: undefined,
+	fulfilledAt: undefined,
 } as IAsyncThunkState);
 
 const fetchTerms = createAsyncThunk<ITerm[], Parameters<typeof door.getTerms> | undefined, { rejectValue: HttpError }>(
@@ -36,6 +38,9 @@ const termsSlice = createSlice({
 	reducers: {},
 	extraReducers: builder =>
 		builder
+			.addCase(reset, state => {
+				Object.assign(state, initialState);
+			})
 			.addCase(fetchTerms.pending, toPending)
 			.addCase(fetchTerms.fulfilled, (state, { payload: terms }) => {
 				toFulfilled(state);
@@ -46,6 +51,7 @@ const termsSlice = createSlice({
 
 						pending: false,
 						error: undefined,
+						fulfilledAt: undefined,
 					})),
 				);
 			})

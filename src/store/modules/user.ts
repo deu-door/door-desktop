@@ -1,8 +1,8 @@
-import { createAsyncThunk, createSlice, isAnyOf, isFulfilled, isPending, isRejected } from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk, createSlice, isAnyOf, isFulfilled, isPending, isRejected } from '@reduxjs/toolkit';
 import { IUser } from 'models/door';
 import { createTransform, persistReducer } from 'redux-persist';
 import door from 'services/door';
-import { HttpError } from 'services/response';
+import { HttpError, NotAcceptableError } from 'services/response';
 import { secure } from 'services/secure';
 import { persistedStorage } from 'store/modules/persisted-storage';
 import { AsyncThunkTransform, IAsyncThunkState, ResetOnVersionChange, toFulfilled, toPending, toRejectedWithError } from './util';
@@ -16,6 +16,7 @@ export interface UserState extends IAsyncThunkState {
 const initialState: UserState = {
 	pending: false,
 	error: undefined,
+	fulfilledAt: undefined,
 	authenticated: false,
 };
 
@@ -73,8 +74,17 @@ const fetchUser = createAsyncThunk<IUser, void, { rejectValue: HttpError }>('use
 	}
 });
 
-const logout = createAsyncThunk('user/logout', async () => {
-	await door.logout();
+// reset all data by logout
+export const reset = createAction('user/reset');
+
+const logout = createAsyncThunk('user/logout', async (_, { dispatch }) => {
+	try {
+		await door.logout();
+		// suppress error
+	} catch (e) {}
+
+	// request reset all data (...to other slices)
+	dispatch(reset());
 });
 
 const userSlice = createSlice({

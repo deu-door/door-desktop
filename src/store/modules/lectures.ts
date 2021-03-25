@@ -5,6 +5,7 @@ import { persistReducer } from 'redux-persist';
 import door from 'services/door';
 import { HttpError } from 'services/response';
 import { persistedStorage } from 'store/modules/persisted-storage';
+import { reset } from './user';
 import { IAsyncThunkState, AsyncThunkTransform, ResetOnVersionChange, toPending, toFulfilled, toRejectedWithError } from './util';
 
 type LecturesState = Pick<ICourse, 'id'> &
@@ -55,6 +56,9 @@ const lecturesSlice = createSlice({
 	reducers: {},
 	extraReducers: builder =>
 		builder
+			.addCase(reset, state => {
+				Object.assign(state, initialState);
+			})
 			.addCase(fetchLectures.pending, (state, { meta: { arg } }) => {
 				const { id: courseId } = arg;
 
@@ -62,6 +66,7 @@ const lecturesSlice = createSlice({
 					id: courseId,
 					error: undefined,
 					pending: false,
+					fulfilledAt: undefined,
 					lectures: [],
 				});
 

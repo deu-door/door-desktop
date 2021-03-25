@@ -5,6 +5,7 @@ import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/too
 import { ICourse, ICourseSyllabus } from 'models/door';
 import { IAsyncThunkState, AsyncThunkTransform, ResetOnVersionChange, toRejectedWithError, toPending, toFulfilled } from './util';
 import { HttpError } from 'services/response';
+import { reset } from './user';
 
 const coursesAdapter = createEntityAdapter<ICourse & IAsyncThunkState>({
 	selectId: course => course.id,
@@ -45,10 +46,13 @@ const fetchCourseSyllabus = createAsyncThunk<ICourseSyllabus, Parameters<typeof 
 
 const coursesSlice = createSlice({
 	name: 'courses',
-	initialState: initialState,
+	initialState,
 	reducers: {},
 	extraReducers: builder =>
 		builder
+			.addCase(reset, state => {
+				Object.assign(state, initialState);
+			})
 			.addCase(fetchCourses.pending, state => {
 				state.pending = true;
 				state.error = undefined;
@@ -77,6 +81,7 @@ const coursesSlice = createSlice({
 
 						pending: false,
 						error: undefined,
+						fulfilledAt: undefined,
 					})),
 				);
 			})

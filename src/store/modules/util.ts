@@ -4,7 +4,7 @@ export interface IAsyncThunkState {
 	pending: boolean;
 	error: string | undefined;
 	// serialized date. => timestamp
-	fulfilledAt?: string;
+	fulfilledAt: string | undefined;
 }
 
 export const toPending = <State extends Partial<IAsyncThunkState>>(state: State): State => {

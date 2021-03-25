@@ -4,6 +4,7 @@ import { persistReducer } from 'redux-persist';
 import door from 'services/door';
 import { HttpError } from 'services/response';
 import { persistedStorage } from 'store/modules/persisted-storage';
+import { reset } from './user';
 import { IAsyncThunkState, AsyncThunkTransform, ResetOnVersionChange, toPending, toFulfilled, toRejectedWithError } from './util';
 
 type CourseAsyncState = Record<PostVariant, IAsyncThunkState> & Pick<ICourse, 'id'>;
@@ -73,10 +74,13 @@ const putSubmission = createAsyncThunk<void, Parameters<typeof door.putSubmissio
 
 const postsSlice = createSlice({
 	name: 'notices',
-	initialState: initialState,
+	initialState,
 	reducers: {},
 	extraReducers: builder => {
 		builder
+			.addCase(reset, state => {
+				Object.assign(state, initialState);
+			})
 			.addCase(fetchPosts.pending, (state, { meta: { arg } }) => {
 				// first initialized values
 				byCourseAdapter.addOne(state.byCourse, {
@@ -126,6 +130,7 @@ const postsSlice = createSlice({
 							...post,
 							pending: false,
 							error: undefined,
+							fulfilledAt: undefined,
 						};
 					}),
 				);
