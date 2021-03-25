@@ -15,11 +15,12 @@ export const KeepLoginState: React.FC<KeepLoginStateProps> = props => {
 
 	// ping to server every {interval} milliseconds
 	useEffect(() => {
-		const timer = setInterval(() => {
-			if (authenticated) ensureLoginState();
-		}, heartbeatInterval);
+		if (authenticated) {
+			const timer = setInterval(ensureLoginState, heartbeatInterval);
 
-		return () => clearInterval(timer);
+			return () => clearInterval(timer);
+		}
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [authenticated]);
 

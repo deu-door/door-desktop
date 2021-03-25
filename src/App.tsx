@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Box, createMuiTheme, CssBaseline, MuiThemeProvider, useMediaQuery } from '@material-ui/core';
 import { Routes } from 'Routes';
 import { useOnlineResources } from 'hooks/online-resources/useOnlineResources';
+import { KeepLoginState } from 'components/common/KeepLoginState';
 
 const App: React.FC = () => {
 	const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -65,6 +66,7 @@ const App: React.FC = () => {
 	return (
 		<MuiThemeProvider theme={theme}>
 			<CssBaseline />
+			<KeepLoginState />
 			<Box display="flex" height="100%" boxSizing="border-box">
 				<Routes />
 			</Box>

@@ -1,4 +1,3 @@
-import { KeepLoginState } from 'components/common/KeepLoginState';
 import { CoursePage } from 'components/pages/CoursePage';
 import { LoginPage } from 'components/pages/LoginPage';
 import { SplashPage } from 'components/pages/SplashPage';
@@ -39,7 +38,7 @@ export const CourseRoutes: React.FC<RouteComponentProps> = ({ match }) => {
 	return (
 		<>
 			<Downloads />
-			<KeepLoginState />
+
 			<Switch>
 				<Route exact path={match.url} component={CoursePage} />
 				<Route path={`${match.url}/:courseId`} component={CoursePage} />
@@ -52,7 +51,6 @@ export const TermRoutes: React.FC<RouteComponentProps> = ({ match }) => {
 	return (
 		<>
 			<Downloads />
-			<KeepLoginState />
 
 			<Switch>
 				<Route exact path={match.url} component={CoursePage} />
