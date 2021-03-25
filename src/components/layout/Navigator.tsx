@@ -15,7 +15,7 @@ export const Navigator: React.FC<NavigatorProps> = props => {
 	const { onSideBarOpen, onClickHome, ...appBarProps } = props;
 	const {
 		user: { user, authenticated, error, pending },
-		ensureLoginState,
+		loginWithSavedCredential,
 	} = useUser();
 	const [open, setOpen] = useState(false);
 
@@ -48,7 +48,8 @@ export const Navigator: React.FC<NavigatorProps> = props => {
 								<>
 									<Tooltip title="서버와 연결할 수 없거나 로그인이 끊어진 것 같아요. 눌러서 상태를 갱신하세요." arrow>
 										<Button
-											onClick={ensureLoginState}
+											disabled={pending}
+											onClick={loginWithSavedCredential}
 											style={{
 												color: red['A200'],
 												fontWeight: 'bolder',
