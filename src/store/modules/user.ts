@@ -170,4 +170,5 @@ export const actions = {
 	saveCredential,
 	logout,
 	fetchUser,
+	reset,
 };
