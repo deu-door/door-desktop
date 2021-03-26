@@ -66,7 +66,6 @@ const App: React.FC = () => {
 	return (
 		<MuiThemeProvider theme={theme}>
 			<CssBaseline />
-			<KeepLoginState />
 			<Box display="flex" height="100%" boxSizing="border-box">
 				<Routes />
 			</Box>

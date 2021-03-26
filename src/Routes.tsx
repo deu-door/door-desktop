@@ -8,6 +8,7 @@ import { HashRouter, Redirect, RouteComponentProps } from 'react-router-dom';
 import { Downloads } from 'components/common/Downloads';
 import { ExternalLinkPage } from 'components/pages/ExternalLinkPage';
 import { useUser } from 'hooks/door/useUser';
+import { KeepLoginState } from 'components/common/KeepLoginState';
 
 export const ScrollToTopOnMount: React.FC = props => {
 	const { pathname } = useLocation();
@@ -38,6 +39,7 @@ export const CourseRoutes: React.FC<RouteComponentProps> = ({ match }) => {
 	return (
 		<>
 			<Downloads />
+			<KeepLoginState />
 
 			<Switch>
 				<Route exact path={match.url} component={CoursePage} />
@@ -51,6 +53,7 @@ export const TermRoutes: React.FC<RouteComponentProps> = ({ match }) => {
 	return (
 		<>
 			<Downloads />
+			<KeepLoginState />
 
 			<Switch>
 				<Route exact path={match.url} component={CoursePage} />
