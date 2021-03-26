@@ -53,7 +53,7 @@ const login = createAsyncThunk<IUser, { id: string; password: string }, { reject
 		try {
 			const response = await door.login(id, password);
 
-			dispatch(saveCredential({ id, password }));
+			await dispatch(saveCredential({ id, password }));
 
 			return response.data;
 		} catch (e) {
