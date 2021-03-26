@@ -130,10 +130,12 @@ const userSlice = createSlice({
 			})
 			.addCase(saveCredential.rejected, state => {
 				state.encryptedCredential = undefined;
+				state.persistAuthorization = false;
 			})
 			.addCase(loginWithSavedCredential.rejected, state => {
 				// saved credential may corrupted
 				state.encryptedCredential = undefined;
+				state.persistAuthorization = false;
 			})
 			.addCase(logout.pending, toPending)
 			// manually logout, delete all data
@@ -160,6 +162,7 @@ const userSlice = createSlice({
 				if (error instanceof NotAcceptableError) {
 					// remove incorrect credential
 					state.encryptedCredential = undefined;
+					state.persistAuthorization = false;
 				}
 
 				toRejectedWithError(state, error?.message);
