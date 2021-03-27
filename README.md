@@ -7,8 +7,6 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 <div align="center">
 
 [![GitHub Release](https://img.shields.io/github/v/release/deu-door/door-desktop.svg)](https://github.com/deu-door/door-desktop/releases/latest)
-[![GitHub Downloads](https://img.shields.io/github/downloads/deu-door/door-desktop/total.svg)](https://github.com/deu-door/door-desktop/releases/)
-[![GitHub Latest Downloads](https://img.shields.io/github/downloads/deu-door/door-desktop/latest/total)](https://github.com/deu-door/door-desktop/releases/latest)
 
 </div>
 
@@ -48,8 +46,7 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 # 다운로드 기록
 
 -   2021년 3월 23일 **첫 릴리즈 (v0.3.4)**
--   2021년 3월 25일 **500+**
--   2021년 3월 27일 **1000+**
+-   2021년 3월 28일 **200+**
 
 <br><br>
 
