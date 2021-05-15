@@ -5,7 +5,7 @@ import { ISubmittablePost } from './submittable-post';
 /**
  * @description 팀 프로젝트 목록을 받아올 때 알 수 없는 정보를 뺀 인터페이스
  */
-export type ITeamProjectPostHead = Omit<ITeamProjectPost, 'contents' | 'attachments' | 'submission'>;
+export type ITeamProjectPostHead = Omit<ITeamProjectPost, 'contents' | 'attachments' | 'submission' | 'submitted'>;
 
 /**
  * @description 팀 프로젝트 정보를 담은 인터페이스

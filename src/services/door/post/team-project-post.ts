@@ -44,8 +44,8 @@ export async function getTeamProjectPost(
 			courseId,
 
 			type: description['제출방식'].text,
-			title: description['제목'].text,
-			contents: description['내용'].element.innerHTML ?? '',
+			title: description['제목']?.text ?? description['주제']?.text ?? '제목이 없습니다',
+			contents: description['내용']?.element.innerHTML ?? description['수업내용']?.element.innerHTML ?? '',
 
 			createdAt: from,
 			duration: { from, to },
@@ -63,14 +63,16 @@ export async function getTeamProjectPost(
 export async function getTeamProjectPosts(params: Pick<ICourse, 'id'> & Partial<ICourse>): Promise<Response<ITeamProjectPostHead[]>> {
 	const { id: courseId } = params;
 
-	const document = parse((await driver.get(`/LMS/LectureRoom/CourseTeamProjectStudentList/${courseId}`)).data);
+	const teamProjectsDocument = parse((await driver.get(`/LMS/LectureRoom/CourseTeamProjectStudentList/${courseId}`)).data);
+	const activitiesDocument = parse((await driver.get(`/LMS/LectureRoom/CourseOutputs/${courseId}`)).data);
 
-	const table = document.querySelector('#sub_content2 > div:nth-child(4) > table');
+	const teamProjectTable = teamProjectsDocument.querySelector('#sub_content2 > div:nth-child(4) > table');
+	const activitiesTable = activitiesDocument.querySelector('#sub_content2 > div > table');
 
-	if (!(table instanceof HTMLTableElement))
+	if (!(teamProjectTable instanceof HTMLTableElement) || !(activitiesTable instanceof HTMLTableElement))
 		throw new UnauthorizedError('팀 프로젝트 목록을 불러올 수 없습니다. 로그인 상태를 확인해주세요.');
 
-	const teamProjectPosts: ITeamProjectPostHead[] = parseTableElement(table)
+	const teamProjectPosts: ITeamProjectPostHead[] = parseTableElement(teamProjectTable)
 		// filter for 등록된 팀프로젝트가 없습니다
 		.filter(row => /\d+/.test(row['No'].text))
 		.map(row => {
@@ -96,8 +98,33 @@ export async function getTeamProjectPosts(params: Pick<ICourse, 'id'> & Partial<
 		})
 		.filter(teamProjectPost => teamProjectPost.id !== '');
 
+	// 수업활동일지 게시판에 팀 프로젝트 게시물이 있음. 이해가 어려운 부분
+	const teamProjectPostsInActivities: ITeamProjectPostHead[] = parseTableElement(activitiesTable)
+		// filter for 등록된 게시물이 없습니다
+		.filter(row => /\d+/.test(row['No'].text))
+		.map(row => {
+			const from = moment(row['제출기간'].text.split('~')[0].trim(), 'YY-MM-DD HH:mm').toDate().toISOString();
+			const to = moment(row['제출기간'].text.split('~')[1].trim(), 'YY-MM-DD HH:mm').toDate().toISOString();
+
+			return {
+				variant: PostVariant.teamProject,
+
+				id: row['주제'].url?.match(/ProjectNo=(\d+)/)?.[1] || '',
+				courseId: courseId,
+
+				title: row['주제'].text,
+				type: row['제출방식'].text,
+
+				createdAt: from,
+				duration: { from, to },
+
+				partial: true,
+			};
+		})
+		.filter(teamProjectPost => teamProjectPost.id !== '');
+
 	return {
 		// Ascending order to descending order
-		data: teamProjectPosts,
+		data: teamProjectPosts.concat(teamProjectPostsInActivities),
 	};
 }

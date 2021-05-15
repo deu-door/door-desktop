@@ -25,9 +25,6 @@ export async function getActivityPost(
 
 	const description = parseInformaticTableElement(descriptionTable);
 
-	// 시간이 많이 지나면 평가 결과 table은 없어질 수도 있음
-	const result = resultTable instanceof HTMLTableElement ? parseInformaticTableElement(resultTable) : undefined;
-
 	const attachments: IAttachment[] = [];
 
 	description['첨부파일'].element.querySelectorAll('a').forEach(fileElement => {
@@ -39,13 +36,15 @@ export async function getActivityPost(
 		if (attachment.link !== '') attachments.push(attachment);
 	});
 
-	const comment = result?.['코멘트'].text;
+	// 시간이 많이 지나면 평가 결과 table은 없어질 수도 있음
+	const result = resultTable instanceof HTMLTableElement ? parseInformaticTableElement(resultTable) : undefined;
+	const comment = result?.['코멘트']?.text;
 
 	const from = moment(description['제출기간'].text.split('~')[0].trim(), 'YY-MM-DD HH:mm').toDate().toISOString();
 	const to = moment(description['제출기간'].text.split('~')[1].trim(), 'YY-MM-DD HH:mm').toDate().toISOString();
 
 	const additionalDuration =
-		description['추가 제출기간'].text.trim() === '없음'
+		(description['추가 제출기간']?.text.trim() || '없음') === '없음'
 			? undefined
 			: {
 					from: moment(description['추가 제출기간'].text.split('~')[0].trim(), 'YY-MM-DD HH:mm').toDate().toISOString(),
