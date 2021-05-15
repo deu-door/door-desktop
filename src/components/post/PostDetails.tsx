@@ -16,7 +16,6 @@ import {
 	withTheme,
 } from '@material-ui/core';
 import { Add, ArrowBack, Attachment, CheckCircleOutline, Delete, ErrorOutline } from '@material-ui/icons';
-import { AsyncThunkState } from 'components/common/AsyncThunkState';
 import { FetchButton } from 'components/common/FetchButton';
 import { KeepLatestState } from 'components/common/KeepLatestState';
 import { usePosts } from 'hooks/door/usePosts';
