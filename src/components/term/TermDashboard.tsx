@@ -97,7 +97,7 @@ export const TermDashboard: React.FC<TermDashboardProps> = props => {
 					<TermPostList
 						term={term}
 						course={selected}
-						threshold={3}
+						threshold={8}
 						variants={[PostVariant.assignment, PostVariant.activity, PostVariant.teamProject]}
 					/>
 				</Grid>
