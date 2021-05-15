@@ -19,6 +19,7 @@ export const driver = axios.create({
 	transformRequest: [(data, headers) => qs.stringify(data, { arrayFormat: 'brackets' })],
 	withCredentials: true,
 	validateStatus: status => status >= 200 && status <= 302,
+	timeout: 5000,
 });
 
 // Logging request
