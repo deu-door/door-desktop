@@ -43,12 +43,15 @@ ReactDOM.render(
 	document.getElementById('root'),
 );
 
-new Titlebar({
+const titlebar = new Titlebar({
 	backgroundColor: Color.fromHex('#204fa3'),
 	menu: undefined,
-	titleHorizontalAlignment: 'left',
+	titleHorizontalAlignment: 'center',
 	unfocusEffect: false,
 });
+
+document.title = '';
+titlebar.updateTitle();
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

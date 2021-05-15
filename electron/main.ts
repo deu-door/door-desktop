@@ -81,7 +81,7 @@ async function createWindow() {
 	console.log('main.ts is running on ' + __dirname);
 
 	mainWindow = new BrowserWindow({
-		title: 'Door Desktop',
+		title: '',
 		titleBarStyle: 'hidden',
 		frame: false,
 
