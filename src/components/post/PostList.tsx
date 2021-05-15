@@ -1,5 +1,4 @@
 import { Box, List, ListItem, ListProps, Typography } from '@material-ui/core';
-import { AsyncThunkState } from 'components/common/AsyncThunkState';
 import { FetchButton } from 'components/common/FetchButton';
 import { KeepLatestState } from 'components/common/KeepLatestState';
 import { useCourses } from 'hooks/door/useCourses';
@@ -14,10 +13,18 @@ export type PostListProps = ListProps & {
 	empty?: React.ReactNode;
 	itemRenderer?: (post: IPostHead) => React.ReactNode;
 	threshold?: number;
+	sortBy?: (postA: IPostHead, postB: IPostHead) => number;
 };
 
 export const PostList: React.FC<PostListProps> = props => {
-	const { posts, empty, itemRenderer, threshold = 50, ...otherProps } = props;
+	const {
+		posts,
+		empty,
+		itemRenderer,
+		threshold = 50,
+		sortBy = (postA, postB) => new Date(postB.createdAt).valueOf() - new Date(postA.createdAt).valueOf(),
+		...otherProps
+	} = props;
 	const [expanded, setExpanded] = useState(1);
 
 	return (
@@ -25,7 +32,7 @@ export const PostList: React.FC<PostListProps> = props => {
 			{posts.length > 0 ? (
 				<>
 					{posts
-						.sort((postA, postB) => new Date(postB.createdAt).valueOf() - new Date(postA.createdAt).valueOf())
+						.sort(sortBy)
 						.slice(0, threshold * expanded)
 						.map(post =>
 							itemRenderer !== undefined ? (
