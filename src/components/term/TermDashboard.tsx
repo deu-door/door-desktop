@@ -3,7 +3,7 @@ import { Banner } from 'components/common/Banner';
 import { useCourses } from 'hooks/door/useCourses';
 import { useTerms } from 'hooks/door/useTerms';
 import { useOnlineResources } from 'hooks/online-resources/useOnlineResources';
-import { ICourse, ITerm, PostVariant } from 'models/door';
+import { Due, ICourse, IPostHead, ISubmittablePost, ITerm, PostVariant } from 'models/door';
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { TermPostList } from './TermPostList';
@@ -29,6 +29,14 @@ export const RouteTermDashboard: React.FC<RouteTermDashboardProps> = props => {
 
 export type TermDashboardProps = {
 	term: ITerm;
+};
+
+const isDue = (post: IPostHead): post is IPostHead & Due => {
+	return 'duration' in post;
+};
+
+const isSubmittable = (post: IPostHead): post is ISubmittablePost => {
+	return isDue(post) && 'submitted' in post;
 };
 
 export const TermDashboard: React.FC<TermDashboardProps> = props => {
@@ -99,6 +107,12 @@ export const TermDashboard: React.FC<TermDashboardProps> = props => {
 						course={selected}
 						threshold={8}
 						variants={[PostVariant.assignment, PostVariant.activity, PostVariant.teamProject]}
+						sortBy={(postA, postB) => {
+							if (isDue(postA) && isDue(postB)) {
+								return new Date(postB.duration.to).valueOf() - new Date(postA.duration.to).valueOf();
+							}
+							return new Date(postB.createdAt).valueOf() - new Date(postA.createdAt).valueOf();
+						}}
 					/>
 				</Grid>
 			</Grid>
