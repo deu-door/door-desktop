@@ -7,7 +7,6 @@ export type BannerProps = BoxProps;
 
 export const Banner: React.FC<BannerProps> = props => {
 	const { ...otherProps } = props;
-	console.log(process.env);
 
 	return (
 		<Paper elevation={0}>
