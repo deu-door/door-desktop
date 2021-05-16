@@ -22,6 +22,7 @@ async function installExtensions() {
 
 app.commandLine.appendSwitch('disable-features', 'SameSiteByDefaultCookies');
 app.commandLine.appendSwitch('disable-features', 'CookiesWithoutSameSiteMustBeSecure');
+app.commandLine.appendSwitch('ignore-certificate-errors');
 
 function configureSession() {
 	session.defaultSession.webRequest.onBeforeSendHeaders(
