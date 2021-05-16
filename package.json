@@ -13,6 +13,19 @@
 	"bugs": {
 		"url": "https://github.com/deu-door/door-desktop/issues"
 	},
+	"scripts": {
+		"react:start": "craco start",
+		"react:build": "craco build",
+		"react:test": "craco test",
+		"lint": "eslint src --ext js,jsx,ts,tsx",
+		"lint:fix": "eslint src --ext js,jsx,ts,tsx --fix",
+		"start": "concurrently \"cross-env BROWSER=none yarn react:start\" \"wait-on http://localhost:3000 && tsc -p electron && electron .\"",
+		"build:prepare": "yarn react:build && tsc -p electron",
+		"build:nsis": "yarn build:prepare && electron-builder --windows nsis",
+		"build:appx": "yarn build:prepare && electron-builder --windows appx",
+		"build:mac": "yarn build:prepare && electron-builder --mac",
+		"build:publish": "yarn build:prepare && electron-builder --publish always"
+	},
 	"dependencies": {
 		"@craco/craco": "^6.1.2",
 		"@iktakahiro/youtube-url-parser": "^1.0.2",
@@ -82,19 +95,6 @@
 		"typescript": "^4.1.5",
 		"typescript-eslint": "^0.0.1-alpha.0",
 		"wait-on": "^5.2.1"
-	},
-	"scripts": {
-		"react:start": "craco start",
-		"react:build": "craco build",
-		"react:test": "craco test",
-		"lint": "eslint src --ext js,jsx,ts,tsx",
-		"lint:fix": "eslint src --ext js,jsx,ts,tsx --fix",
-		"start": "concurrently \"cross-env BROWSER=none yarn react:start\" \"wait-on http://localhost:3000 && tsc -p electron && electron .\"",
-		"build:prepare": "yarn react:build && tsc -p electron",
-		"build:nsis": "yarn build:prepare && electron-builder --windows nsis",
-		"build:appx": "yarn build:prepare && electron-builder --windows appx",
-		"build:mac": "yarn build:prepare && electron-builder --mac",
-		"build:publish": "yarn build:prepare && electron-builder --publish always"
 	},
 	"browserslist": {
 		"production": [
