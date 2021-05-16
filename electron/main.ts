@@ -160,12 +160,6 @@ if (!gotTheLock) {
 			createWindow();
 		}
 	});
-
-	// 모든 창에 대해 메뉴 바 제거
-	if (!isDev)
-		app.on('browser-window-created', (event, window) => {
-			window.removeMenu();
-		});
 }
 
 app.on('window-all-closed', () => {
