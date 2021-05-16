@@ -109,7 +109,17 @@ export const TermDashboard: React.FC<TermDashboardProps> = props => {
 						variants={[PostVariant.assignment, PostVariant.activity, PostVariant.teamProject]}
 						sortBy={(postA, postB) => {
 							if (isDue(postA) && isDue(postB)) {
-								return new Date(postB.duration.to).valueOf() - new Date(postA.duration.to).valueOf();
+								const a = new Date(postB.duration.to).valueOf();
+								const b = new Date(postA.duration.to).valueOf();
+								const now = Date.now();
+
+								// not expired yet both a and b
+								if (a >= now && b >= now) return b - a;
+
+								// expired both a and b
+								if (a < now && b < now) return a - b;
+
+								return a < now ? -1 : b < now ? 1 : 0;
 							}
 							return new Date(postB.createdAt).valueOf() - new Date(postA.createdAt).valueOf();
 						}}
