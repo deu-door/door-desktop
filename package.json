@@ -93,6 +93,7 @@
 		"build:prepare": "yarn react:build && tsc -p electron",
 		"build:nsis": "yarn build:prepare && electron-builder --windows nsis",
 		"build:appx": "yarn build:prepare && electron-builder --windows appx",
+		"build:mac": "yarn build:prepare && electron-builder --mac",
 		"build:publish": "yarn build:prepare && electron-builder --publish always"
 	},
 	"browserslist": {
