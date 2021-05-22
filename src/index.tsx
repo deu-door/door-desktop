@@ -33,13 +33,13 @@ Object.assign(window, {
 });
 
 ReactDOM.render(
-	// <React.StrictMode>
-	<Provider store={store}>
-		<PersistGate loading={null} persistor={persistor}>
-			<App />
-		</PersistGate>
-	</Provider>,
-	// </React.StrictMode>
+	<React.StrictMode>
+		<Provider store={store}>
+			<PersistGate loading={null} persistor={persistor}>
+				<App />
+			</PersistGate>
+		</Provider>
+	</React.StrictMode>,
 	document.getElementById('root'),
 );
 
