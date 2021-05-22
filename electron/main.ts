@@ -164,7 +164,6 @@ if (!gotTheLock) {
 
 app.on('window-all-closed', () => {
 	// OS X 에서는 프로그램을 닫았을 때 메뉴 바에 머물러 있는것이 일반적
-	if (process.platform !== 'darwin') {
-		app.quit();
-	}
+	//if (process.platform !== 'darwin')
+	app.quit();
 });
