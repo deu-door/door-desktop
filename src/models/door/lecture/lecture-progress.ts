@@ -7,10 +7,6 @@ export interface ILectureProgress extends WeekTagged, CourseSubordinated {
 	 */
 	type: '온라인' | '오프라인';
 	/**
-	 * @description 출석 여부
-	 */
-	attendance: '출석' | '결석' | '수업없음';
-	/**
 	 * @description 최종 학습시간
 	 */
 	length: number;
