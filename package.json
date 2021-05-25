@@ -2,7 +2,7 @@
 	"name": "door-desktop",
 	"productName": "Door Desktop",
 	"description": "Enhanced Dong-eui University Door Desktop App (Unofficial)",
-	"version": "0.3.6",
+	"version": "0.3.7",
 	"author": "solo5star <solo_5@naver.com>",
 	"main": "build/electron/main.js",
 	"homepage": "./",
