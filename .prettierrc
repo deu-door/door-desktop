@@ -6,5 +6,6 @@
 	"tabWidth": 4,
 	"useTabs": true,
 	"printWidth": 140,
-	"endOfLine": "auto"
+	"endOfLine": "crlf",
+	"bracketSpacing": true
 }
