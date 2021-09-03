@@ -1,0 +1,87 @@
+@font-face {
+	font-family: '나눔스퀘어라운드';
+	src: url(./NanumSquareRoundR.eot);
+	src: local('나눔스퀘어라운드 '), local('나눔스퀘어라운드'), url(./NanumSquareRoundR.eot?#iefix) format('embedded-opentype'),
+		url(./NanumSquareRoundR.woff2) format('woff2'), url(./NanumSquareRoundR.woff) format('woff'),
+		url(./NanumSquareRoundR.ttf) format('truetype');
+	font-display: swap;
+	font-style: normal;
+	font-weight: 400;
+}
+
+@font-face {
+	font-family: 'nanum-square-round';
+	src: url(./NanumSquareRoundR.eot);
+	src: local('nanum-square-round '), local('nanum-square-round'), url(./NanumSquareRoundR.eot?#iefix) format('embedded-opentype'),
+		url(./NanumSquareRoundR.woff2) format('woff2'), url(./NanumSquareRoundR.woff) format('woff'),
+		url(./NanumSquareRoundR.ttf) format('truetype');
+	font-display: swap;
+	font-style: normal;
+	font-weight: 400;
+}
+
+@font-face {
+	font-family: '나눔스퀘어라운드';
+	src: url(./NanumSquareRoundL.eot);
+	src: local('나눔스퀘어라운드 '), local('나눔스퀘어라운드'), url(./NanumSquareRoundL.eot?#iefix) format('embedded-opentype'),
+		url(./NanumSquareRoundL.woff2) format('woff2'), url(./NanumSquareRoundL.woff) format('woff'),
+		url(./NanumSquareRoundL.ttf) format('truetype');
+	font-display: swap;
+	font-style: normal;
+	font-weight: 300;
+}
+
+@font-face {
+	font-family: 'nanum-square-round';
+	src: url(./NanumSquareRoundL.eot);
+	src: local('nanum-square-round '), local('nanum-square-round'), url(./NanumSquareRoundL.eot?#iefix) format('embedded-opentype'),
+		url(./NanumSquareRoundL.woff2) format('woff2'), url(./NanumSquareRoundL.woff) format('woff'),
+		url(./NanumSquareRoundL.ttf) format('truetype');
+	font-display: swap;
+	font-style: normal;
+	font-weight: 300;
+}
+
+@font-face {
+	font-family: '나눔스퀘어라운드';
+	src: url(./NanumSquareRoundB.eot);
+	src: local('나눔스퀘어라운드 '), local('나눔스퀘어라운드'), url(./NanumSquareRoundB.eot?#iefix) format('embedded-opentype'),
+		url(./NanumSquareRoundB.woff2) format('woff2'), url(./NanumSquareRoundB.woff) format('woff'),
+		url(./NanumSquareRoundB.ttf) format('truetype');
+	font-display: swap;
+	font-style: normal;
+	font-weight: 700;
+}
+
+@font-face {
+	font-family: 'nanum-square-round';
+	src: url(./NanumSquareRoundB.eot);
+	src: local('nanum-square-round '), local('nanum-square-round'), url(./NanumSquareRoundB.eot?#iefix) format('embedded-opentype'),
+		url(./NanumSquareRoundB.woff2) format('woff2'), url(./NanumSquareRoundB.woff) format('woff'),
+		url(./NanumSquareRoundB.ttf) format('truetype');
+	font-display: swap;
+	font-style: normal;
+	font-weight: 700;
+}
+
+@font-face {
+	font-family: '나눔스퀘어라운드';
+	src: url(./NanumSquareRoundEB.eot);
+	src: local('나눔스퀘어라운드 '), local('나눔스퀘어라운드'), url(./NanumSquareRoundEB.eot?#iefix) format('embedded-opentype'),
+		url(./NanumSquareRoundEB.woff2) format('woff2'), url(./NanumSquareRoundEB.woff) format('woff'),
+		url(./NanumSquareRoundEB.ttf) format('truetype');
+	font-display: swap;
+	font-style: normal;
+	font-weight: 800;
+}
+
+@font-face {
+	font-family: 'nanum-square-round';
+	src: url(./NanumSquareRoundEB.eot);
+	src: local('nanum-square-round '), local('nanum-square-round'), url(./NanumSquareRoundEB.eot?#iefix) format('embedded-opentype'),
+		url(./NanumSquareRoundEB.woff2) format('woff2'), url(./NanumSquareRoundEB.woff) format('woff'),
+		url(./NanumSquareRoundEB.ttf) format('truetype');
+	font-display: swap;
+	font-style: normal;
+	font-weight: 800;
+}
