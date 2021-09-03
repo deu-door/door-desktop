@@ -1,26 +1,27 @@
 {
 	"compilerOptions": {
-		"target": "ES6",
-		"baseUrl": "src",
-		"strict": true,
-		"sourceMap": true,
-		"lib": ["dom", "dom.iterable", "esnext", "es2019"],
-		"module": "esnext",
+		"target": "es2017",
+		"lib": ["dom", "dom.iterable", "es2021"],
+		"module": "commonjs",
 		"moduleResolution": "node",
-		"allowJs": true,
-		"declaration": true,
+		"baseUrl": ".",
+		"jsx": "react-jsx",
+		"outDir": "build",
+		"strict": true,
+		"strictNullChecks": true,
+		"sourceMap": true,
 		"skipLibCheck": true,
 		"esModuleInterop": true,
+		"allowJs": true,
 		"allowSyntheticDefaultImports": true,
-		"strictNullChecks": true,
 		"forceConsistentCasingInFileNames": true,
 		"resolveJsonModule": true,
 		"isolatedModules": true,
-		"noEmit": true,
-		"noImplicitAny": false,
-		"jsx": "react-jsx",
-		"outDir": "./build",
-		"noFallthroughCasesInSwitch": true
+		"noImplicitAny": true,
+		"noFallthroughCasesInSwitch": true,
+		"paths": {
+			"*": ["node_modules/*"]
+		}
 	},
-	"include": ["src"]
+	"include": ["src/**/*"]
 }

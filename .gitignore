@@ -24,6 +24,7 @@ yarn-error.log*
 
 # build output
 /release
+/out
 
 # VSCode Code counter output
 .VSCodeCounter
@@ -39,3 +40,9 @@ electron-builder.env
 
 # certification files (cert.cer, cert.pfx, cert.pvk)
 /cert
+
+# webpack build files
+/.webpack
+
+# dotenv file
+.env

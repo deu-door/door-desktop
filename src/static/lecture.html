@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="icon" href="../static/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#2F71E9" />
+		<meta name="description" content="Better way to join online classes, In Dong-eui University" />
+
+		<link rel="apple-touch-icon" href="../static/logo192.png" />
+		<link rel="manifest" href="../static/manifest.json" />
+
+		<title>Door Desktop</title>
+
+		<style>
+			img {
+				pointer-events: none;
+			}
+
+			body {
+				margin: 0;
+				padding: 0;
+				height: 100vh;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				background-color: #2f71e9;
+				color: white;
+				user-select: none;
+			}
+
+			webview {
+				width: 100%;
+				height: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<webview id="lecture" src="" allowfullscreen></webview>
+	</body>
+	<script type="text/javascript">
+		const urlSearchParams = new URLSearchParams(window.location.search);
+		const params = Object.fromEntries(urlSearchParams.entries());
+
+		// parse lecture from query string, and init
+		const lecture = JSON.parse(decodeURIComponent(params['serializedLecture']));
+
+		document.getElementById('lecture').setAttribute('src', lecture.url);
+		document.title = `${lecture.week}주차-${lecture.period}차시 :: ${lecture.title}`;
+	</script>
+</html>
