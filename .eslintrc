@@ -1,13 +1,18 @@
 {
 	"root": true,
-	"parser": "@typescript-eslint/parser",
 	"plugins": ["@typescript-eslint", "prettier"],
 	"extends": [
+		"eslint:recommended",
 		"react-app",
 		"plugin:react/recommended",
+		"plugin:@typescript-eslint/eslint-recommended",
 		"plugin:@typescript-eslint/recommended",
+		"plugin:import/recommended",
+		"plugin:import/electron",
+		"plugin:import/typescript",
 		"plugin:prettier/recommended"
 	],
+	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
 		// Allows for the parsing of modern ECMAScript features
 		"ecmaVersion": 2020,
@@ -17,6 +22,14 @@
 			"jsx": true
 		}
 	},
+	"env": {
+		"browser": true,
+		"node": true,
+		"es6": true
+	},
+	"globals": {
+		"__static": true
+	},
 	"settings": {
 		"react": {
 			// Tells eslint-plugin-react to automatically detect the version of React to use
@@ -25,6 +38,9 @@
 	},
 	"rules": {
 		"prettier/prettier": "warn",
-		"react/prop-types": "off"
+		"react/prop-types": "off",
+		"react-hooks/exhaustive-deps": "off",
+		"no-empty": "off",
+		"@typescript-eslint/ban-ts-comment": "off"
 	}
 }
