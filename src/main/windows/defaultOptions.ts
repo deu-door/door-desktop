@@ -1,6 +1,8 @@
+import path from 'path';
+
 export const defaultOptions: Electron.BrowserWindowConstructorOptions = {
 	title: 'Door Desktop',
-	icon: '/static/favicon.ico',
+	icon: path.join(__dirname, 'static/icon/icon.png'),
 	frame: false,
 	show: false,
 	center: true,

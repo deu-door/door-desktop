@@ -1,6 +1,6 @@
 import { Box, CircularProgress, Typography } from '@material-ui/core';
 import React from 'react';
-import { default as LogoOriginalWhite } from '../../static/logo-original-white.svg';
+import { default as LogoOriginalWhite } from '../../static/logo/logo-original-white.svg';
 import { DesktopSpacer } from '../components/common/DesktopSpacer';
 
 /**

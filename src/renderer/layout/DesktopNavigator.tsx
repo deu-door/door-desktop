@@ -1,6 +1,6 @@
 import { AppBar, AppBarProps, Box, Container, Hidden, IconButton, Toolbar } from '@material-ui/core';
 import { Menu } from '@material-ui/icons';
-import { default as LogoOriginalWhite } from '../../static/logo-original-white.svg';
+import { default as LogoOriginalWhite } from '../../static/logo/logo-original-white.svg';
 import React from 'react';
 
 export type DesktopNavigatorProps = {

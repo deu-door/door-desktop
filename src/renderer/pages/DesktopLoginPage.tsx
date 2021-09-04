@@ -12,7 +12,7 @@ import {
 	TextFieldProps,
 	Typography,
 } from '@material-ui/core';
-import { default as IconOriginal } from '../../static/icon-original.svg';
+import { default as IconOriginal } from '../../static/icon/icon-original.svg';
 import React, { useEffect, useState } from 'react';
 import { Alert } from '@material-ui/lab';
 import { useUser } from '../hooks/door/useUser';
