@@ -1,5 +1,6 @@
 import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, IconButton, TextField } from '@material-ui/core';
 import { Add, Delete } from '@material-ui/icons';
+import { Alert } from '@material-ui/lab';
 import { Attachment, Assignment } from 'door-api';
 import React, { createRef, useEffect, useState } from 'react';
 import { runEvery, cancelRun } from '../../../common/helper/schedule';
@@ -160,7 +161,11 @@ export const DesktopSubmission: React.FC<DesktopSubmissionProps> = props => {
 				)}
 			</Box>
 
-			{pending ? (
+			<Alert severity="warning">
+				현재 버전에서는 과제 제출을 지원하지 않습니다. 다음 버전에서 지원 예정이오니 참고 부탁드립니다.
+			</Alert>
+
+			{/* {pending ? (
 				<CircularProgress />
 			) : editEnabled ? (
 				<>
@@ -178,7 +183,7 @@ export const DesktopSubmission: React.FC<DesktopSubmissionProps> = props => {
 						편집
 					</Button>
 				</>
-			)}
+			)} */}
 		</>
 	);
 };
