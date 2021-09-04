@@ -18,7 +18,7 @@ const updateRequestMetadataFulfilled = createAction('UpdateRequestMetadata/Fulfi
 
 const updateRequestMetadataRejected = createAction(
 	'UpdateRequestMetadata/Rejected',
-	(uri: string, error: { message: string } | string | undefined) => ({
+	(uri: string, error: { name: string; message?: string } | string | undefined) => ({
 		payload: { uri, error },
 	}),
 );
@@ -63,7 +63,7 @@ const slice = createSlice({
 					id: uri,
 					changes: {
 						pending: false,
-						error: typeof error === 'string' ? error : error?.message ?? 'Unknown Error',
+						error: typeof error === 'string' ? error : error?.message ?? error?.name ?? 'Unknown Error',
 					},
 				});
 			}),
