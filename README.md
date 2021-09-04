@@ -67,30 +67,47 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 
 <h1>목차</h1>
 
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
-
-- [1. 소개](#1-소개)
-  - [1-1. 이 프로젝트는 무엇인가요?](#1-1-이-프로젝트는-무엇인가요)
-  - [1-2. 왜 이런 프로젝트를 시작했나요?](#1-2-왜-이런-프로젝트를-시작했나요)
-  - [1-3. 기존 Door보다 어떤 점이 더 좋나요?](#1-3-기존-door보다-어떤-점이-더-좋나요)
-- [2. 설치](#2-설치)
-- [3. Door 기능 지원 현황](#3-door-기능-지원-현황)
-- [4. 기존 Door와 비교](#4-기존-door와-비교)
-  - [4-1. 메인 화면](#4-1-메인-화면)
-  - [4-2. 수업계획서 화면](#4-2-수업계획서-화면)
-  - [4-3. 온라인강의 목록 화면](#4-3-온라인강의-목록-화면)
-  - [4-3. 온라인강의 진행상태 화면](#4-3-온라인강의-진행상태-화면)
-  - [4-4. 공지사항 게시물 목록 화면](#4-4-공지사항-게시물-목록-화면)
-  - [4-5. 과제 게시물 목록 화면](#4-5-과제-게시물-목록-화면)
-  - [4-6. 과제 게시물 화면](#4-6-과제-게시물-화면)
-  - [4-7. 수업활동일지 게시물 목록 화면](#4-7-수업활동일지-게시물-목록-화면)
-- [5. 개발자들을 위한 정보](#5-개발자들을-위한-정보)
-  - [5-1. 프로젝트 테스트 또는 빌드](#5-1-프로젝트-테스트-또는-빌드)
-  - [5-2. 프로젝트에 사용된 기술 스택](#5-2-프로젝트에-사용된-기술-스택)
-  - [5-3. 프로젝트 구성](#5-3-프로젝트-구성)
-  - [5-4. 프로그램 통신 개요](#5-4-프로그램-통신-개요)
-  - [5-5. 프로그램 IPC 통신 구조](#5-5-프로그램-ipc-통신-구조)
-  - [5-6. How to store password to local securely](#5-6-how-to-store-password-to-local-securely)
+-   [1. 소개](#1-소개)
+    -   [1-1. 이 프로젝트는 무엇인가요?](#1-1-이-프로젝트는-무엇인가요)
+    -   [1-2. 왜 이런 프로젝트를 시작했나요?](#1-2-왜-이런-프로젝트를-시작했나요)
+    -   [1-3. 기존 Door보다 어떤 점이 더 좋나요?](#1-3-기존-door보다-어떤-점이-더-좋나요)
+-   [2. 설치](#2-설치)
+-   [3. Door 기능 지원 현황](#3-door-기능-지원-현황)
+-   [4. 기존 Door와 비교](#4-기존-door와-비교)
+    -   [4-1. 메인 화면](#4-1-메인-화면)
+    -   [4-2. 수업계획서 화면](#4-2-수업계획서-화면)
+    -   [4-3. 온라인강의 목록 화면](#4-3-온라인강의-목록-화면)
+    -   [4-3. 온라인강의 진행상태 화면](#4-3-온라인강의-진행상태-화면)
+    -   [4-4. 공지사항 게시물 목록 화면](#4-4-공지사항-게시물-목록-화면)
+    -   [4-5. 과제 게시물 목록 화면](#4-5-과제-게시물-목록-화면)
+    -   [4-6. 과제 게시물 화면](#4-6-과제-게시물-화면)
+    -   [4-7. 수업활동일지 게시물 목록 화면](#4-7-수업활동일지-게시물-목록-화면)
+-   [5. 개발자들을 위한 정보](#5-개발자들을-위한-정보)
+    -   [5-1. 프로젝트 테스트 또는 빌드](#5-1-프로젝트-테스트-또는-빌드)
+    -   [5-2. 프로젝트에 사용된 기술 스택](#5-2-프로젝트에-사용된-기술-스택)
+    -   [5-3. 프로젝트 구성](#5-3-프로젝트-구성)
+    -   [5-4. 프로그램 통신 개요](#5-4-프로그램-통신-개요)
+    -   [5-5. 프로그램 IPC 통신 구조](#5-5-프로그램-ipc-통신-구조)
+    -   [5-6. How to store password to local securely](#5-6-how-to-store-password-to-local-securely)
+-   [6. 체인지로그](#6-체인지로그)
+    -   [Door Desktop v0.0.2](#door-desktop-v002)
+    -   [Door Desktop v0.0.3](#door-desktop-v003)
+    -   [Door Desktop v0.0.4](#door-desktop-v004)
+    -   [Door Desktop v0.1.0](#door-desktop-v010)
+    -   [Door Desktop v0.1.1](#door-desktop-v011)
+    -   [Door Desktop v0.1.2](#door-desktop-v012)
+    -   [Door Desktop v0.2.0](#door-desktop-v020)
+    -   [Door Desktop v0.2.1](#door-desktop-v021)
+    -   [Door Desktop v0.2.2](#door-desktop-v022)
+    -   [Door Desktop v0.3.0](#door-desktop-v030)
+    -   [Door Desktop v0.3.1](#door-desktop-v031)
+    -   [Door Desktop v0.3.2](#door-desktop-v032)
+    -   [Door Desktop v0.3.3](#door-desktop-v033)
+    -   [Door Desktop v0.3.4](#door-desktop-v034)
+    -   [Door Desktop v0.3.5](#door-desktop-v035)
+    -   [Door Desktop v0.3.6](#door-desktop-v036)
+    -   [Door Desktop v0.3.7](#door-desktop-v037)
+    -   [Door Desktop v0.4.0](#door-desktop-v040)
 
 <br><br>
 
@@ -490,3 +507,387 @@ Google Material Design이 적용된UI 컴포넌트들을 제공해주는 라이�
 This section describes about "how to securely save user's credential to local storage". Please note, how this logic is secure is depends on `OS keychain` system.
 
 Once user checked `auto-login`, program encrypts password with symmetric encryption algorithm: `AES-256-CBC`. Encrypted password is splited to two parts, `key with iv` and `encrypted password by algorithm`. The former is stored in the `OS keychain` and latter is stored in the `AppData`. Delete either of them, it cannot be decrypted.
+
+<br><br>
+
+# 6. 체인지로그
+
+## Door Desktop v0.0.2
+
+<h3>Feature Changelog</h3>
+
+-   로그아웃 기능 추가
+-   캐시 간주 기간 30분에서 1시간으로 변경
+-   타임라인 페이지에서 컨텐츠의 캐시 간주 기간이 지났는지 확인 후 지났다면 업데이트
+
+<h3>Bug Fix</h3>
+
+-   유튜브 영상의 재생, 탐색 등의 컨트롤러가 이제 정상적으로 보임
+
+<br>
+
+## Door Desktop v0.0.3
+
+<h3>Feature Changelog</h3>
+
+-   자동 로그아웃 방지 기능 추가
+-   이제 대시보드에서 타임라인이 표시되지 않고 강의마다 표시됨
+-   강의의 대시보드 탭에서 공지사항, 과제 등 게시물 목록의 최신 상태를 확인하는 기능 추가
+-   백그라운드에서 천천히 게시물 목록을 가져오는 기능 삭제
+-   게시물을 생성된 시각 기준으로 오름차순으로 정렬하도록 수정
+
+<h3>Bug Fix</h3>
+
+-   몇몇 디자인 오류 수정
+
+<br>
+
+## Door Desktop v0.0.4
+
+<h3>Feature Changelog</h3>
+
+-   윈도우 툴바 제거
+
+<h3>Bug Fix</h3>
+
+-   글 내용이 로드되지 않았음에도 글의 일부 컴포넌트가 보이던 점 수정
+
+<br>
+
+## Door Desktop v0.1.0
+
+<h3>Feature Changelog</h3>
+
+-   수업활동일지, 팀 프로젝트 게시판 구현
+-   사용자 프로필 이미지가 보이도록 수정됨
+-   처음 열었을 때 창의 크기를 좀 더 크게 표시하도록 수정
+-   채팅 로직 구현(실험적)
+
+<h3>Bug Fix</h3>
+
+-   SameSite=Lax 정책이 우회되지 않는 오류 수정
+
+<h3>Code Changelog</h3>
+
+-   컴포넌트 및 비즈니스 로직 재구성 및 리팩토링
+-   개발 환경에서 메뉴 바를 제거하지 않도록 설정
+
+<br>
+
+## Door Desktop v0.1.1
+
+<h3>Feature Changelog</h3>
+
+-   다크모드 지원
+-   파일 업로드 구현. 파일 업로드를 사용하는 게시판(과제, 수업활동일지, 팀 프로젝트)에서 사용 가능
+-   수업활동일지와 팀 프로젝트 최신 게시물을 대시보드에서도 받아오게끔 수정
+-   상단 AppBar 색깔이 파랑에서 흰색으로 변경됨
+
+<h3>Bug Fix</h3>
+
+-   아직 과제 기간에 해당되지 않는 게시물을 읽어올 때 발생하는 에러 수정
+
+<h3>Code Changelog</h3>
+
+-   이미 요청중인 자원에 대해 이중으로 요청되지 않게끔 수정
+-   크기가 커진 PostComponent 내 마이크로 컴포넌트를 개별 파일로 분리
+-   Stomp React 컴포넌트를 Typescript 모듈로 직접 구현하여 사용
+
+<br>
+
+## Door Desktop v0.1.2
+
+<h3>Feature Changelog</h3>
+
+-   게시물의 제목 폰트 크기 더 작게 조정
+-   메인 화면(임시)의 폰트 크기를 좀 더 작게 조정
+-   강의 목록에서 주별로 등록된 강의가 몇 개인지 표시됨
+
+<h3>Bug Fix</h3>
+
+-   간혹 게시물 로딩 상태가 로딩중으로 계속 멈출 수 있는 오류 수정
+
+<h3>Code Changelog</h3>
+
+-   아이콘 리소스 사이즈별로 추가
+
+<br>
+
+## Door Desktop v0.2.0
+
+<h3>Feature Changelog</h3>
+
+-   게시물의 새로고침 버튼을 맨 하단이 아닌 상단에 배치
+-   게시물의 새로고침 버튼 디자인 버튼 스타일에서 링크 스타일로 변경
+-   강의 게시물에 새로고침 버튼 추가
+-   제출 가능한 게시물에 제출 기한 및 만료 상태를 표시
+
+<h3>Bug Fix</h3>
+
+-   게시물 목록을 가져올 때 게시물 목록에 있는 일부 정보들이 무시되던 버그 수정
+-   대시보드 상에서 모든 게시물을 최신 상태로 새로고침할 때 발생하는 에러를 일부 보여주지 않던 오류 수정
+-   게시물의 불필요한 여백(margin)을 제거
+
+<h3>Code Changelog</h3>
+
+-   Post 관련 컴포넌트 및 클래스 리팩토링
+-   학습현황을 불러오는 기능 구현. UI는 아직 미구현된 상태
+
+<br>
+
+## Door Desktop v0.2.1
+
+<h3>Bug Fix</h3>
+
+-   처음 윈도우 창이 켜질 때 door-desktop로 표시되는 버그 수정
+
+<h3>Code Changelog</h3>
+
+-   채팅 접속 시 localhost:8000으로 설정되어있던 것을 실제 도메인(door.p-e.kr)으로 변경
+
+<br>
+
+## Door Desktop v0.2.2
+
+<h3>Bug Fix</h3>
+
+-   공지사항의 게시물이 표시되지 않던 버그 수정
+
+<br>
+
+## Door Desktop v0.3.0
+
+<h3>Feature Changelog</h3>
+
+-   UI/UX를 모두 새로 바꾸었음, 사용자 경험을 한층 더 강화
+-   채팅 기능 지원 종료
+-   학기 선택 기능 추가
+-   처음 로그인 시 데이터를 미리 받아놓는 과정을 제거
+-   온라인 강의 게시판 지원
+-   프로그램 제거 시 AppData 폴더도 제거하도록 설정
+-   ... 기타 등등 셀 수 없이 많은 부분이 변경됨!!
+
+<h3>Code Changelog</h3>
+
+-   코드의 90%를 리팩토링
+-   Redux toolkit 사용
+-   Custom hooks 추가
+
+<br>
+
+## Door Desktop v0.3.1
+
+<h3>Feature Changelog</h3>
+
+-   메인 화면에서 선택된 학기에 대한 대시보드 추가
+-   메인 화면의 대시보드에 시간표 추가. 특정 시간 선택 시 하이라이트 되며 해당 시간에 해당되는 게시물만 볼 수 있음
+-   게시물 목록을 표시할 때 제한된 크기만큼 표시됨, 더보기 버튼을 눌러 더 많이 표시할 수 있음
+-   공지사항/강의자료 게시물에 대해 읽음 여부를 확인할 수 있는 기능 추가
+-   로그인 상태 유지 체크 시 공공장소 사용에 대한 경고 추가
+-   자동 로그인을 로그인 상태 유지로 이름을 바꿈
+-   광고 영역을 추가함. 추후 동아리 및 교내 행사에 대한 수요가 있을 시 활용될 예정. 없다면 제거
+-   상단 바 유저 아이콘을 왼쪽에서 오른쪽으로 이동
+-   상단 바에 학번 대신 전공을 표시하도록 변경
+-   간단한 Footer를 추가함
+
+<h3>Bug Fix</h3>
+
+-   학기 선택에 대한 잘못된 동작 수정
+-   팀 프로젝트 게시물이 불러와지지 않던 오류 수정
+-   스크롤 바 표시 오류 수정
+
+<br>
+
+## Door Desktop v0.3.2
+
+<h3>Feature Changelog</h3>
+
+-   새로운 0.3.x 버전에 맞춰 README 업데이트
+-   시간표 및 공지사항/강의자료 컴포넌트를 위로, 과제/수업활동일지/팀 프로젝트 컴포넌트를 아래로 위치를 변경하였음
+-   추가 제출기간을 표시함
+-   제출한 첨부파일을 삭제하기 전 삭제 confirm 메세지를 띄우도록 수정 (이전엔 바로 삭제되었음)
+-   제출 기한에 해당되지 않을 시 제출 기한 텍스트를 살짝 투명하게 처리
+-   온라인강의 화면에서 강의 제목들의 크기를 좀 더 작게 수정
+-   온라인강의 화면에서 진행 바의 크기를 더 작게 수정
+-   온라인강의 화면에서 진행 바의 색깔에 Gradient를 추가하였음
+-   상단 네비게이션 바에서 사용자의 이름 첫 글자 대신 유저 아이콘을 표시
+-   heading 폰트는 NanumSquare로, subtitle, body 폰트는 NanumSquareRound로 지정
+
+<h3>Bug Fix</h3>
+
+-   외부 링크를 클릭했을 때 외부 브라우저에서 열리도록 수정
+-   다크 모드에서 몇몇 컴포넌트의 색이 이상하던 점 수정(시간표와 읽지 않은 게시물)
+-   제출 마감까지 남은 기간이 음수 값을 보이는 버그 수정
+-   NanumSquare, NanumSquareRound 폰트가 제대로 로드되지 않던 버그 수정
+-   TimeTable에서 잘못된 태그 이름 수정(thead td -> thead th)
+-   창의 크기를 줄였을 때 메인화면에서 게시물 목록의 크기가 이상하게 보이던 버그 수정
+
+<h3>Code Changelog</h3>
+
+-   대시보드에서 여러 게시판의 게시물을 긁어오는 로직 수정(컴포넌트가 destruct될 때 바로 중단되도록 함)
+-   appx 아이콘과 타일 이미지 추가
+
+<br>
+
+## Door Desktop v0.3.3
+
+<h3>Feature Changelog</h3>
+
+-   자동 업데이트 지원. GitHub releases를 통해 업데이트를 수신함.
+
+<h3>Bug Fix</h3>
+
+-   메인 화면에서 시간표의 상단 헤더 부분의 배경이 투명하던 오류 수정
+-   메인 화면에서 여러 게시판의 게시물을 로드할 때 시간표의 항목을 선택하면 멈추던 현상 수정
+
+<h3>Code Changelog</h3>
+
+-   KeepLatestState 컴포넌트는 이제 visibility에 의존하지 않음. (기존: 컴포넌트가 화면 상에 표시될 때에만 Fetch됨)
+-   appx 아이콘의 로고 크기를 조금씩 작게 수정
+-   icon, tiles 리소스를 별도 repository로 이동(deu-door/door-desktop-resources), submodule로 연결
+-   Artifact 포맷을 door-desktop-${version}-setup-${arch}.${ext} 로 변경
+-   package.json에 몇몇 scripts 추가
+
+<br>
+
+## Door Desktop v0.3.4
+
+<h3>Feature Changelog</h3>
+
+-   메인 화면의 Footer에서 외부 링크(카카오 오픈채팅방) 표시. door-desktop-online-resources 레포지토리에서 받아옴
+-   메인 화면의 splash text를 door-desktop-online-resources에서 받아오도록 수정
+
+<h3>Code Changelog</h3>
+
+-   Google Analytics 태그 추가
+
+<br>
+
+## Door Desktop v0.3.5
+
+<h3>Feature Changelog</h3>
+
+-   메인 화면에서 게시물들이 언제 새로고침되었는지 보이게끔 수정
+-   메인 화면의 종합 게시글 목록에서 게시글 타입(공지사항/강의자료 등) 필터 체크박스 추가
+-   타이틀바에 색깔을 입힘
+-   로그인 페이지를 좀 더 미려하게 수정
+-   창의 크기가 작을 때(<768px) 왼쪽 사이드 바 크기를 작게 조정하도록 수정
+-   유저 정보에서 유저의 사진을 띄우도록 수정
+-   로그인 페이지에서 패스워드 입력 시 CapsLock이 켜져있는 경우 경고 문구 추가
+-   제출을 편집하기 전 첨부파일 삭제 버튼을 표시하지 않도록 수정
+-   온라인강의에서 출석 여부도 같이 새로고침되게끔 수정
+-   자동 로그인 미사용 시 데이터를 보존하지 않도록 변경
+-   서버와 연결할 수 없거나 로그인이 끊어질 시 상단에 DISCONNECTED를 표시하게끔 수정(클릭 시 다시 로그인 시도)
+-   상단 바에서 Login이라는 모호한 의미의 텍스트를 표시하지 않도록 수정
+-   실험 기능: Offline Access 추가. 자동 로그인 사용시에만 작동하며 Door 서버가 다운되거나 네트워크에 연결되어 있지 않을 때에도 미리 저장해 둔 데이터를 볼 수 있음.
+
+<h3>Bug Fix</h3>
+
+-   첨부파일 다운로드 후 간혹 "열기" 버튼이 클릭이 안되던 오류 수정
+-   첨부파일 다운로드 시 "열기" 버튼이 왼쪽 아래에 뜨던 오류 수정. 이제 오른쪽에 뜸
+-   제출 날짜를 표시할 때 오전/오후가 표시되지 않던 오류 수정
+-   로그아웃 시 데이터를 비우도록 수정
+-   외부 링크 사이에 간격이 없던 오류 수정
+-   상단 바에서 로그인 상태가 잘 감지되지 않던 오류 수정
+-   로그인 실패 시 잘못된 경로로 라우팅되는 동작 수정
+-   온라인강의가 잘못된 방식으로 저장되던 오류 수정
+
+<h3>Code Changelog</h3>
+
+-   UserDialog를 별도 파일로 분리(source: Navigator.tsx)
+-   TermPostList를 별도 파일로 분리(source: TermDashboard.tsx)
+-   메인 화면에서 상단과 하단 여백 조정
+-   loginWithSavedCredential 액션은 내부에서 login api를 호출하는 대신 login 액션을 dispatch하도록 변경
+-   Google Analytics 태그 제거
+-   비밀번호가 틀려 로그인 실패 시 저장된 비밀번호를 지우도록 변경
+
+![image](https://user-images.githubusercontent.com/20203944/112609270-b209f880-8e5e-11eb-84f5-7ff9e205dbd0.png)
+
+![image](https://user-images.githubusercontent.com/20203944/112609289-b6ceac80-8e5e-11eb-87df-955e379999aa.png)
+
+![image](https://user-images.githubusercontent.com/20203944/112609227-a61e3680-8e5e-11eb-80ba-efd9a07483f5.png)
+
+![image](https://user-images.githubusercontent.com/20203944/112609241-aa4a5400-8e5e-11eb-90cd-3bfe0c19534e.png)
+
+![image](https://user-images.githubusercontent.com/20203944/112609254-acacae00-8e5e-11eb-92c3-653a97e301f3.png)
+
+![image](https://user-images.githubusercontent.com/20203944/112609262-af0f0800-8e5e-11eb-8533-78f87afd604d.png)
+
+![image](https://user-images.githubusercontent.com/20203944/112609278-b46c5280-8e5e-11eb-8738-191076858687.png)
+
+![image](https://user-images.githubusercontent.com/20203944/112609292-b8987000-8e5e-11eb-995a-1b64b9fcd723.png)
+
+<br>
+
+## Door Desktop v0.3.6
+
+<h3>Feature Changelog</h3>
+
+-   메인화면 하단의 제출 게시글 모음을 3->8개씩 표시하도록 수정
+-   메인화면 하단의 제출 게시글 모음의 정렬 로직 수정. 빨리 제출해야 하는 게시글을 우선으로 표시함
+-   수업활동일지 게시판에 올라오는 팀 프로젝트 게시글을 표시하도록 수정. (팀 프로젝트 카테고리에 표시됨)
+-   메인화면의 배너에 프로그램의 버전이 표시되며 또한 비공개 버전임을 명시함
+-   상단 바에서 Door Desktop 글자를 제거함 (Mac에서 창 컨트롤 버튼과 겹치기 때문)
+
+<h3>Bug Fix</h3>
+
+-   Mac OS에서 http 사용으로 인해 로그인이 안되는 오류 수정
+
+<h3>Code Changelog</h3>
+
+-   npm 패키지 버전 업그레이드
+-   electron-is-dev, electron-reload 패키지 삭제
+-   AJAX 요청 시 5000ms timeout 옵션을 주도록 설정
+-   개발자 도구(DevTools)를 열 수 있도록 수정
+-   Mac OS 빌드 지원
+
+<br>
+
+## Door Desktop v0.3.7
+
+<h3>Bug Fix</h3>
+
+-   2021-05-25 Door 홈페이지 잠수함 패치로 인해 학습 현황을 제대로 불러오지 못하던 점 수정
+-   Mac OS에서 Cmd+w 입력 시 창이 종료되도록 수정
+
+<h3>Code Changelog</h3>
+
+-   React 버전 16에서 17로 업그레이드
+-   React.StrictMode 사용
+
+<br>
+
+## Door Desktop v0.4.0
+
+<h3>Feature Changelog</h3>
+
+-   대시보드에 강의 진행 현황 컴포넌트를 추가하였음. 이제 강의 진행을 한 눈에 확인할 수 있음
+-   게시글의 조회수, 카테고리를 표시할 때 아이콘을 적극적으로 활용하였음
+-   게시글 목록에서 작성 시간은 오른쪽 하단으로 배치되도록 하였음
+-   상단 AppBar에 있던 유저 프로필을 SideBar로 옮겼음
+-   게시물 리스트를 최신화하는 컴포넌트를 추가하였음
+-   다크모드에서 일부 컴포넌트의 시인성이 떨어지던 점 수정
+
+<h3>Bug Fix</h3>
+
+-   대시보드에서 게시물 목록을 최신화하는 중에 다른 뷰로 이동할 시 멈추던 버그 수정
+-   NanumSquare, NanumSquareRound 폰트가 제대로 적용되지 않던 버그 수정
+-   다운로드와 관련된 버그 수정 및 안정성 개선
+-   ...그 외 수많은 버그들을 고쳤음
+
+<h3>Code Changelog</h3>
+
+-   Renderer Process에서 처리되던 대부분의 로직을 Main Process로 이전하였음
+-   백그라운드 로직이 Renderer Process에서 Main Process로 옮겨짐에 따라 프로그램 안정성 증가, 백그라운드 작업을 구현할 수 있는 기반을 마련
+-   React Component들을 리팩토링하였음. 이제 컴포넌트들은 Desktop이라는 접두사를 가짐
+-   electron-redux를 도입하여 Main과 Renderer간 상태가 동기화될 수 있도록 적용하였음
+-   electron, React 등 의존성들의 버전을 최신으로 업데이트하였음
+-   electron remote 모듈의 코드를 최대한 줄였음. (Renderer -> Main 으로 IPC 통신하는 것으로 변경)
+-   electron-forge, webpack 을 도입
+-   Splash 창을 도입하였음. 초기에 프로그램을 켤 때 Splash 화면이 띄워짐
+-   door 홈페이지와 통신하는 코드 및 관련 Typescript definition들을 door-api 로 분리하였음
+-   ...그 외 수많은 부분들을 리팩토링 하였음
+
+<h3>Known Issue</h3>
+
+-   과제 제출이 정상 작동하지 않음
