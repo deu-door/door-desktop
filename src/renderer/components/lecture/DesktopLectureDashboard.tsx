@@ -1,5 +1,6 @@
-import { Box, Typography, useTheme } from '@material-ui/core';
+import { Box, Button, Typography, useTheme } from '@material-ui/core';
 import { amber, green, grey, yellow } from '@material-ui/core/colors';
+import { makeStyles } from '@material-ui/styles';
 import { Lecture, LectureProgress, Term } from 'door-api';
 import React from 'react';
 import { lectureListURI, lectureURI } from '../../../common/uri/uri';
@@ -10,6 +11,16 @@ import { DesktopRequestButton } from '../common/DesktopRequestButton';
 import { DesktopRequestState } from '../common/DesktopRequestState';
 import { DesktopSpacer } from '../common/DesktopSpacer';
 
+const useStyles = makeStyles({
+	lectureTile: {
+		opacity: 0.8,
+
+		'&:hover': {
+			opacity: 1,
+		},
+	},
+});
+
 type LectureTileProps = {
 	lecture: Lecture | undefined;
 	progress: LectureProgress | undefined;
@@ -17,6 +28,7 @@ type LectureTileProps = {
 
 const LectureTile: React.FC<LectureTileProps> = props => {
 	const { lecture, progress } = props;
+	const classes = useStyles();
 	const theme = useTheme();
 	const { openLecture } = useLecture();
 
@@ -32,26 +44,25 @@ const LectureTile: React.FC<LectureTileProps> = props => {
 
 	const textColor = backgroundColor === 'trasparent' ? undefined : theme.palette.getContrastText(backgroundColor);
 
+	const lectureAvailable = lecture?.url !== undefined;
+
 	return (
 		<Box
-			height={theme.spacing(5)}
-			width={theme.spacing(5)}
+			className={classes.lectureTile}
+			height={theme.spacing(4.5)}
+			width={theme.spacing(4.5)}
 			bgcolor={backgroundColor}
 			color={textColor}
 			display="flex"
 			alignItems="center"
 			justifyContent="center"
 			position="relative"
-			{...(lecture?.url !== undefined
-				? {
-						style: { cursor: 'pointer' },
-						onClick: () => openLecture(lectureURI(lecture)),
-				  }
-				: {})}
+			style={{ cursor: lectureAvailable ? 'pointer' : undefined }}
+			onClick={() => lectureAvailable && openLecture(lectureURI(lecture))}
 		>
 			<Box width={innerSize} height={innerSize} bgcolor={foregroundColor} />
-			<Box position="absolute">
-				<Typography variant="caption">{lecture?.url !== undefined ? lecture?.attendance : lecture?.type}</Typography>
+			<Box position="absolute" fontSize="0.7rem" color={textColor}>
+				{lecture?.url !== undefined ? lecture?.attendance : lecture?.type}
 			</Box>
 		</Box>
 	);
