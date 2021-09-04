@@ -47,7 +47,7 @@ const common = {
 					loader: 'file-loader',
 					options: {
 						name: '[path][name].[ext]',
-						//publicPath: '..', // move up from 'main_window'
+						publicPath: '..', // move up from 'window' folder
 						context: 'src', // set relative working folder to src
 					},
 				},
@@ -58,17 +58,18 @@ const common = {
 	resolve: {
 		extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
 	},
-	plugins: [new ForkTsCheckerWebpackPlugin(), new CopyPlugin({ patterns: [{ from: './src/static', to: 'static' }] })],
 };
 
 const main = {
 	...common,
 	entry: './src/main',
+	plugins: [new ForkTsCheckerWebpackPlugin(), new CopyPlugin({ patterns: [{ from: './src/static/icon', to: 'icon' }] })],
 };
 
 const renderer = {
 	...common,
 	entry: './src/renderer',
+	plugins: [new ForkTsCheckerWebpackPlugin()],
 };
 
 module.exports = {
@@ -119,7 +120,7 @@ module.exports = {
 			config: arch => ({
 				name: 'door-desktop',
 				iconUrl: 'https://raw.githubusercontent.com/deu-door/door-desktop-resources/main/icon.ico',
-				setupIcon: './src/static/icon.ico',
+				setupIcon: './src/static/icon/icon.ico',
 				setupExe: `door-desktop-${package.version}-setup-win-${arch}.exe`,
 				certificateFile: './cert/cert.pfx',
 				certificatePassword: process.env.CSC_KEY_PASSWORD,
@@ -127,6 +128,11 @@ module.exports = {
 		},
 		{
 			name: '@electron-forge/maker-deb',
+			config: {
+				options: {
+					icon: './src/static/icon/icon.png',
+				},
+			},
 		},
 		// {
 		// 	name: '@electron-forge/maker-appx',
