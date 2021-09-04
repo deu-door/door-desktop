@@ -458,7 +458,7 @@ Google Material Design이 적용된UI 컴포넌트들을 제공해주는 라이�
 
 ## 5-4. 프로그램 통신 개요
 
-![Door Desktop 통신 개요](resources/Door%20Desktop%20통신%20개요.png)
+![Door Desktop 통신 개요](screenshots/door-desktop-0.4.0/통신-개요.png)
 
 이 프로그램은 별도의 외부 서버와 통신하지 않습니다. 오로지 공식 Door 홈페이지와 통신하며, 데이터는 로컬 디스크에 저장됩니다. 따라서 사용자의 데이터가 외부로 유출될 위험이 없습니다.
 
@@ -470,7 +470,7 @@ Google Material Design이 적용된UI 컴포넌트들을 제공해주는 라이�
 
 이 섹션에서는 프로그램의 IPC (Inter-Process Communication) 통신 구조에 대해 설명합니다.
 
-![Door Desktop IPC 통신](resources/Door%20Desktop%20IPC%20통신.png)
+![Door Desktop IPC 통신](screenshots/door-desktop-0.4.0/IPC-통신.png)
 
 1. 프로그램이 켜지면 Main Process 의 redux store 가 초기화됩니다. Main Process 의 redux store 는 `redux-persist` 가 적용되어 있어 프로그램이 꺼질 때 상태가 저장되며, 켜질 때 저장되어 있는 상태를 불러옵니다.
 2. Main Process 가 준비되면 Renderer Process 를 생성합니다. Renderer Process 는 chromium 으로 작동하며 이는 `electron` 의 핵심이라 할 수 있습니다. Renderer Process 또한 별도의 redux store 를 가지고 있습니다. Main Process 와 동일한 redux store 를 가지기 위해 Renderer Process 생성과 동시에 `getInitialStateRenderer()` 를 통하여 Main Process 의 redux store 데이터를 복사하여 가져옵니다.
