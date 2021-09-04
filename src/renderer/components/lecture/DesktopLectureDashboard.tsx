@@ -27,11 +27,17 @@ const LectureTile: React.FC<LectureTileProps> = props => {
 			? '0%'
 			: `${Math.min(progress.current / progress.length, 1) * 100}%`;
 
+	const backgroundColor = lecture === undefined ? 'trasparent' : lecture?.url === undefined ? grey[200] : yellow[200];
+	const foregroundColor = lecture?.attendance === '출석' ? green['A400'] : amber['A400'];
+
+	const textColor = backgroundColor === 'trasparent' ? undefined : theme.palette.getContrastText(backgroundColor);
+
 	return (
 		<Box
 			height={theme.spacing(5)}
 			width={theme.spacing(5)}
-			bgcolor={lecture === undefined ? 'trasparent' : lecture?.url === undefined ? grey[200] : yellow[200]}
+			bgcolor={backgroundColor}
+			color={textColor}
 			display="flex"
 			alignItems="center"
 			justifyContent="center"
@@ -43,7 +49,7 @@ const LectureTile: React.FC<LectureTileProps> = props => {
 				  }
 				: {})}
 		>
-			<Box width={innerSize} height={innerSize} bgcolor={lecture?.attendance === '출석' ? green['A400'] : amber['A400']} />
+			<Box width={innerSize} height={innerSize} bgcolor={foregroundColor} />
 			<Box position="absolute">
 				<Typography variant="caption">{lecture?.url !== undefined ? lecture?.attendance : lecture?.type}</Typography>
 			</Box>
