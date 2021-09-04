@@ -109,7 +109,7 @@ module.exports = {
 		darwinDarkModeSupport: 'true',
 		packageManager: 'yarn',
 		executableName: 'door-desktop',
-		icon: 'src/static/icon',
+		icon: 'src/static/icon/icon',
 	},
 	makers: [
 		// {
