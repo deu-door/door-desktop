@@ -134,6 +134,9 @@ module.exports = {
 				},
 			},
 		},
+		{
+			name: '@electron-forge/maker-dmg',
+		},
 		// {
 		// 	name: '@electron-forge/maker-appx',
 		// },
