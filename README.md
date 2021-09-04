@@ -1,4 +1,4 @@
-<p align="center"><img src="src/static/logo192.png"></p>
+<p align="center"><img src="src/static/logo/logo192.png"></p>
 <h1 align="center">Door Desktop</h1>
 <p align="center">
 Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Dong-eui University</a></strong>
@@ -67,47 +67,47 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 
 <h1>목차</h1>
 
--   [1. 소개](#1-소개)
-    -   [1-1. 이 프로젝트는 무엇인가요?](#1-1-이-프로젝트는-무엇인가요)
-    -   [1-2. 왜 이런 프로젝트를 시작했나요?](#1-2-왜-이런-프로젝트를-시작했나요)
-    -   [1-3. 기존 Door보다 어떤 점이 더 좋나요?](#1-3-기존-door보다-어떤-점이-더-좋나요)
--   [2. 설치](#2-설치)
--   [3. Door 기능 지원 현황](#3-door-기능-지원-현황)
--   [4. 기존 Door와 비교](#4-기존-door와-비교)
-    -   [4-1. 메인 화면](#4-1-메인-화면)
-    -   [4-2. 수업계획서 화면](#4-2-수업계획서-화면)
-    -   [4-3. 온라인강의 목록 화면](#4-3-온라인강의-목록-화면)
-    -   [4-3. 온라인강의 진행상태 화면](#4-3-온라인강의-진행상태-화면)
-    -   [4-4. 공지사항 게시물 목록 화면](#4-4-공지사항-게시물-목록-화면)
-    -   [4-5. 과제 게시물 목록 화면](#4-5-과제-게시물-목록-화면)
-    -   [4-6. 과제 게시물 화면](#4-6-과제-게시물-화면)
-    -   [4-7. 수업활동일지 게시물 목록 화면](#4-7-수업활동일지-게시물-목록-화면)
--   [5. 개발자들을 위한 정보](#5-개발자들을-위한-정보)
-    -   [5-1. 프로젝트 테스트 또는 빌드](#5-1-프로젝트-테스트-또는-빌드)
-    -   [5-2. 프로젝트에 사용된 기술 스택](#5-2-프로젝트에-사용된-기술-스택)
-    -   [5-3. 프로젝트 구성](#5-3-프로젝트-구성)
-    -   [5-4. 프로그램 통신 개요](#5-4-프로그램-통신-개요)
-    -   [5-5. 프로그램 IPC 통신 구조](#5-5-프로그램-ipc-통신-구조)
-    -   [5-6. How to store password to local securely](#5-6-how-to-store-password-to-local-securely)
--   [6. 체인지로그](#6-체인지로그)
-    -   [Door Desktop v0.0.2](#door-desktop-v002)
-    -   [Door Desktop v0.0.3](#door-desktop-v003)
-    -   [Door Desktop v0.0.4](#door-desktop-v004)
-    -   [Door Desktop v0.1.0](#door-desktop-v010)
-    -   [Door Desktop v0.1.1](#door-desktop-v011)
-    -   [Door Desktop v0.1.2](#door-desktop-v012)
-    -   [Door Desktop v0.2.0](#door-desktop-v020)
-    -   [Door Desktop v0.2.1](#door-desktop-v021)
-    -   [Door Desktop v0.2.2](#door-desktop-v022)
-    -   [Door Desktop v0.3.0](#door-desktop-v030)
-    -   [Door Desktop v0.3.1](#door-desktop-v031)
-    -   [Door Desktop v0.3.2](#door-desktop-v032)
-    -   [Door Desktop v0.3.3](#door-desktop-v033)
-    -   [Door Desktop v0.3.4](#door-desktop-v034)
-    -   [Door Desktop v0.3.5](#door-desktop-v035)
-    -   [Door Desktop v0.3.6](#door-desktop-v036)
-    -   [Door Desktop v0.3.7](#door-desktop-v037)
-    -   [Door Desktop v0.4.0](#door-desktop-v040)
+- [1. 소개](#1-소개)
+  - [1-1. 이 프로젝트는 무엇인가요?](#1-1-이-프로젝트는-무엇인가요)
+  - [1-2. 왜 이런 프로젝트를 시작했나요?](#1-2-왜-이런-프로젝트를-시작했나요)
+  - [1-3. 기존 Door보다 어떤 점이 더 좋나요?](#1-3-기존-door보다-어떤-점이-더-좋나요)
+- [2. 설치](#2-설치)
+- [3. Door 기능 지원 현황](#3-door-기능-지원-현황)
+- [4. 기존 Door와 비교](#4-기존-door와-비교)
+  - [4-1. 메인 화면](#4-1-메인-화면)
+  - [4-2. 수업계획서 화면](#4-2-수업계획서-화면)
+  - [4-3. 온라인강의 목록 화면](#4-3-온라인강의-목록-화면)
+  - [4-4. 온라인강의 진행상태 화면](#4-4-온라인강의-진행상태-화면)
+  - [4-5. 공지사항 게시물 목록 화면](#4-5-공지사항-게시물-목록-화면)
+  - [4-6. 과제 게시물 목록 화면](#4-6-과제-게시물-목록-화면)
+  - [4-7. 과제 게시물 화면](#4-7-과제-게시물-화면)
+  - [4-8. 수업활동일지 게시물 목록 화면](#4-8-수업활동일지-게시물-목록-화면)
+- [5. 개발자들을 위한 정보](#5-개발자들을-위한-정보)
+  - [5-1. 프로젝트 테스트 또는 빌드](#5-1-프로젝트-테스트-또는-빌드)
+  - [5-2. 프로젝트에 사용된 기술 스택](#5-2-프로젝트에-사용된-기술-스택)
+  - [5-3. 프로젝트 구성](#5-3-프로젝트-구성)
+  - [5-4. 프로그램 통신 개요](#5-4-프로그램-통신-개요)
+  - [5-5. 프로그램 IPC 통신 구조](#5-5-프로그램-ipc-통신-구조)
+  - [5-6. How to store password to local securely](#5-6-how-to-store-password-to-local-securely)
+- [6. 체인지로그](#6-체인지로그)
+  - [Door Desktop v0.0.2](#door-desktop-v002)
+  - [Door Desktop v0.0.3](#door-desktop-v003)
+  - [Door Desktop v0.0.4](#door-desktop-v004)
+  - [Door Desktop v0.1.0](#door-desktop-v010)
+  - [Door Desktop v0.1.1](#door-desktop-v011)
+  - [Door Desktop v0.1.2](#door-desktop-v012)
+  - [Door Desktop v0.2.0](#door-desktop-v020)
+  - [Door Desktop v0.2.1](#door-desktop-v021)
+  - [Door Desktop v0.2.2](#door-desktop-v022)
+  - [Door Desktop v0.3.0](#door-desktop-v030)
+  - [Door Desktop v0.3.1](#door-desktop-v031)
+  - [Door Desktop v0.3.2](#door-desktop-v032)
+  - [Door Desktop v0.3.3](#door-desktop-v033)
+  - [Door Desktop v0.3.4](#door-desktop-v034)
+  - [Door Desktop v0.3.5](#door-desktop-v035)
+  - [Door Desktop v0.3.6](#door-desktop-v036)
+  - [Door Desktop v0.3.7](#door-desktop-v037)
+  - [Door Desktop v0.4.0](#door-desktop-v040)
 
 <br><br>
 
@@ -381,7 +381,7 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 
 <br>
 
-## 4-3. 온라인강의 진행상태 화면
+## 4-4. 온라인강의 진행상태 화면
 
 |                      기존 Door                      |         Door Desktop          |
 | :-------------------------------------------------: | :---------------------------: |
@@ -389,7 +389,7 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 
 <br>
 
-## 4-4. 공지사항 게시물 목록 화면
+## 4-5. 공지사항 게시물 목록 화면
 
 |                 기존 Door                  |                  Door Desktop                   |
 | :----------------------------------------: | :---------------------------------------------: |
@@ -397,7 +397,7 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 
 <br>
 
-## 4-5. 과제 게시물 목록 화면
+## 4-6. 과제 게시물 목록 화면
 
 |                   기존 Door                    |                    Door Desktop                     |
 | :--------------------------------------------: | :-------------------------------------------------: |
@@ -405,7 +405,7 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 
 <br>
 
-## 4-6. 과제 게시물 화면
+## 4-7. 과제 게시물 화면
 
 |                      기존 Door                       |                       Door Desktop                        |
 | :--------------------------------------------------: | :-------------------------------------------------------: |
@@ -413,7 +413,7 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 
 <br>
 
-## 4-7. 수업활동일지 게시물 목록 화면
+## 4-8. 수업활동일지 게시물 목록 화면
 
 |                   기존 Door                   |                    Door Desktop                    |
 | :-------------------------------------------: | :------------------------------------------------: |
