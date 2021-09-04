@@ -111,9 +111,9 @@ module.exports = {
 		icon: 'src/static/icon',
 	},
 	makers: [
-		{
-			name: '@electron-forge/maker-zip',
-		},
+		// {
+		// 	name: '@electron-forge/maker-zip',
+		// },
 		{
 			name: '@electron-forge/maker-squirrel',
 			config: arch => ({
