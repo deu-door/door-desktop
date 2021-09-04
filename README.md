@@ -27,7 +27,7 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 <tbody>
 <tr>
 <td>
-이 레포지토리는 GUI 소스코드만 제공하고 있습니다. door 서비스에서 데이터를 가져오는 등의 통신을 하는 코드는 제외되어 있습니다. 자세한 내용은 5-3을 참고해주세요.
+이 레포지토리는 GUI 소스코드만 제공하고 있습니다. door 서비스에서 데이터를 가져오는 등의 통신을 하는 코드는 제외되어 있습니다. 자세한 내용은 <a href="#5-3-프로젝트-구성">여기</a>를 참고해주세요.
 </td>
 </tr>
 </tbody>
