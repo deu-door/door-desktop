@@ -101,15 +101,10 @@ export const DesktopLoginPage: React.FC<DesktopLoginPageProps> = props => {
 	const tryLogin = async (event: React.FormEvent<HTMLElement>) => {
 		event.preventDefault();
 
-		try {
-			await login(id, password);
-
-			// check using auto login, and save credential
-			//if (autoLogin) await saveCredential({ id, password });
-		} catch (e) {}
+		login(id, password);
 	};
 
-	if (user !== undefined && sessionExpired === false) return <Redirect to="/" />;
+	if (user !== undefined && sessionExpired !== true) return <Redirect to="/" />;
 
 	return (
 		<Box

@@ -14,6 +14,8 @@ export interface UserState {
 
 const initialState: UserState = {
 	sessionExpired: true,
+	encryptedCredential: undefined,
+	user: undefined,
 	persistCredential: false,
 };
 

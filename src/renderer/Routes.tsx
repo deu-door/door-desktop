@@ -21,12 +21,10 @@ const DesktopLoginLoadingPage: React.FC = () => {
 		<DesktopLoadingPage>
 			{pending === true ? (
 				<>세션 상태를 확인중입니다 ...</>
-			) : sessionExpired === false ? (
+			) : encryptedCredential !== undefined || sessionExpired !== true ? (
 				<Redirect to="/term" />
-			) : encryptedCredential === undefined ? (
-				<Redirect to="/login" />
 			) : (
-				<></>
+				<Redirect to="/login" />
 			)}
 		</DesktopLoadingPage>
 	);
@@ -47,7 +45,9 @@ const DesktopTermLoadingPage: React.FC = () => {
 };
 
 const Routes: React.FC = () => {
-	const { encryptedCredential } = useUser();
+	const { encryptedCredential, sessionExpired } = useUser();
+
+	const contentAvailable = encryptedCredential !== undefined || sessionExpired !== true;
 
 	return (
 		<HashRouter>
@@ -56,16 +56,10 @@ const Routes: React.FC = () => {
 				<Route path="/login" component={DesktopLoginPage} />
 				<Route path="/external" component={DesktopExternalURLPage} />
 
-				{/* Following routes are login required */}
-				{encryptedCredential !== undefined && <Route exact path="/term" component={DesktopTermLoadingPage} />}
-				{encryptedCredential !== undefined && <Route path="/term/:termId" component={DesktopTermPage} />}
+				{contentAvailable && <Route exact path="/term" component={DesktopTermLoadingPage} />}
+				{contentAvailable && <Route path="/term/:termId" component={DesktopTermPage} />}
 
-				<Route exact path="/" component={() => <Redirect to="/loading" />} />
-
-				{/* In production, fallback to /loading */}
-				{!IS_DEV && <Redirect to="/loading" />}
-
-				<Route path="*" component={DesktopNotFoundPage} />
+				<Redirect to="/loading" />
 			</Switch>
 		</HashRouter>
 	);
