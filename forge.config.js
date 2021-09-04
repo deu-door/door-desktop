@@ -125,11 +125,11 @@ module.exports = {
 				certificatePassword: process.env.CSC_KEY_PASSWORD,
 			}),
 		},
+		{
+			name: '@electron-forge/maker-deb',
+		},
 		// {
 		// 	name: '@electron-forge/maker-appx',
-		// },
-		// {
-		// 	name: '@electron-forge/maker-deb',
 		// },
 		// {
 		// 	name: '@electron-forge/maker-rpm',
