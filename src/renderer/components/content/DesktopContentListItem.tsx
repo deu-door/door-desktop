@@ -1,4 +1,4 @@
-import { ListItemText, useTheme } from '@material-ui/core';
+import { alpha, ListItemText, useTheme } from '@material-ui/core';
 import { Assignment, AssignmentHead, Post } from 'door-api';
 import { DesktopBorderedListItem } from '../common/DesktopBorderedListItem';
 import React from 'react';
@@ -16,20 +16,14 @@ export type DesktopContentListItemProps = {
 
 export const DesktopContentListItem: React.FC<DesktopContentListItemProps> = props => {
 	const { content, onClick, TitleProps, SubtitleProps } = props;
-	const theme = useTheme();
 
 	return (
 		<DesktopBorderedListItem
 			button
 			onClick={onClick}
-			style={
-				'noted' in content && content.noted === false
-					? {
-							backgroundColor: yellow[100],
-							color: theme.palette.getContrastText(yellow[100]),
-					  }
-					: {}
-			}
+			style={{
+				backgroundColor: 'noted' in content && content.noted === false ? alpha(yellow[500], 0.25) : undefined,
+			}}
 		>
 			<ListItemText
 				primary={
