@@ -7,6 +7,9 @@ dotenv.config();
 // Type checking을 더 빨리 해주는 플러그인
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
+// 리소스를 지정된 디렉토리에 복사해주는 플러그인
+const CopyPlugin = require('copy-webpack-plugin');
+
 /**
  * commonly used config for both main, renderer process
  */
@@ -55,18 +58,17 @@ const common = {
 	resolve: {
 		extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
 	},
+	plugins: [new ForkTsCheckerWebpackPlugin(), new CopyPlugin({ patterns: [{ from: './src/static', to: 'static' }] })],
 };
 
 const main = {
 	...common,
 	entry: './src/main',
-	plugins: [new ForkTsCheckerWebpackPlugin()],
 };
 
 const renderer = {
 	...common,
 	entry: './src/renderer',
-	plugins: [new ForkTsCheckerWebpackPlugin()],
 };
 
 module.exports = {
@@ -106,7 +108,7 @@ module.exports = {
 		darwinDarkModeSupport: 'true',
 		packageManager: 'yarn',
 		executableName: 'door-desktop',
-		icon: './src/static/icon.ico',
+		icon: 'src/static/icon',
 	},
 	makers: [
 		{
