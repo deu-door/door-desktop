@@ -2455,7 +2455,7 @@ domutils@^2.5.2, domutils@^2.6.0:
 
 "door-api@git+https://github.com/deu-door/door-api":
   version "0.1.0"
-  resolved "git+https://github.com/deu-door/door-api#89074cf56010d255e1bf95d821e1856dacf22d1d"
+  resolved "git+https://github.com/deu-door/door-api#31b6456e4f6694ae86a14f29910bcc494c47880d"
   dependencies:
     "@types/node" "^16.7.2"
     "@types/qs" "^6.9.7"
