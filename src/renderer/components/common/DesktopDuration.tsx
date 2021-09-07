@@ -12,12 +12,19 @@ export type DesktopDurationProps = TypographyProps & {
 };
 
 export const DesktopDuration: React.FC<DesktopDurationProps> = props => {
-	const { from: _from, to: _to, interval = 500, tooltip, ...otherProps } = props;
+	const { from: _from, to: _to, interval: _interval, tooltip, ...otherProps } = props;
 
 	const from = new Date(_from).valueOf();
 	const to = new Date(_to).valueOf();
-
 	const [now, setNow] = useState(Date.now());
+
+	const criteria = now < from ? from : to;
+
+	const diffMonths = Math.abs(differenceInMonths(now, criteria));
+	const diffDays = Math.abs(differenceInDays(now, criteria));
+
+	// optimize: if diffDays > 0, not necessary to update so hurry
+	const interval = _interval !== undefined ? _interval : diffDays > 0 ? 30000 : 500;
 
 	useEffect(() => {
 		const timer = runEvery(() => setNow(Date.now()), interval);
@@ -25,7 +32,7 @@ export const DesktopDuration: React.FC<DesktopDurationProps> = props => {
 		return () => cancelRun(timer);
 	}, [interval]);
 
-	const format = differenceInMonths(now, from) !== 0 ? 'M월' : differenceInDays(now, from) !== 0 ? 'd일' : 'hh:mm:ss';
+	const format = diffMonths > 0 ? 'M월' : diffDays > 0 ? 'd일' : 'hh:mm:ss';
 
 	return (
 		<Tooltip
@@ -41,7 +48,8 @@ export const DesktopDuration: React.FC<DesktopDurationProps> = props => {
 					<>종료되었습니다</>
 				) : (
 					<>
-						<DesktopDate duration={now} date={from} format={format} interval={0} /> {now < from ? '후 제출가능' : '남음'}
+						<DesktopDate duration={now} date={criteria} format={format} interval={0} />
+						{now < from ? '후 제출가능' : ' 남음'}
 					</>
 				)}
 			</Typography>
