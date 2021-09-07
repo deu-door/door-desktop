@@ -108,6 +108,7 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
   - [Door Desktop v0.3.6](#door-desktop-v036)
   - [Door Desktop v0.3.7](#door-desktop-v037)
   - [Door Desktop v0.4.0](#door-desktop-v040)
+  - [Door Desktop v0.4.1](#door-desktop-v041)
 
 <br><br>
 
@@ -891,3 +892,11 @@ Once user checked `auto-login`, program encrypts password with symmetric encrypt
 <h3>Known Issue</h3>
 
 -   과제 제출이 정상 작동하지 않음
+
+<br>
+
+## Door Desktop v0.4.1
+
+<h3>Bug Fix</h3>
+
+-   **deu-door/door-api@4ab84cbb194924cc7a93436b3643c67a811d4182** CA 문제로 인해 https 통신 시 `Error: unable to verify the first certificate` 에러가 발생하면서 로그인이 되지 않던 오류 수정
