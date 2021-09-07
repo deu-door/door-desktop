@@ -64,6 +64,8 @@ if (!gotTheLock) {
 		mainWindow.on('closed', () => {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			mainWindow = undefined!;
+
+			app.releaseSingleInstanceLock();
 		});
 
 		// check for update
@@ -81,7 +83,7 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
 	// On OS X it's common to re-create a window in the app when the
 	// dock icon is clicked and there are no other windows open.
-	if (mainWindow === undefined && BrowserWindow.getAllWindows().length === 0) {
+	if (mainWindow === undefined /* && BrowserWindow.getAllWindows().length === 0 */) {
 		mainWindow = createMainWindow();
 	}
 });
