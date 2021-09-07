@@ -897,6 +897,10 @@ Once user checked `auto-login`, program encrypts password with symmetric encrypt
 
 ## Door Desktop v0.4.1
 
+<h3>Feature Changelog</h3>
+
+-   다운로드 시 파일 크기를 소숫점 2자리까지 표시하도록 수정
+
 <h3>Bug Fix</h3>
 
 -   **deu-door/door-api@4ab84cbb194924cc7a93436b3643c67a811d4182** CA 문제로 인해 https 통신 시 `Error: unable to verify the first certificate` 에러가 발생하면서 로그인이 되지 않던 오류 수정
