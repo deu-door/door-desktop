@@ -1,4 +1,4 @@
-import { Box, Button, Typography, useTheme } from '@material-ui/core';
+import { Box, Typography, useTheme } from '@material-ui/core';
 import { amber, green, grey, yellow } from '@material-ui/core/colors';
 import { makeStyles } from '@material-ui/styles';
 import { Lecture, LectureProgress, Term } from 'door-api';
@@ -32,12 +32,13 @@ const LectureTile: React.FC<LectureTileProps> = props => {
 	const theme = useTheme();
 	const { openLecture } = useLecture();
 
-	const innerSize =
+	const progressSize =
 		lecture?.attendance === '출석'
 			? '100%'
-			: progress === undefined
+			: lecture?.attendance === '미수강' || progress === undefined
 			? '0%'
-			: `${Math.min(progress.current / progress.length, 1) * 100}%`;
+			: // progress bar size range: 5% ~ 95%
+			  `${Math.min(progress.current / progress.length, 1) * 90 + 5}%`;
 
 	const backgroundColor = lecture === undefined ? 'trasparent' : lecture?.url === undefined ? grey[200] : yellow[200];
 	const foregroundColor = lecture?.attendance === '출석' ? green['A400'] : amber['A400'];
@@ -55,13 +56,13 @@ const LectureTile: React.FC<LectureTileProps> = props => {
 			color={textColor}
 			display="flex"
 			alignItems="center"
-			justifyContent="center"
+			justifyContent="left"
 			position="relative"
 			style={{ cursor: lectureAvailable ? 'pointer' : undefined }}
 			onClick={() => lectureAvailable && openLecture(lectureURI(lecture))}
 		>
-			<Box width={innerSize} height={innerSize} bgcolor={foregroundColor} />
-			<Box position="absolute" fontSize="0.7rem" color={textColor}>
+			<Box width={progressSize} height="100%" bgcolor={foregroundColor} />
+			<Box position="absolute" fontSize="0.7rem" color={textColor} width="100%" textAlign="center">
 				{lecture?.url !== undefined ? lecture?.attendance : lecture?.type}
 			</Box>
 		</Box>
