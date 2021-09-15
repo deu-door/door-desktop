@@ -15,8 +15,11 @@ export const DesktopContentTitle: React.FC<DesktopContentTitleProps> = props => 
 	return (
 		<Typography variant="h5" {...TypographyProps}>
 			<Box display="flex">
-				<span>{content.title}</span>
+				<Box overflow="hidden" textOverflow="ellipsis">
+					{content.title}
+				</Box>
 
+				<DesktopSpacer horizontal={1} />
 				<DesktopSpacer horizontal="auto" />
 
 				{'duration' in content && (
