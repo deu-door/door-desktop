@@ -7,7 +7,7 @@ import { Timer } from '@material-ui/icons';
 import { DesktopSpacer } from './DesktopSpacer';
 
 export type DesktopDurationProps = TypographyProps & {
-	from: DesktopDateProps['date'];
+	from?: DesktopDateProps['date'];
 	to: DesktopDateProps['date'];
 	interval?: number;
 	tooltip?: boolean;
@@ -16,11 +16,13 @@ export type DesktopDurationProps = TypographyProps & {
 export const DesktopDuration: React.FC<DesktopDurationProps> = props => {
 	const { from: _from, to: _to, interval: _interval, tooltip, ...otherProps } = props;
 
-	const from = new Date(_from).valueOf();
+	const from = _from === undefined ? undefined : new Date(_from).valueOf();
 	const to = new Date(_to).valueOf();
 	const [now, setNow] = useState(Date.now());
 
-	const criteria = now < from ? from : to;
+	// if from is not given? -> criteria: to
+	// else compare both from and to with now
+	const criteria = from === undefined ? to : now < from ? from : to;
 
 	const diffMonths = Math.abs(differenceInMonths(now, criteria));
 	const diffDays = Math.abs(differenceInDays(now, criteria));
@@ -41,11 +43,21 @@ export const DesktopDuration: React.FC<DesktopDurationProps> = props => {
 			placement="top"
 			title={
 				<>
-					<DesktopDate date={from} format="M월 D일 a h시 m분" /> ~ <DesktopDate date={to} format="M월 D일 a h시 m분" />
+					{from !== undefined && (
+						<>
+							<DesktopDate date={from} format="M월 D일 a h시 m분" /> ~{' '}
+						</>
+					)}
+					<DesktopDate date={to} format="M월 D일 a h시 m분" />
 				</>
 			}
 		>
-			<Typography display="inline" variant="subtitle2" {...otherProps} style={{ opacity: from < now && now < to ? 1 : 0.7 }}>
+			<Typography
+				display="inline"
+				variant="subtitle2"
+				{...otherProps}
+				style={{ opacity: (from === undefined || from < now) && now < to ? 1 : 0.7 }}
+			>
 				{to < now ? (
 					<>종료되었습니다</>
 				) : (
@@ -53,7 +65,7 @@ export const DesktopDuration: React.FC<DesktopDurationProps> = props => {
 						<Timer style={{ fontSize: '1.5em' }} />
 						<DesktopSpacer horizontal={0.2} />
 						<DesktopDate duration={now} date={criteria} format={format} interval={0} />
-						{now < from ? '후 제출가능' : <span style={{ marginLeft: '0.2rem' }}>남음</span>}
+						{from !== undefined && now < from ? '후 제출가능' : <span style={{ marginLeft: '0.2rem' }}>남음</span>}
 					</Box>
 				)}
 			</Typography>
