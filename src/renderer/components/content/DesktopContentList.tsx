@@ -9,7 +9,6 @@ import { startOfDay, startOfMonth, startOfToday, startOfWeek, startOfYesterday, 
 type ContentList = Array<(PostHead | Post) | (AssignmentHead | Assignment)>;
 
 export type DesktopContentListProps = Omit<DesktopVirtualListProps, 'itemCount' | 'itemRenderer'> & {
-	title?: string;
 	list: ContentList;
 	sortBy?: (a: ContentList[0], b: ContentList[0]) => number;
 	groupByCreatedAt?: boolean;
@@ -19,7 +18,6 @@ export type DesktopContentListProps = Omit<DesktopVirtualListProps, 'itemCount' 
 
 export const DesktopContentList: React.FC<DesktopContentListProps> = props => {
 	const {
-		title,
 		list: _list,
 		sortBy = (a, b) => {
 			const aDate = 'duration' in a ? a.duration.to : 'createdAt' in a ? a.createdAt : '';
@@ -35,7 +33,6 @@ export const DesktopContentList: React.FC<DesktopContentListProps> = props => {
 	const { courseById } = useCourse();
 
 	const list = _list.sort(sortBy);
-	const variants = new Set<string>(list.map(content => content.variant));
 
 	const onClick = (content: (PostHead | Post) | (AssignmentHead | Assignment)) => {
 		history.push(`/term/${courseById(content.courseId)?.termId}/course/${content.courseId}/${content.variant}/${content.id}`);
@@ -78,13 +75,6 @@ export const DesktopContentList: React.FC<DesktopContentListProps> = props => {
 
 	return (
 		<DesktopVirtualList
-			title={
-				title ??
-				Object.entries(AssignmentVariantNames)
-					.filter(([variant]) => variants.has(variant))
-					.map(([, name]) => name)
-					.join(' · ')
-			}
 			itemCount={list.length}
 			itemRenderer={index => (
 				<DesktopContentListItem
