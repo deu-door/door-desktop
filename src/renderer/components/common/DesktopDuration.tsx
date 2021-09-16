@@ -14,7 +14,7 @@ export type DesktopDurationProps = TypographyProps & {
 };
 
 export const DesktopDuration: React.FC<DesktopDurationProps> = props => {
-	const { from: _from, to: _to, interval: _interval, tooltip, ...otherProps } = props;
+	const { from: _from, to: _to, interval: _interval, tooltip = true, ...otherProps } = props;
 
 	const from = _from === undefined ? undefined : new Date(_from).valueOf();
 	const to = new Date(_to).valueOf();
