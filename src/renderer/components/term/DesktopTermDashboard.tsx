@@ -60,9 +60,7 @@ export const DesktopTermDashboard: React.FC<DesktopTermDashboardProps> = props =
 
 			<Grid container spacing={4} direction="row-reverse">
 				<Grid item xs={12} md={6}>
-					<Box>
-						<DesktopTimeTable courseList={courseList} selected={selectedCourse} onSelect={setSelectedCourse} />
-					</Box>
+					<DesktopTimeTable courseList={courseList} selected={selectedCourse} onSelect={setSelectedCourse} />
 				</Grid>
 
 				<Hidden mdUp>
