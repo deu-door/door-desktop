@@ -1,10 +1,9 @@
-import { alpha, ListItemText, useTheme } from '@material-ui/core';
-import { Assignment, AssignmentHead, Post } from 'door-api';
+import { alpha, ListItemText } from '@material-ui/core';
+import { Assignment, AssignmentHead, Post, PostHead } from 'door-api';
 import { DesktopBorderedListItem } from '../common/DesktopBorderedListItem';
 import React from 'react';
 import { DesktopContentSubtitle, DesktopContentSubtitleProps } from './DesktopContentSubtitle';
 import { DesktopContentTitle, DesktopContentTitleProps } from './DesktopContentTitle';
-import { PostHead } from 'door-api/src';
 import { yellow } from '@material-ui/core/colors';
 
 export type DesktopContentListItemProps = {

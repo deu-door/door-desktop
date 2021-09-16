@@ -84,11 +84,13 @@ export const DesktopTermDashboard: React.FC<DesktopTermDashboardProps> = props =
 
 			<Grid container spacing={2}>
 				<Grid item xs={12} md={6}>
+					{/* 공지사항, 강의자료 게시물 리스트 */}
 					<DesktopContentList
 						title={Object.values(PostVariantNames).join(' · ')}
 						list={postList}
 						defaultThreshold={6}
 						expandThresholdSize={8}
+						groupByCreatedAt
 						VirtualListProps={{
 							defaultThreshold: 8,
 							expandThresholdSize: 8,
@@ -99,6 +101,7 @@ export const DesktopTermDashboard: React.FC<DesktopTermDashboardProps> = props =
 					/>
 				</Grid>
 				<Grid item xs={12} md={6}>
+					{/* 과제, 팀 프로젝트, 수업활동일지 게시물 리스트 */}
 					<DesktopContentList
 						title={Object.values(AssignmentVariantNames).join(' · ')}
 						list={assignmentList}

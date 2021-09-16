@@ -1,5 +1,5 @@
 import { Box, Tooltip, Typography, TypographyProps } from '@material-ui/core';
-import { Done, ErrorOutline, Timer } from '@material-ui/icons';
+import { Done, ErrorOutline } from '@material-ui/icons';
 import { Assignment, AssignmentHead, Post, PostHead } from 'door-api';
 import React from 'react';
 import { DesktopDuration } from '../common/DesktopDuration';

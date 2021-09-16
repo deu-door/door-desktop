@@ -1,5 +1,6 @@
-import { List, ListItem, ListProps, Typography } from '@material-ui/core';
+import { List, ListItem, ListProps, ListSubheader, Typography } from '@material-ui/core';
 import React, { useState } from 'react';
+import { DesktopListSubheader } from './DesktopListSubheader';
 import { DesktopSpacer } from './DesktopSpacer';
 
 export type DesktopVirtualListProps = ListProps & {
@@ -9,10 +10,20 @@ export type DesktopVirtualListProps = ListProps & {
 	expandThresholdSize?: number;
 	itemCount: number;
 	itemRenderer: (index: number) => React.ReactNode | undefined;
+	itemGroup?: (index: number) => string;
 };
 
 export const DesktopVirtualList: React.FC<DesktopVirtualListProps> = props => {
-	const { title, empty, defaultThreshold = 50, expandThresholdSize = defaultThreshold, itemCount, itemRenderer, ...otherProps } = props;
+	const {
+		title,
+		empty,
+		defaultThreshold = 50,
+		expandThresholdSize = defaultThreshold,
+		itemCount,
+		itemRenderer,
+		itemGroup,
+		...otherProps
+	} = props;
 
 	const [expandedCount, setExpandedCount] = useState(0);
 	const threshold = defaultThreshold + expandThresholdSize * expandedCount;
@@ -20,6 +31,8 @@ export const DesktopVirtualList: React.FC<DesktopVirtualListProps> = props => {
 	const items = Array(Math.min(threshold, itemCount))
 		.fill(undefined)
 		.map((_, index) => itemRenderer(index));
+
+	let currentGroup: string | undefined = undefined;
 
 	return (
 		<>
@@ -32,7 +45,22 @@ export const DesktopVirtualList: React.FC<DesktopVirtualListProps> = props => {
 					<ListItem>{empty ?? <Typography color="textSecondary">목록이 비어있습니다</Typography>}</ListItem>
 				) : (
 					<>
-						{items.map(item => item)}
+						{itemGroup === undefined
+							? items
+							: // make group with itemGroup function
+							  items.map((item, index) => {
+									const group = itemGroup(index);
+									if (currentGroup !== group) {
+										currentGroup = group;
+										return (
+											<>
+												<DesktopListSubheader>{group}</DesktopListSubheader>
+												{item}
+											</>
+										);
+									}
+									return item;
+							  })}
 						{items.length < itemCount && (
 							<ListItem
 								button
