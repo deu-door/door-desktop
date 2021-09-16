@@ -37,7 +37,7 @@ export const DesktopPostListPage: React.FC<DesktopPostListPageProps> = props => 
 			<DesktopRequestTrigger uri={postListURI({ id: courseId, variant })} onRequest={fetch} />
 			<DesktopRequestButton uri={postListURI({ id: courseId, variant })} onClick={fetch} />
 			<DesktopSpacer vertical={0.7} />
-			<DesktopContentList title={PostVariantNames[variant]} list={postList} />
+			<DesktopContentList title={PostVariantNames[variant]} list={postList} groupByCreatedAt />
 		</>
 	);
 };
