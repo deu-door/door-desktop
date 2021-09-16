@@ -43,7 +43,7 @@ export const DesktopContentList: React.FC<DesktopContentListProps> = props => {
 		() => ({
 			today: startOfToday().toISOString(),
 			yesterday: startOfYesterday().toISOString(),
-			dayBeforeYesterday: startOfDay(subDays(Date.now(), 3)).toISOString(),
+			dayBeforeYesterday: startOfDay(subDays(Date.now(), 2)).toISOString(),
 			thisWeek: startOfWeek(Date.now()).toISOString(),
 			lastWeek: startOfWeek(startOfWeek(Date.now()).getTime() - 1).toISOString(),
 			thisMonth: startOfMonth(Date.now()).toISOString(),
