@@ -5,9 +5,9 @@ import { reducers } from '../common/modules';
 import { IS_DEV } from '../common/constants';
 import { forwardToRenderer, replayActionMain, triggerAlias } from 'electron-redux';
 import { requestMetadataMiddleware } from '../common/request/request';
-import { RequestMetadataResetPending } from '../common/transforms/requestMetadataResetPending';
-import { PersistCredential } from '../common/transforms/persistCredential';
-import { ResetOnVersionChange } from '../common/migrates/resetOnVersionChange';
+import { RequestMetadataResetPending } from './transforms/requestMetadataResetPending';
+import { PersistCredential } from './transforms/persistCredential';
+import { ResetOnVersionChange } from './migrates/resetOnVersionChange';
 
 const rootReducer = combineReducers({
 	user: persistReducer(

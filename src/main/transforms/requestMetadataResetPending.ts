@@ -1,6 +1,6 @@
 import { createTransform } from 'redux-persist';
-import { reducers } from '../modules';
-import { RequestMetadata } from '../request/request.interface';
+import { reducers } from '../../common/modules';
+import { RequestMetadata } from '../../common/request/request.interface';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const RequestMetadataResetPending = createTransform<unknown, unknown, any, ReturnType<typeof reducers.requestMetadata>>(

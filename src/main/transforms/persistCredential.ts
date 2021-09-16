@@ -1,5 +1,5 @@
 import { createTransform } from 'redux-persist';
-import { reducers } from '../modules';
+import { reducers } from '../../common/modules';
 
 export const PersistCredential = createTransform<unknown, unknown, ReturnType<typeof reducers.user>>(
 	// transform state on its way to being serialized and persisted.
