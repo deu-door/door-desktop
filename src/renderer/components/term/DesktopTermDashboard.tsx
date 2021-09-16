@@ -58,7 +58,7 @@ export const DesktopTermDashboard: React.FC<DesktopTermDashboardProps> = props =
 
 			<DesktopSpacer vertical={4} />
 
-			<Grid container spacing={2} direction="row-reverse">
+			<Grid container spacing={4} direction="row-reverse">
 				<Grid item xs={12} md={6}>
 					<Box>
 						<DesktopTimeTable courseList={courseList} selected={selectedCourse} onSelect={setSelectedCourse} />
@@ -82,7 +82,7 @@ export const DesktopTermDashboard: React.FC<DesktopTermDashboardProps> = props =
 
 			<DesktopSpacer vertical={4} />
 
-			<Grid container spacing={2}>
+			<Grid container spacing={4}>
 				<Grid item xs={12} md={6}>
 					{/* 공지사항, 강의자료 게시물 리스트 */}
 					<DesktopContentList
