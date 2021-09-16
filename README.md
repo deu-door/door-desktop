@@ -109,6 +109,7 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
   - [Door Desktop v0.3.7](#door-desktop-v037)
   - [Door Desktop v0.4.0](#door-desktop-v040)
   - [Door Desktop v0.4.1](#door-desktop-v041)
+  - [Door Desktop v0.4.2](#door-desktop-v042)
 
 <br><br>
 
@@ -904,3 +905,35 @@ Once user checked `auto-login`, program encrypts password with symmetric encrypt
 <h3>Bug Fix</h3>
 
 -   **deu-door/door-api@4ab84cbb194924cc7a93436b3643c67a811d4182** CA 문제로 인해 https 통신 시 `Error: unable to verify the first certificate` 에러가 발생하면서 로그인이 되지 않던 오류 수정
+
+<h3>Known Issue</h3>
+
+-   과제 제출이 정상 작동하지 않음
+
+<br>
+
+## Door Desktop v0.4.2
+
+<h3>Feature Changelog</h3>
+
+-   메인 화면에서 강의 진행 정도 표기를 바 스타일로 바꿈 (기존에는 가운데에서 정사각형이 커지는 스타일)
+-   메인 화면에서 게시글 목록이 적절히 그룹핑되어 표시됨 (오늘, 어제, 이번 주, 기간 내, 종료됨)
+-   메인 화면에서 컨텐츠 간 간격을 좀 더 넓게 조정하였음
+
+<h3>Bug Fix</h3>
+
+-   과제, 팀 프로젝트, 수업활동일지 남은 기간이 잘못 표시되던 오류 수정
+-   게시글 리스트에서 제목이 길 때 오른쪽을 침범하는 오류 수정
+
+<h3>Code Changelog</h3>
+
+-   메인 윈도우가 종료되었을 때 `app.releaseSingleInstanceLock()` 가 실행되도록 함
+-   `DesktopDuration` 컴포넌트에 `Timer` 아이콘 통합
+-   `DesktopDuration` 컴포넌트는 `tooltip` 옵션이 기본적으로 활성화되도록 하였음
+-   `DesktopDuration` 컴포넌트는 `from` 이 없어도 됨 (기존에는 `from`, `to` 둘 다 있어야 했음)
+-   `DesktopVirtualList`, `DesktopContentList` 컴포넌트는 이제 `title` 을 렌더링하지 않음
+-   `migrates`, `transforms` 는 `main` 프로세스에서만 참조되기 때문에, `main` 폴더로 옮겼음
+
+<h3>Known Issue</h3>
+
+-   과제 제출이 정상 작동하지 않음
