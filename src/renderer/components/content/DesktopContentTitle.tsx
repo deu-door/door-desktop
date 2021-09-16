@@ -25,7 +25,7 @@ export const DesktopContentTitle: React.FC<DesktopContentTitleProps> = props => 
 				{'duration' in content && (
 					<Box display="flex" alignItems="center">
 						<Typography style={{ fontSize: '0.9em' }}>
-							<DesktopDuration from={content.duration.from} to={content.duration.to} tooltip />
+							<DesktopDuration from={content.duration.from} to={content.duration.to} />
 						</Typography>
 
 						<DesktopSpacer horizontal="0.5em" />
