@@ -7,6 +7,7 @@ import { lectureListURI, lectureURI } from '../../../common/uri/uri';
 import { useCourse } from '../../hooks/door/useCourse';
 import { useLecture } from '../../hooks/door/useLecture';
 import { DesktopDate } from '../common/DesktopDate';
+import { DesktopDuration } from '../common/DesktopDuration';
 import { DesktopRequestButton } from '../common/DesktopRequestButton';
 import { DesktopRequestState } from '../common/DesktopRequestState';
 import { DesktopSpacer } from '../common/DesktopSpacer';
@@ -122,11 +123,15 @@ export const DesktopLectureDashboard: React.FC<DesktopLectureDashboardProps> = p
 						// 데이터통신          [  ][  ][  ][  ]
 						return (
 							<Box key={durationTo}>
-								<Typography variant="h6">
-									강의목록 (~
-									<DesktopDate date={durationTo} format="MMMM Do" />
-									까지)
-								</Typography>
+								<Box display="flex" alignItems="center">
+									<Typography variant="h6">수강중인 강의 목록</Typography>
+									<DesktopSpacer horizontal={1} />
+									<Typography variant="subtitle2" color="textSecondary">
+										(~ <DesktopDate date={durationTo} format="MMMM Do" />)
+									</Typography>
+									<DesktopSpacer horizontal="auto" />
+									<DesktopDuration to={durationTo} />
+								</Box>
 								<DesktopSpacer vertical={1} />
 								<table>
 									<thead>
