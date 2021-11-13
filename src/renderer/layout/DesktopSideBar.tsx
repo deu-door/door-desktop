@@ -16,7 +16,7 @@ import {
 	withTheme,
 } from '@material-ui/core';
 import { Course, Term } from 'door-api';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { courseListURI } from '../../common/uri/uri';
 import { DesktopRoundedPaper } from '../components/common/DesktopRoundedPaper';
 import { DesktopSpacer } from '../components/common/DesktopSpacer';
@@ -30,8 +30,6 @@ const SelectWithoutBorder = styled(withTheme((props: SelectProps) => <Select {..
 		borderColor: 'transparent',
 	},
 }));
-
-const shouldDense = () => window.innerHeight <= 1080;
 
 export type DesktopFixedSideBarProps = {
 	selectedCourse: Course | undefined;
@@ -49,17 +47,6 @@ export const DesktopFixedSideBar: React.FC<DesktopFixedSideBarProps> = props => 
 	const courseList = selectedTerm !== undefined ? courseListByTerm(selectedTerm.id) : undefined;
 	const { requestMetadataByURI } = useRequestMetadata();
 	const pending = selectedTerm === undefined ? false : requestMetadataByURI(courseListURI(selectedTerm)).pending;
-
-	const [dense, setDense] = useState(shouldDense());
-
-	// height-responsive-sidebar
-	useEffect(() => {
-		const onResize = () => setDense(shouldDense());
-
-		window.addEventListener('resize', onResize);
-
-		return () => window.removeEventListener('resize', onResize);
-	});
 
 	return (
 		<Box component="aside" {...boxProps}>
@@ -108,7 +95,7 @@ export const DesktopFixedSideBar: React.FC<DesktopFixedSideBarProps> = props => 
 									<List
 										key={type}
 										subheader={
-											<ListSubheader style={dense ? { height: '2.4rem' } : {}} disableSticky>
+											<ListSubheader style={{ height: '2.4rem' }} disableSticky>
 												{type}
 											</ListSubheader>
 										}
@@ -118,7 +105,7 @@ export const DesktopFixedSideBar: React.FC<DesktopFixedSideBarProps> = props => 
 												key={course.id}
 												button
 												onClick={() => onSelectCourse?.(course)}
-												style={dense ? { paddingTop: '0.1rem', paddingBottom: '0.1rem' } : {}}
+												style={{ paddingTop: '0.1rem', paddingBottom: '0.1rem' }}
 											>
 												<ListItemText
 													primary={course.name}
