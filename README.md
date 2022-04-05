@@ -15,8 +15,7 @@ Better way to join online classes, In <strong><a href="http://door.deu.ac.kr">Do
 
 <div align="center">
 
-![dashboard-filter-posts](./screenshots/door-desktop-0.3.0/dashboard-filter-posts.gif)
-![lectures](./screenshots/door-desktop-0.3.0/lectures.gif)
+![summary](./screenshots/door-desktop-0.4.0/summary.webp)
 
 </div>
 
